@@ -21,6 +21,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './auth/login/login.component';
 import {SignupComponent} from './auth/signup/signup.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
+import {AuthService} from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import {AuthInterceptor} from './auth/auth-interceptor';
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
-    ],
+, AuthService    ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -13,14 +13,18 @@ router.post('/signup', (req,res,next) => {
     .then(hash => {
       const user  = new User({
         email: req.body.email,
-        password: hash
+        password: hash,
+        username: req.body.username,
+        department: req.body.department,
+        registrationno: req.body.registration
       });
       user.save()
         .then(result => {
           res.status(201).json({
             message: 'User Created',
-            result: result
+            result: result,
           });
+          console.log(user);
         })
         .catch(err => {
           res.status(500).json({
@@ -50,6 +54,7 @@ router.post("/login", (req,res,next) => {
           message: "Auth failed"
         });
       }
+      console.log(fetchedUser+"\nafter login");
       const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id},
         'secret_this_should_be_longer',
         {expiresIn: '1h'}
@@ -57,7 +62,8 @@ router.post("/login", (req,res,next) => {
       res.status(200).json({
         token: token,
         expiresIn: 3600,
-        userId: fetchedUser._id
+        userId: fetchedUser._id,
+        username: fetchedUser.username
       });
     })
     .catch(err => {

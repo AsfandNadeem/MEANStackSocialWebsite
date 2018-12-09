@@ -4,8 +4,52 @@
     <mat-form-field>
       <input
         matInput
+        type="text"
+        placeholder="Username"
+        name="uname"
+        ngModel
+        #unameInput="ngModel"
+        required
+
+      >
+      <mat-error *ngIf="unameInput.invalid">Please enter a username.</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        placeholder="Registration Number"
+        name="regno"
+        ngModel
+        #regnoInput="ngModel"
+        required
+
+      >
+      <mat-error *ngIf="regnoInput.invalid">Please enter your registration number.</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        placeholder="Department"
+        name="dname"
+        ngModel
+        #dnameInput="ngModel"
+        required
+
+      >
+      <mat-error *ngIf="dnameInput.invalid">Please enter a Department.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        matInput
         type="email"
-        placeholder="E-mail"
+        placeholder="COMSATS Provided E-mail"
         name="email"
         ngModel
         #emailInput="ngModel"
