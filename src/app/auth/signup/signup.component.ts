@@ -10,6 +10,10 @@ import {AuthService} from '../auth.service';
 export class SignupComponent {
 
   isLoading = false;
+  departments = ['Computer Science',
+    'Architecture',
+    'Electrical Engineering'
+  ];
 
   constructor(public authService: AuthService) {}
 

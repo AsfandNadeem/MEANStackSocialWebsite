@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 
 const Post = require("../models/post");
+const User = require('../models/user');
 const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
@@ -37,6 +38,7 @@ router.post(
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
+    console.log(url.toString());
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
@@ -64,6 +66,7 @@ router.put(
     let imagePath = req.body.imagePath;
     if (req.file) {
       const url = req.protocol + "://" + req.get("host");
+      console.log(url);
       imagePath = url + "/images/" + req.file.filename;
     }
     const post = new Post({
@@ -87,6 +90,7 @@ router.put(
 router.get("", (req, res, next) => {
   const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
   const currentPage = +req.query.page;
+
   const postQuery = Post.find();
   let fetchedPosts;
   if (pageSize && currentPage) {
@@ -94,6 +98,7 @@ router.get("", (req, res, next) => {
       .skip(pageSize * (currentPage - 1))
       .limit(pageSize);
   }
+
   postQuery
     .then(documents => {
       fetchedPosts = documents;

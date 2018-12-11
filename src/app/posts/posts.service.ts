@@ -18,7 +18,7 @@ export class PostsService {
   getPosts(postsPerPage: number, currentPage: number) { // httpclientmodule
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
    this.http
-     .get<{message: string, posts: any, maxPosts: number}>(
+     .get<{message: string, posts: any,  username: string, maxPosts: number}>(
        'http://localhost:3000/api/posts'
      )
      .pipe(map((postData) => {
@@ -30,7 +30,7 @@ export class PostsService {
            creator: post.creator,
            imagePath: post.imagePath
          };
-       }), maxPosts: postData.maxPosts };
+       }), maxPosts: postData.maxPosts  };
     }))// change rterieving data
      .subscribe(transformedPostData => {
       this.posts = transformedPostData.posts;

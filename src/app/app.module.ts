@@ -9,7 +9,8 @@ import {
   MatToolbarModule,
   MatExpansionModule,
   MatProgressSpinnerModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatSelectModule
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -45,6 +46,7 @@ import {AuthService} from './auth/auth.service';
     MatExpansionModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     HttpClientModule
   ],
   providers: [

@@ -30,20 +30,34 @@
       <mat-error *ngIf="regnoInput.invalid">Please enter your registration number.</mat-error>
     </mat-form-field>
 
-
     <mat-form-field>
-      <input
-        matInput
-        type="text"
-        placeholder="Department"
-        name="dname"
-        ngModel
-        #dnameInput="ngModel"
-        required
-
-      >
-      <mat-error *ngIf="dnameInput.invalid">Please enter a Department.</mat-error>
+      <mat-select placeholder="Department" name="dname"
+                  ngModel
+                  name = "dname"
+                  #dnameInput="ngModel"  required>
+        <!--<mat-option>&#45;&#45;</mat-option>-->
+        <mat-option *ngFor="let department of departments" [value]="department" >
+          {{department}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="dnameInput.invalid">Please choose a department</mat-error>
+      <!--<mat-hint>{{depControl.value?.sound}}</mat-hint>-->
     </mat-form-field>
+
+
+    <!--<mat-form-field>-->
+      <!--<input-->
+        <!--matInput-->
+        <!--type="text"-->
+        <!--placeholder="Department"-->
+        <!--name="dname"-->
+        <!--ngModel-->
+        <!--#dnameInput="ngModel"-->
+        <!--required-->
+
+      <!--&gt;-->
+      <!--<mat-error *ngIf="dnameInput.invalid">Please enter a Department.</mat-error>-->
+    <!--</mat-form-field>-->
 
     <mat-form-field>
       <input
