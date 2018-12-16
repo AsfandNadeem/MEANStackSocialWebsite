@@ -22,3 +22,7 @@ mat-spinner{
 mat-paginator{
   margin-top:1rem;
 }
+
+mat-expansion-panel-header{
+  padding: 1%;
+}

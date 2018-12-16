@@ -27,6 +27,7 @@ export class PostsService {
            title: post.title,
            content: post.content,
            id: post._id,
+           username : post.username,
            creator: post.creator,
            imagePath: post.imagePath
          };
@@ -51,6 +52,7 @@ export class PostsService {
     postData.append('title', title);
       postData.append('content', content);
     postData.append('image', image, title);
+    postData.append('username', localStorage.getItem('username'));
     this.http
       .post<{ message: string, post: Post }>(
         'http://localhost:3000/api/posts',
@@ -65,6 +67,7 @@ export class PostsService {
       _id: string,
       title: string,
       content: string,
+      username: string,
       creator: string,
       imagePath: string
     }>('http://localhost:3000/api/posts/' + id) ;
@@ -77,6 +80,7 @@ export class PostsService {
        postData.append('id', id);
       postData.append('title', title);
       postData.append('content', content);
+      postData.append('username', localStorage.getItem('username'));
       postData.append('image', image, title);
     } else {
        postData = {
@@ -84,6 +88,7 @@ export class PostsService {
         title: title,
         content: content,
          creator: null,
+         username: localStorage.getItem('username'),
         imagePath: image
       };
 

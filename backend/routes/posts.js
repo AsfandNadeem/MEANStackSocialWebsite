@@ -42,6 +42,7 @@ router.post(
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
+      username: req.body.username,
       creator: req.userData.userId,
       imagePath: url + "/images/" + req.file.filename
     });
@@ -73,6 +74,7 @@ router.put(
       _id: req.body.id,
       title: req.body.title,
       content: req.body.content,
+      username: req.body.username,
       creator: req.userData.userId,
       imagePath: imagePath
     });
