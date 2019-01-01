@@ -23,6 +23,8 @@ import {LoginComponent} from './auth/login/login.component';
 import {SignupComponent} from './auth/signup/signup.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
 import {AuthService} from './auth/auth.service';
+import {MatMenuModule} from '@angular/material/menu';
+
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import {AuthService} from './auth/auth.service';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatMenuModule,
     HttpClientModule
   ],
   providers: [

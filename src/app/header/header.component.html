@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <span *ngIf="userIsAuthenticated">
-    <a routerLink="/messages">MyMessages</a>
+    <a routerLink="/messages">Home</a>
 
   </span>
   <span class="spacer"></span>
@@ -18,7 +18,21 @@
       <a mat-button routerLink="/signup" routerLinkActive="mat-accent">Signup</a>
     </li>
     <li *ngIf="userIsAuthenticated">
-      <button mat-button (click)="onLogout()" >Logout</button>
+
+      <button mat-button [matMenuTriggerFor]="appMenu">Options</button>
+      <mat-menu #appMenu="matMenu" yPosition="below">
+        <button mat-menu-item [matMenuTriggerFor]="createmenu">Create</button>
+        <button mat-menu-item>Settings</button>
+        <button mat-menu-item>Help</button>
+        <button mat-menu-item (click)="onLogout()" >Logout</button>
+      </mat-menu>
+
+      <mat-menu #createmenu="matMenu">
+        <button mat-menu-item>Group</button>
+        <button mat-menu-item>Event</button>
+      </mat-menu>
+
     </li>
+
   </ul>
 </mat-toolbar>
