@@ -71,7 +71,9 @@ router.put(
       console.log(url);
       imagePath = url + "/images/" + req.file.filename;
     }
-    const post = new Post({
+
+
+    const post =({
       _id: req.body.id,
       title: req.body.title,
       content: req.body.content,
@@ -140,7 +142,7 @@ router.delete("/:id", checkAuth, (req, res, next) => {
 
 
 router.put("/likePost/:id",checkAuth,(req,res) =>{
-  console.log("-----------------------\n"+req.params.id+"\n----------------------------");
+  console.log("liking-----------------------\n"+req.params.id+"\n----------------------------");
     if(!req.params.id){
       res.json({success: false, message:'no id provided'});
     } else {
@@ -184,6 +186,7 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                           if(err) {
                             res.json({ success: false, message:'something went wrong'});
                           } else {
+                            console.log(post);
                             res.json({ success: true, message: 'post liked!'});
                           }
                         });
@@ -203,11 +206,12 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
     }
   });
 
-router.put('/dislikePost',(req,res) =>{
-  if(!req.body.id){
+router.put("/dislikePost/:id",checkAuth,(req,res) =>{
+  console.log("disliking-----------------------\n"+req.params.id+"\n----------------------------");
+  if(!req.params.id){
     res.json({success: false, message:'no id provided'});
   } else {
-    Post.findOne({_id: req.body.id},(err,post) => {
+    Post.findById({_id: req.params.id},(err,post) => {
       if(err){
         res.json({success:false, message:'invalid post id'});
       } else {

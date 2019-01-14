@@ -23,6 +23,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   totalPosts = 0;
   postsPerPage = 5;
   currentPage = 1;
+  username: string;
   userId: string;
   newComment = [];
   pageSizeOptions = [1, 2, 5, 10];
@@ -36,10 +37,12 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
     this.userId = this.authService.getUserId();
+    this.username = this.authService.getName();
     this.postsSub = this.postsService.getPostUpdateListener()
       .subscribe((postData: { posts: Post[], postCount: number}) => {
         this.isLoading = false;
         this.totalPosts = postData.postCount;
+        this.username = this.authService.getName();
         this.posts = postData.posts;
         console.log(this.posts);
       });
@@ -74,6 +77,13 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   likePost(id: string) {
     this.postsService.likePost(id).subscribe( () => {
+      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+    });
+
+  }
+
+  dislikePost(id: string) {
+    this.postsService.dislikePost(id).subscribe( () => {
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
 
