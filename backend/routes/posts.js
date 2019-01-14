@@ -139,68 +139,69 @@ router.delete("/:id", checkAuth, (req, res, next) => {
 });
 
 
-router.put('/likePost',(req,res) =>{
-  if(!req.body.id){
-    res.json({success: false, message:'no id provided'});
-  } else {
-    Post.findOne({_id: req.body.id},(err,post) => {
-      if(err){
-        res.json({success:false, message:'invalid post id'});
-      } else {
-        if(!post){
-          res.json({success: false, message:'post not found'});
+router.put("/likePost/:id",checkAuth,(req,res) =>{
+  console.log("-----------------------\n"+req.params.id+"\n----------------------------");
+    if(!req.params.id){
+      res.json({success: false, message:'no id provided'});
+    } else {
+      Post.findById({_id: req.params.id},(err,post) => {
+        if(err){
+          res.json({success:false, message:'invalid post id'});
         } else {
-          User.findOne({_id: req.userData.userId}, (err, user) => {
-            if (err) {
-              res.json({success:false, message:'Something went wrong'});
-            } else {
-              if(!user) {
-                res.json({ success: false, message:'Could not find user'});
+          if(!post){
+            res.json({success: false, message:'post not found'});
+          } else {
+            User.findOne({_id: req.userData.userId}, (err, user) => {
+              if (err) {
+                res.json({success:false, message:'Something went wrong'});
               } else {
-                if(user.username === post.username) {
-                  res.json({ success: false, message: 'Cannot like own post'});
+                if(!user) {
+                  res.json({ success: false, message:'Could not find user'});
                 } else {
-                  if(post.likedBy.includes(user.username)) {
-                    res.json({success: false, message: 'You already liked this post'});
+                  if(user.username === post.username) {
+                    res.json({ success: false, message: 'Cannot like own post'});
                   } else {
-                    if(post.dislikedBy.includes(user.username)) {
-                      post.dislikes--;
-                      const arrayIndex = post.dislikedBy.indexOf(user.username);
-                      post.dislikedBy.splice(arrayIndex,1);
-                      post.likes++;
-                      post.likedBy.push(user.username);
-                      post.save((err) => {
-                        if(err) {
-                          res.json({ success: false, message:'something went wrong'});
-                        } else {
-                          res.json({ success: true, message: 'post liked!'});
-                        }
-                      });
+                    if(post.likedBy.includes(user.username)) {
+                      res.json({success: false, message: 'You already liked this post'});
                     } else {
+                      if(post.dislikedBy.includes(user.username)) {
+                        post.dislikes--;
+                        const arrayIndex = post.dislikedBy.indexOf(user.username);
+                        post.dislikedBy.splice(arrayIndex,1);
+                        post.likes++;
+                        post.likedBy.push(user.username);
+                        post.save((err) => {
+                          if(err) {
+                            res.json({ success: false, message:'something went wrong'});
+                          } else {
+                            res.json({ success: true, message: 'post liked!'});
+                          }
+                        });
+                      } else {
+                        post.likes++;
+                        post.likedBy.push(user.username);
+                        post.save((err) => {
+                          if(err) {
+                            res.json({ success: false, message:'something went wrong'});
+                          } else {
+                            res.json({ success: true, message: 'post liked!'});
+                          }
+                        });
 
-                      post.likes++;
-                      post.likedBy.push(user.username);
-                      post.save((err) => {
-                        if(err) {
-                          res.json({ success: false, message:'something went wrong'});
-                        } else {
-                          res.json({ success: true, message: 'post liked!'});
-                        }
-                      });
+                      }
 
                     }
-
                   }
                 }
-              }
-            }
-          });
-        }
-      }
 
-    });
-  }
-});
+              }
+            });
+          }
+        }
+
+      });
+    }
+  });
 
 router.put('/dislikePost',(req,res) =>{
   if(!req.body.id){
@@ -263,6 +264,7 @@ router.put('/dislikePost',(req,res) =>{
 
     });
   }
+
 });
 
 

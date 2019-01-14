@@ -115,8 +115,8 @@ export class PostsService {
   }
 
   likePost(id) {
-    const postdata = {id: id};
-    return this.http.put( 'http://localhost:3000/api/posts/likePost/', postdata);
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/posts/likePost/' + id);
   }
 
   dislikePost(id) {
