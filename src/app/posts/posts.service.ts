@@ -29,6 +29,7 @@ export class PostsService {
            id: post._id,
            username : post.username,
            creator: post.creator,
+           likes: post.likes,
            createdAt: post.createdAt,
            imagePath: post.imagePath
          };
@@ -110,6 +111,16 @@ export class PostsService {
       id: id,
       comment: comment
     };
-    return this.http.post('http://localhost:3000/api/posts/comment', postData);
+    return this.http.post('http://localhost:3000/api/posts/comment/', postData);
+  }
+
+  likePost(id) {
+    const postdata = {id: id};
+    return this.http.put( 'http://localhost:3000/api/posts/likePost/', postdata);
+  }
+
+  dislikePost(id) {
+    const postData = {id: id};
+    return this.http.put( 'http://localhost:3000/api/posts/dislikePost/', postData);
   }
 }

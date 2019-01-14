@@ -71,4 +71,11 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postsPerPage = pageData.pageSize;
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
   }
+
+  likePost(id: string) {
+    this.postsService.likePost(id).subscribe( () => {
+      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+    });
+
+  }
 }
