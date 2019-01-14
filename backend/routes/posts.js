@@ -43,6 +43,7 @@ router.post(
       title: req.body.title,
       content: req.body.content,
       username: req.body.username,
+      createdAt : Date.now(),
       creator: req.userData.userId,
       imagePath: url + "/images/" + req.file.filename
     });
@@ -76,6 +77,7 @@ router.put(
       content: req.body.content,
       username: req.body.username,
       creator: req.userData.userId,
+      createdAt : Date.now(),
       imagePath: imagePath
     });
     console.log(post);
@@ -93,7 +95,7 @@ router.get("", (req, res, next) => {
   const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
   const currentPage = +req.query.page;
 
-  const postQuery = Post.find();
+  const postQuery = Post.find().sort({ '_id': -1 });
   let fetchedPosts;
   if (pageSize && currentPage) {
     postQuery
@@ -134,6 +136,53 @@ router.delete("/:id", checkAuth, (req, res, next) => {
       res.status(401).json({message: "Not authorized to delete!"});
     }
   });
+});
+
+router.post("/comment", (req,res) => {
+  if(!req.body.comment){
+    res.json({ success: false, message: 'No Comment provided'});
+  }
+  else{
+    if(!req.body.id){
+      res.json({ success: false, message: 'ID not provided'});
+    }else{
+      Post.findOne({ _id:req.body.id}, (err,post)=>{
+
+        if(err) {
+          res.json({ success: false, message: 'Invalid post id'});
+        }
+        else{
+          if(!post){
+            res.json({success: false,message:'blog not Found'});
+          }else{
+            User.findOne({_id: req.userData.userId}, (err, user) =>{
+              if (err){
+                res.json({success: false, message:'something went wrong'});
+              }else{
+                if(!user){
+                  res.json({success: false, message:'user not found'});
+                }else{
+                  post.comment.push({
+                    comment:req.body.comment,
+                    commentator:user.username
+                  });
+                  post.save((err) => {
+                    if(err){
+                      res.json({success: false, message:'something went wrong'});
+                    }else{
+                      res.json({success: true, message:'Comment added'});
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
+
+      });
+    }
+  }
+
 });
 
 module.exports = router;

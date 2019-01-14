@@ -29,6 +29,7 @@ export class PostsService {
            id: post._id,
            username : post.username,
            creator: post.creator,
+           createdAt: post.createdAt,
            imagePath: post.imagePath
          };
        }), maxPosts: postData.maxPosts  };
@@ -100,7 +101,15 @@ export class PostsService {
   }
 
   deletePost(postId: string) {
-   return this.http
-     .delete('http://localhost:3000/api/posts/' + postId);
-        }
+    return this.http
+      .delete('http://localhost:3000/api/posts/' + postId);
+  }
+
+  postComment(id, comment) {
+    const postData = {
+      id: id,
+      comment: comment
+    };
+    return this.http.post('http://localhost:3000/api/posts/comment', postData);
+  }
 }

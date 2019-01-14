@@ -24,6 +24,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   postsPerPage = 5;
   currentPage = 1;
   userId: string;
+  newComment = [];
   pageSizeOptions = [1, 2, 5, 10];
   userIsAuthenticated = false;
   private postsSub: Subscription;
@@ -62,6 +63,7 @@ export class PostListComponent implements OnInit, OnDestroy {
    this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
   }
+
 
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;

@@ -34,7 +34,6 @@ export class PostCreateComponent implements OnInit {
         validators : [Validators.required]
        }),
       image: new FormControl(null, {
-        validators: [Validators.required],
         asyncValidators: [mimeType]
       })
     });
