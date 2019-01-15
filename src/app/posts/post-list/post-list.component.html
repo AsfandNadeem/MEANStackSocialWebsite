@@ -18,10 +18,70 @@
     </button>
 
 
+
+
     <button mat-icon-button (click)="dislikePost(post.id)" >
       <mat-icon >thumb_down</mat-icon>
       {{ post.dislikes }}
     </button>
+
+    <br/>
+
+    <mat-accordion class="example-headers-align" >
+              <mat-expansion-panel  [class.mat-expansion-panel]="false" hideToggle>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+
+                      <mat-icon >comment</mat-icon>
+                      {{ post.commentsNo }}
+
+                  </mat-panel-title>
+
+                </mat-expansion-panel-header>
+
+
+
+                <mat-form-field style="width:100% !important" >
+                  <input  matInput
+                          placeholder="Add a Comment"
+                          ngModel
+                          #commentInput="ngModel"
+                          required
+                          comment>
+                  <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
+
+                </mat-form-field>
+                  <button (click)="addComment(post.id,commentInput.value)">
+                    <mat-icon >send</mat-icon>
+                   </button>
+
+
+
+                <!--<mat-list>-->
+                  <!--<h3 matSubheader>Folders</h3>-->
+                  <!--<mat-list-item *ngFor="let comment of post.comments">-->
+                    <!--<mat-icon matListIcon>folder</mat-icon>-->
+                    <!--<h4 matLine>{{post.comments}}</h4>-->
+                    <!--<p matLine class="demo-2"> {{folder.updated}} </p>-->
+                  <!--</mat-list-item>-->
+                  <!--<mat-divider></mat-divider>-->
+                  <!--<h3 matSubheader>Notes</h3>-->
+                  <!--<mat-list-item *ngFor="let note of notes">-->
+                    <!--<mat-icon matListIcon>note</mat-icon>-->
+                    <!--<h4 matLine>{{note.name}}</h4>-->
+                    <!--<p matLine class="demo-2"> {{note.updated}} </p>-->
+                  <!--</mat-list-item>-->
+                <!--</mat-list>-->
+
+
+
+              </mat-expansion-panel>
+
+
+            </mat-accordion>
+
+
+
 
     <mat-action-row *ngIf="userIsAuthenticated && userId == post.creator">
       <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>

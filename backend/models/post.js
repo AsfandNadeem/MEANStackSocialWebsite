@@ -35,6 +35,7 @@ const postSchema = mongoose.Schema({
   likedBy: {type: Array},
   dislikes: {type: Number, default: 0},
   dislikedBy: {type: Array},
+  commentsNo: {type: Number,default:0},
   comments: [{
     comment:{type: String, validate: commentValidators},
     commentator: {type: String}

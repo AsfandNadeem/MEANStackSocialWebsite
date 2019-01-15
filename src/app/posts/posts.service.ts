@@ -30,6 +30,7 @@ export class PostsService {
            username : post.username,
            creator: post.creator,
            likes: post.likes,
+           commentsNo: post.commentsNo,
            dislikes: post.dislikes,
            createdAt: post.createdAt,
            imagePath: post.imagePath
@@ -123,5 +124,14 @@ export class PostsService {
   dislikePost(id) {
     // @ts-ignore
     return this.http.put( 'http://localhost:3000/api/posts/dislikePost/' + id);
+  }
+
+  addComment(id, comment) {
+    const postdata = {
+      id: id,
+      comment: comment
+    };
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/posts/comment/' + id,postdata);
   }
 }

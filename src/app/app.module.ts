@@ -10,7 +10,7 @@ import {
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatPaginatorModule,
-  MatSelectModule, MatIconModule, MatDividerModule
+  MatSelectModule, MatIconModule, MatDividerModule, MatListModule
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -51,6 +51,7 @@ import {MatMenuModule} from '@angular/material/menu';
     MatSelectModule,
     MatMenuModule,
     MatDividerModule,
+    MatListModule,
     MatIconModule,
     HttpClientModule
   ],

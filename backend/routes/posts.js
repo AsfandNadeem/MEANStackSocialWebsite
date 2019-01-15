@@ -272,7 +272,8 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
 });
 
 
-router.post("/comment/:id", (req,res) => {
+router.put("/comment/:id",checkAuth, (req,res) => {
+  console.log("commenting----------------------\n"+req.params.id+"\n----------------------------");
   if(!req.body.comment){
     res.json({ success: false, message: 'No Comment provided'});
   }
@@ -300,11 +301,14 @@ router.post("/comment/:id", (req,res) => {
                     comment:req.body.comment,
                     commentator:user.username
                   });
+                  post.commentsNo++;
+
                   post.save((err) => {
                     if(err){
                       res.json({success: false, message:'something went wrong'});
                     }else{
                       res.json({success: true, message:'Comment added'});
+                      console.log(post);
                     }
                   });
                 }
