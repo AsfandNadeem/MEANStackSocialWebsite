@@ -272,15 +272,15 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
 });
 
 
-router.post("/comment", (req,res) => {
+router.post("/comment/:id", (req,res) => {
   if(!req.body.comment){
     res.json({ success: false, message: 'No Comment provided'});
   }
   else{
-    if(!req.body.id){
+    if(!req.params.id){
       res.json({ success: false, message: 'ID not provided'});
     }else{
-      Post.findOne({ _id:req.body.id}, (err,post)=>{
+      Post.findById({ _id: req.params.id}, (err,post)=>{
 
         if(err) {
           res.json({ success: false, message: 'Invalid post id'});
@@ -296,7 +296,7 @@ router.post("/comment", (req,res) => {
                 if(!user){
                   res.json({success: false, message:'user not found'});
                 }else{
-                  post.comment.push({
+                  post.comments.push({
                     comment:req.body.comment,
                     commentator:user.username
                   });
