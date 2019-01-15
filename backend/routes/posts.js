@@ -299,7 +299,8 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                 }else{
                   post.comments.push({
                     comment:req.body.comment,
-                    commentator:user.username
+                    commentator:user.username,
+                    commentatorid: user._id
                   });
                   post.commentsNo++;
 

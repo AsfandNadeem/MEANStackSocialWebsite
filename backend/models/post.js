@@ -38,7 +38,8 @@ const postSchema = mongoose.Schema({
   commentsNo: {type: Number,default:0},
   comments: [{
     comment:{type: String, validate: commentValidators},
-    commentator: {type: String}
+    commentator: {type: String},
+    commentatorid: {type: mongoose.Schema.Types.ObjectId, ref: "User"}
   }]
 });
 
