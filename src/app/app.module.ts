@@ -24,6 +24,7 @@ import {SignupComponent} from './auth/signup/signup.component';
 import {AuthInterceptor} from './auth/auth-interceptor';
 import {AuthService} from './auth/auth.service';
 import {MatMenuModule} from '@angular/material/menu';
+import { ProfileComponent } from './auth/profile/profile.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import {MatMenuModule} from '@angular/material/menu';
     HeaderComponent,
     PostListComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {AuthData} from './auth-data.model';
 import {Subject} from 'rxjs';
 import {Router} from '@angular/router';
+import {Post} from '../posts/post.model';
 
 
 @Injectable({
@@ -135,4 +136,35 @@ export class AuthService {
       userId: userId
     };
   }
+
+  // public getUser(name: string) {
+  //     return this.http.get<{
+  //       username: string,
+  //       }>('http://localhost:3000/api/user/' + localStorage.getItem('userId')) ;
+  //   }
+
+  public updateUser(id: string , username: string, password: string) {
+
+
+    console.log(id + '\n' + username + '\n' + password);
+
+
+   const userData = {
+
+    username: username,
+    password: password
+  };
+      console.log(userData);
+      this.http.put<{userId: string, username: string}>
+    ('http://localhost:3000/api/user/edit/', userData)
+      .subscribe(response => {
+        console.log(response);
+        localStorage.removeItem('userId');
+        localStorage.removeItem('username');
+        localStorage.setItem('userId', response.userId);
+        localStorage.setItem('username', response.username);
+        this.router.navigate(['/messages']);
+      });
+  }
+
 }

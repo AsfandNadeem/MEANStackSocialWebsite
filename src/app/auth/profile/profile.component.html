@@ -1,0 +1,37 @@
+<mat-card>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+  <form [formGroup]="form" (submit)="onEdit()" *ngIf="!isLoading">
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        formControlName="username"
+        placeholder="New Username"
+      >
+      <mat-error *ngIf="form.get('username').invalid">Please enter a username.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        matInput
+        type="password"
+        formControlName="password"
+        placeholder="New password"
+      >
+      <mat-error *ngIf="form.get('password').invalid">Please enter a password.</mat-error>
+    </mat-form-field>
+
+
+
+
+    <button
+      mat-raised-button
+      color="accent"
+      type="submit"
+      *ngIf="!isLoading">Edit</button>
+
+  </form>
+
+
+</mat-card>
