@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   getName() {
-    return this.userN;
+    return localStorage.getItem('username');
   }
   getIsAuth() {
     return this.isAuthenticated;
@@ -137,11 +137,7 @@ export class AuthService {
     };
   }
 
-  // public getUser(name: string) {
-  //     return this.http.get<{
-  //       username: string,
-  //       }>('http://localhost:3000/api/user/' + localStorage.getItem('userId')) ;
-  //   }
+
 
   public updateUser(id: string , username: string, password: string) {
 
@@ -159,9 +155,7 @@ export class AuthService {
     ('http://localhost:3000/api/user/edit/', userData)
       .subscribe(response => {
         console.log(response);
-        localStorage.removeItem('userId');
         localStorage.removeItem('username');
-        localStorage.setItem('userId', response.userId);
         localStorage.setItem('username', response.username);
         this.router.navigate(['/messages']);
       });
