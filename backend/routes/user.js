@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
+const Post = require("../models/post");
 const User = require('../models/user');
 
 const router = express.Router();
@@ -71,7 +72,7 @@ router.post("/login", (req,res,next) => {
         });
       }
       console.log(fetchedUser+"\nafter login");
-      const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id},
+      const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, username: fetchedUser.username},
         'secret_this_should_be_longer',
         {expiresIn: '1h'}
         );
@@ -92,6 +93,7 @@ router.post("/login", (req,res,next) => {
 
 
 router.put("/edit",checkAuth,(req,res,next) => {
+  let fetcheduser;
   console.log("editing user---------------------------"+req.body.username+req.body.password+"---------------------------");
   bcrypt.hash(req.body.password,10)
     .then(hash => {
@@ -101,28 +103,60 @@ router.put("/edit",checkAuth,(req,res,next) => {
     });
       console.log(user);
       let fetchedUser;
-      User.updateOne({_id: req.userData.userId},user)
-        .then(user => {
-          if(user.nModified>0) {
-            fetchedUser = user;
-            const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id},
-              'secret_this_should_be_longer',
-              {expiresIn: '1h'}
-            );
-            res.status(200).json({
-              message:"user updated",
-              token: token,
-              expiresIn: 3600,
-              userId: fetchedUser._id,
-              username: fetchedUser.username,
-            });
+      User.findOneAndUpdate({_id: req.userData.userId},user,{new:true}, (err,doc) => {
+        if (err){
+          res.status(401).json({message: "Not authorized to update!"});
+          console.log(err);
+        } else {
+          fetchedUser = doc;
+          // const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, username:fetchedUser.username},
+          //           'secret_this_should_be_longer',
+          //           {expiresIn: '1h'});
+          const post = ({
+            username: fetchedUser.username,
+          });
+          Post.updateMany({ creator: req.userData.userId}, post).then(result => {
 
-          } else {
-            res.status(401).json({message: "Not authorized to update!"});
-          }
-          fetchedUser = user;
-          console.log(fetchedUser);
-        });
+            if (result.nModified > 0) {
+              console.log(result);
+
+            } else {
+              console.log("Not authorized to update!");
+            }
+          });
+          res.status(200).json({
+                    message:"user updated",
+                    // token: token,
+                    // expiresIn: 3600,
+                    userId: fetchedUser._id,
+                    username: fetchedUser.username,
+                  });
+          console.log(doc);
+        }
+      });
+      // User.findOneAndUpdate({_id: req.userData.userId},user, {new:true},)
+      //   .then(user1 => {
+      //     console.log(user1);
+      //     if(user1.nModified>0) {
+      //       fetchedUser = user1;
+      //       const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, username:fetchedUser.username},
+      //         'secret_this_should_be_longer',
+      //         {expiresIn: '1h'}
+      //       );
+      //       res.status(200).json({
+      //         message:"user updated",
+      //         token: token,
+      //         expiresIn: 3600,
+      //         userId: fetchedUser._id,
+      //         username: fetchedUser.username,
+      //       });
+      //
+      //     } else {
+      //       res.status(401).json({message: "Not authorized to update!"});
+      //     }
+      //
+      //     console.log("newuser"+fetchedUser.username);
+      //   });
 
 });
 
