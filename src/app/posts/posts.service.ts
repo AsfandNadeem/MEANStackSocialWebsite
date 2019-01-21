@@ -30,6 +30,7 @@ export class PostsService {
            username : post.username,
            creator: post.creator,
            likes: post.likes,
+           category: post.category,
            commentsNo: post.commentsNo,
            dislikes: post.dislikes,
            createdAt: post.createdAt,
@@ -51,11 +52,12 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string , image: File) {
+  addPost(title: string, content: string , image: File, category: string) {
     const postData =  new FormData();
     postData.append('title', title);
       postData.append('content', content);
     postData.append('image', image, title);
+    postData.append( 'category', category);
     postData.append('username', localStorage.getItem('username'));
     this.http
       .post<{ message: string, post: Post }>(
@@ -72,6 +74,7 @@ export class PostsService {
       title: string,
       content: string,
       username: string,
+      category: string,
       creator: string,
       imagePath: string
     }>('http://localhost:3000/api/posts/' + id) ;
@@ -91,6 +94,7 @@ export class PostsService {
         id: id,
         title: title,
         content: content,
+         category: null,
          creator: null,
          username: localStorage.getItem('username'),
         imagePath: image
@@ -132,6 +136,6 @@ export class PostsService {
       comment: comment
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/posts/comment/' + id,postdata);
+    return this.http.put( 'http://localhost:3000/api/posts/comment/' + id, postdata);
   }
 }

@@ -44,6 +44,7 @@ router.post(
       content: req.body.content,
       username: req.body.username,
       createdAt : Date.now(),
+      category: req.body.category,
       creator: req.userData.userId,
       imagePath: url + "/images/" + req.file.filename
     });

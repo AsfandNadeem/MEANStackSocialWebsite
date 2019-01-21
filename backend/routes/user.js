@@ -72,7 +72,7 @@ router.post("/login", (req,res,next) => {
         });
       }
       console.log(fetchedUser+"\nafter login");
-      const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, username: fetchedUser.username},
+      const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id},
         'secret_this_should_be_longer',
         {expiresIn: '1h'}
         );
@@ -80,7 +80,8 @@ router.post("/login", (req,res,next) => {
         token: token,
         expiresIn: 3600,
         userId: fetchedUser._id,
-        username: fetchedUser.username
+        username: fetchedUser.username,
+        department: fetchedUser.department
       });
     })
     .catch(err => {
@@ -109,9 +110,7 @@ router.put("/edit",checkAuth,(req,res,next) => {
           console.log(err);
         } else {
           fetchedUser = doc;
-          // const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, username:fetchedUser.username},
-          //           'secret_this_should_be_longer',
-          //           {expiresIn: '1h'});
+
           const post = ({
             username: fetchedUser.username,
           });
@@ -134,29 +133,7 @@ router.put("/edit",checkAuth,(req,res,next) => {
           console.log(doc);
         }
       });
-      // User.findOneAndUpdate({_id: req.userData.userId},user, {new:true},)
-      //   .then(user1 => {
-      //     console.log(user1);
-      //     if(user1.nModified>0) {
-      //       fetchedUser = user1;
-      //       const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, username:fetchedUser.username},
-      //         'secret_this_should_be_longer',
-      //         {expiresIn: '1h'}
-      //       );
-      //       res.status(200).json({
-      //         message:"user updated",
-      //         token: token,
-      //         expiresIn: 3600,
-      //         userId: fetchedUser._id,
-      //         username: fetchedUser.username,
-      //       });
-      //
-      //     } else {
-      //       res.status(401).json({message: "Not authorized to update!"});
-      //     }
-      //
-      //     console.log("newuser"+fetchedUser.username);
-      //   });
+
 
 });
 

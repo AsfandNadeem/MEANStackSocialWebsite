@@ -13,8 +13,6 @@ import {mimeType} from './mime-type.validator';
   styleUrls: ['./post-create.component.css']
 })
 export class PostCreateComponent implements OnInit {
-  enteredTitle = '';
-  enteredContent = '';
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
@@ -22,6 +20,7 @@ export class PostCreateComponent implements OnInit {
   private mode = 'create';
   private postId: string;
   post: Post;
+  categories = ['General', localStorage.getItem('department')];
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
@@ -35,6 +34,9 @@ export class PostCreateComponent implements OnInit {
        }),
       image: new FormControl(null, {
         asyncValidators: [mimeType]
+      }),
+      cname: new FormControl(null, {
+        validators: [Validators.required]
       })
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -50,6 +52,7 @@ export class PostCreateComponent implements OnInit {
               title: postData.title,
               content: postData.content,
               username: postData.username,
+              category: postData.category,
               creator: postData.creator,
               imagePath: postData.imagePath
             };
@@ -81,12 +84,13 @@ export class PostCreateComponent implements OnInit {
   }
 
   onSavePost() {
+    // console.log(this.form.value.title, this.form.value.content,  this.form.value.cname);
     if (this.form.invalid) {
       return;
     }
     this.isLoading = true;
     if (this.mode === 'create') {
-      this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image);
+      this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image, this.form.value.cname);
     } else {
       this.postsService.updatePost(
         this.postId,

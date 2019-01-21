@@ -26,6 +26,22 @@
         ></textarea>
       <mat-error *ngIf="form.get('content').invalid">Please enter a post title.</mat-error>
     </mat-form-field>
+<br/>
+    <mat-form-field>
+      <mat-select
+        matNativeControl
+        placeholder="Category"
+        formControlName = "cname">
+
+        <mat-option *ngFor="let category of categories" [value]="category">
+          {{category}}
+        </mat-option>
+
+      </mat-select>
+      <mat-error *ngIf="form.get('cname').invalid">Please choose a Category</mat-error>
+
+    </mat-form-field>
+
     <button
       mat-raised-button
       color="accent"

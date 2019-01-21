@@ -31,6 +31,7 @@ const postSchema = mongoose.Schema({
   username: { type: String},
   creator: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
   createdAt: {type: Date, default: Date.now()},
+  category: {type: String},
   likes: {type: Number, default: 0},
   likedBy: {type: Array},
   dislikes: {type: Number, default: 0},
