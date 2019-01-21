@@ -25,6 +25,7 @@ import {AuthInterceptor} from './auth/auth-interceptor';
 import {AuthService} from './auth/auth.service';
 import {MatMenuModule} from '@angular/material/menu';
 import { ProfileComponent } from './auth/profile/profile.component';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -48,10 +49,12 @@ import { ProfileComponent } from './auth/profile/profile.component';
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,
+    MatCardModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatMenuModule,
+    ScrollDispatchModule,
     MatDividerModule,
     MatListModule,
     MatIconModule,

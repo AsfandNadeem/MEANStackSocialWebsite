@@ -32,6 +32,7 @@ export class PostsService {
            likes: post.likes,
            category: post.category,
            commentsNo: post.commentsNo,
+           comments: post.comments,
            dislikes: post.dislikes,
            createdAt: post.createdAt,
            imagePath: post.imagePath
