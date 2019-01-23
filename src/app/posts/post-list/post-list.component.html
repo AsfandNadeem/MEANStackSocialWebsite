@@ -39,9 +39,9 @@
 
                 </mat-expansion-panel-header>
 
-
-
-                <mat-form-field style="width:100% !important" >
+<ul class="commentspanel">
+<li >
+                <mat-form-field style="width:700px; !important; " >
                   <input  matInput
                           placeholder="Add a Comment"
                           ngModel
@@ -51,9 +51,28 @@
                   <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
 
                 </mat-form-field>
+</li>
+  <li>
                   <button (click)="addComment(post.id,commentInput.value)">
                     <mat-icon >send</mat-icon>
                    </button>
+  </li>
+</ul>
+
+                <mat-card class="example-card" *ngFor="let comment of post.comments">
+                  <mat-card-header>
+                    <div mat-card-avatar class="example-header-image"></div>
+                    <mat-card-title style="font-weight: bold">{{comment.commentator}}</mat-card-title>
+
+                  </mat-card-header>
+
+                  <mat-card-content>
+                    <p>
+                      {{comment.comment}}
+                    </p>
+                  </mat-card-content>
+
+                </mat-card>
 
 
 
@@ -64,20 +83,7 @@
               </mat-expansion-panel>
 
 
-      <mat-card class="example-card" *ngFor="let comment of post.comments">
-        <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title style="font-weight: bold">{{comment.commentator}}</mat-card-title>
 
-        </mat-card-header>
-
-        <mat-card-content>
-          <p>
-            {{comment.comment}}
-          </p>
-        </mat-card-content>
-
-      </mat-card>
 
 
 

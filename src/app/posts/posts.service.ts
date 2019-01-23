@@ -60,6 +60,7 @@ export class PostsService {
     postData.append('image', image, title);
     postData.append( 'category', category);
     postData.append('username', localStorage.getItem('username'));
+    console.log(postData);
     this.http
       .post<{ message: string, post: Post }>(
         'http://localhost:3000/api/posts',

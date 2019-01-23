@@ -26,6 +26,8 @@ import {AuthService} from './auth/auth.service';
 import {MatMenuModule} from '@angular/material/menu';
 import { ProfileComponent } from './auth/profile/profile.component';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
+import { GroupCreateComponent } from './groups/group-create/group-create.component';
+import { GroupListComponent } from './groups/group-list/group-list.component';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
     PostListComponent,
     LoginComponent,
     SignupComponent,
-    ProfileComponent
+    ProfileComponent,
+    GroupCreateComponent,
+    GroupListComponent
   ],
   imports: [
     BrowserModule,

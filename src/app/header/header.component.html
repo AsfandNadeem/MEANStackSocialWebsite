@@ -1,8 +1,23 @@
 <mat-toolbar color="primary">
-  <span *ngIf="userIsAuthenticated">
-    <a routerLink="/messages">Home</a>
+  <ul>
+    <li *ngIf="userIsAuthenticated">
 
-  </span>
+    <a mat-button routerLink="/messages" routerLinkActive="mat-accent">Home</a>
+
+    </li>
+    <li *ngIf="userIsAuthenticated">
+
+    <a  mat-button routerLink="#" routerLinkActive="mat-accent">Groups</a>
+
+
+    </li>
+    <li *ngIf="userIsAuthenticated">
+
+    <a  mat-button routerLink="#" routerLinkActive="mat-accent">Events</a>
+
+
+    </li>
+  </ul>
   <span class="spacer"></span>
   <ul>
     <li *ngIf="userIsAuthenticated">
@@ -29,7 +44,7 @@
       </mat-menu>
 
       <mat-menu #createmenu="matMenu">
-        <button mat-menu-item>Group</button>
+        <button mat-menu-item [routerLink]="['/groupcreate']" >Group</button>
         <button mat-menu-item>Event</button>
       </mat-menu>
 
