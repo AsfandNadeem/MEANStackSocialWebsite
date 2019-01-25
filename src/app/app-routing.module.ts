@@ -7,6 +7,7 @@ import {SignupComponent} from './auth/signup/signup.component';
 import {AuthGuard} from './auth/auth.guard';
 import {ProfileComponent} from './auth/profile/profile.component';
 import {GroupCreateComponent} from './groups/group-create/group-create.component';
+import {EventCreateComponent} from './events/event-create/event-create.component';
 
 const routes: Routes = [
   { path: '' , component: LoginComponent},
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: SignupComponent},
   { path: 'groupcreate', component: GroupCreateComponent, canActivate: [AuthGuard]},
+  { path: 'eventcreate', component: EventCreateComponent, canActivate: [AuthGuard]},
   { path: 'profile/:userId', component: ProfileComponent, canActivate: [AuthGuard]}
 ];
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 
-const Group = require('../models/group');
+const Event = require('../models/event');
 const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
@@ -10,24 +10,25 @@ const router = express.Router();
 router.post(
   "",
   checkAuth,
-   (req, res, next) => {
+  (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
-    console.log("____________creating group_____________\n"+req.body+"-------------------");
-    const group = new Group({
-      groupname: req.body.groupname,
+    console.log("____________creating event_____________\n"+req.body+"-------------------");
+    const event = new Event({
+      eventname: req.body.eventname,
       description: req.body.description,
-      groupcreator: req.userData.userId,
+     eventcreator: req.userData.userId,
+      eventdate: req.body.eventdate,
       username: req.body.username,
       category: req.body.category,
     });
-    group.save().then(createdGroup => {
+    event.save().then(createdEvent => {
 
       res.status(201).json({
-        message: 'Group Created',
-        result: createdGroup,
+        message: 'Event Created',
+        result: createdEvent,
       });
-      console.log(group);
+      console.log(event);
     });
   }
 );

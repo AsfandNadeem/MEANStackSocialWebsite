@@ -10,8 +10,9 @@ import {
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatPaginatorModule,
-  MatSelectModule, MatIconModule, MatDividerModule, MatListModule
+  MatSelectModule, MatIconModule, MatDividerModule, MatListModule, MatNativeDateModule
 } from '@angular/material';
+import { MatDatepickerModule} from '@angular/material/datepicker';
 
 import { AppComponent } from './app.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
@@ -28,6 +29,8 @@ import { ProfileComponent } from './auth/profile/profile.component';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import { GroupCreateComponent } from './groups/group-create/group-create.component';
 import { GroupListComponent } from './groups/group-list/group-list.component';
+import { EventCreateComponent } from './events/event-create/event-create.component';
+import { EventListComponent } from './events/event-list/event-list.component';
 
 
 @NgModule({
@@ -40,7 +43,9 @@ import { GroupListComponent } from './groups/group-list/group-list.component';
     SignupComponent,
     ProfileComponent,
     GroupCreateComponent,
-    GroupListComponent
+    GroupListComponent,
+    EventCreateComponent,
+    EventListComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +55,7 @@ import { GroupListComponent } from './groups/group-list/group-list.component';
     BrowserAnimationsModule,
     MatInputModule,
     MatCardModule,
+    MatDatepickerModule,
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,
@@ -58,6 +64,7 @@ import { GroupListComponent } from './groups/group-list/group-list.component';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatMenuModule,
+    MatNativeDateModule,
     ScrollDispatchModule,
     MatDividerModule,
     MatListModule,

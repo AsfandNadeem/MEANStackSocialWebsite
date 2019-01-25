@@ -6,6 +6,7 @@ const path = require("path");
 const postsRoutes=require("./routes/posts");
 const userRoutes=require("./routes/user");
 const groupRoutes=require("./routes/groups");
+const eventRoutes=require("./routes/events");
 
 const app = express();
 mongoose.connect("mongodb://asfand:Nj3atbLzmaV5WZHJ@comsatssocial-shard-00-00-y7oqn.mongodb.net:27017,comsatssocial-shard-00-01-y7oqn.mongodb.net:27017,comsatssocial-shard-00-02-y7oqn.mongodb.net:27017/socialdb?ssl=true&replicaSet=ComsatsSocial-shard-0&authSource=admin&retryWrites=true")
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 app.use("/api/posts",postsRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/groups",groupRoutes);
+app.use("/api/events",eventRoutes);
 
 
 module.exports = app;

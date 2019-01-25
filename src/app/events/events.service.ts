@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import {Group} from './group.model';
+import {Event} from './event.model';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
 @Injectable({providedIn: 'root'})
-export class GroupsService {
-  username = "";
-  private groups: Group[] = [];
-  private groupsUpdated = new Subject<{groups: Group[], groupsCount: number}>();
+export class EventsService {
+  username = '';
+  private events: Event[] = [];
+  private eventsUpdated = new Subject<{events: Event[], eventssCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -54,11 +54,11 @@ export class GroupsService {
   //   return this.postsUpdated.asObservable();
   // }
 
-  addGroup(groupname: string,  category: string, description: string, username: string) {
+  addEvent(eventname: string,  category: string, description: string, eventdate: Date, username: string) {
     return this.http
       .post(
-        'http://localhost:3000/api/groups',
-        {groupname, description, category, username})
+        'http://localhost:3000/api/events',
+        {eventname, description, category, eventdate, username})
       .subscribe( responseData  => {
         this.router.navigate(['/messages']);
       });
