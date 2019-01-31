@@ -8,6 +8,8 @@ import {AuthGuard} from './auth/auth.guard';
 import {ProfileComponent} from './auth/profile/profile.component';
 import {GroupCreateComponent} from './groups/group-create/group-create.component';
 import {EventCreateComponent} from './events/event-create/event-create.component';
+import {GroupListComponent} from './groups/group-list/group-list.component';
+import {EventListComponent} from './events/event-list/event-list.component';
 
 const routes: Routes = [
   { path: '' , component: LoginComponent},
@@ -16,6 +18,8 @@ const routes: Routes = [
   { path: 'edit/:postId', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: SignupComponent},
+  { path: 'grouplist', component: GroupListComponent, canActivate: [AuthGuard]},
+  { path: 'eventlist', component: EventListComponent, canActivate: [AuthGuard]},
   { path: 'groupcreate', component: GroupCreateComponent, canActivate: [AuthGuard]},
   { path: 'eventcreate', component: EventCreateComponent, canActivate: [AuthGuard]},
   { path: 'profile/:userId', component: ProfileComponent, canActivate: [AuthGuard]}

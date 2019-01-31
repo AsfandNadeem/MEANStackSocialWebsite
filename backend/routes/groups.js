@@ -32,6 +32,32 @@ router.post(
   }
 );
 
+router.get("", (req, res, next) => {
+  const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  const currentPage = +req.query.page;
+
+  const groupQuery = Group.find().sort({ '_id': -1 });
+  let fetchedGroup;
+  if (pageSize && currentPage) {
+    groupQuery
+      .skip(pageSize * (currentPage - 1))
+      .limit(pageSize);
+  }
+
+  groupQuery
+    .then(documents => {
+      fetchedGroup = documents;
+      return Group.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Groups fetched successfully!",
+        groups: fetchedGroup,
+        maxGroups: count
+      });
+    });
+});
+
 
 
 

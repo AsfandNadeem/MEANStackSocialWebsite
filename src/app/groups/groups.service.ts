@@ -8,51 +8,46 @@ import {Router} from '@angular/router';
 
 @Injectable({providedIn: 'root'})
 export class GroupsService {
-  username = "";
+  username = '';
   private groups: Group[] = [];
-  private groupsUpdated = new Subject<{groups: Group[], groupsCount: number}>();
+  private groupsUpdated = new Subject<{groups: Group[], groupCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  //
-  //
-  // getPosts(postsPerPage: number, currentPage: number) { // httpclientmodule
-  //   const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
-  //  this.http
-  //    .get<{message: string, posts: any,  username: string, maxPosts: number}>(
-  //      'http://localhost:3000/api/posts' + queryParams
-  //    )
-  //    .pipe(map((postData) => {
-  //      return { posts: postData.posts.map(post => {
-  //        return {
-  //          title: post.title,
-  //          content: post.content,
-  //          id: post._id,
-  //          username : post.username,
-  //          creator: post.creator,
-  //          likes: post.likes,
-  //          category: post.category,
-  //          commentsNo: post.commentsNo,
-  //          comments: post.comments,
-  //          dislikes: post.dislikes,
-  //          createdAt: post.createdAt,
-  //          imagePath: post.imagePath
-  //        };
-  //      }), maxPosts: postData.maxPosts  };
-  //   }))// change rterieving data
-  //    .subscribe(transformedPostData => {
-  //     this.posts = transformedPostData.posts;
-  //     this.postsUpdated.next({
-  //         posts: [...this.posts],
-  //         postCount: transformedPostData.maxPosts
-  //       }
-  //     );
-  //    }); // subscribe is to liosten
-  // }
-  //
-  // getPostUpdateListener() {
-  //   return this.postsUpdated.asObservable();
-  // }
+
+
+  getGroups(groupsPerPage: number, currentPage: number) { // httpclientmodule
+    const queryParams = `?pagesize=${groupsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
+   this.http
+     .get<{message: string, groups: any,  username: string, maxGroups: number}>(
+       'http://localhost:3000/api/groups' + queryParams
+     )
+     .pipe(map((groupData) => {
+       return { groups: groupData.groups.map(group => {
+         return {
+           groupname: group.groupname,
+           description: group.description,
+           id: group._id,
+           username : group.username,
+           creator: group.groupcreator,
+           category: group.category,
+           // imagePath: post.imagePath
+         };
+       }), maxGroups: groupData.maxGroups  };
+    }))// change rterieving data
+     .subscribe(transformedGroupData => {
+      this.groups = transformedGroupData.groups;
+      this.groupsUpdated.next({
+          groups: [...this.groups],
+          groupCount: transformedGroupData.maxGroups
+        }
+      );
+     }); // subscribe is to liosten
+  }
+
+  getGroupUpdateListener() {
+    return this.groupsUpdated.asObservable();
+  }
 
   addGroup(groupname: string,  category: string, description: string, username: string) {
     return this.http
