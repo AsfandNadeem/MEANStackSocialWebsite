@@ -10,49 +10,44 @@ import {Router} from '@angular/router';
 export class EventsService {
   username = '';
   private events: Event[] = [];
-  private eventsUpdated = new Subject<{events: Event[], eventssCount: number}>();
+  private eventsUpdated = new Subject<{events: Event[], eventCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  //
-  //
-  // getPosts(postsPerPage: number, currentPage: number) { // httpclientmodule
-  //   const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
-  //  this.http
-  //    .get<{message: string, posts: any,  username: string, maxPosts: number}>(
-  //      'http://localhost:3000/api/posts' + queryParams
-  //    )
-  //    .pipe(map((postData) => {
-  //      return { posts: postData.posts.map(post => {
-  //        return {
-  //          title: post.title,
-  //          content: post.content,
-  //          id: post._id,
-  //          username : post.username,
-  //          creator: post.creator,
-  //          likes: post.likes,
-  //          category: post.category,
-  //          commentsNo: post.commentsNo,
-  //          comments: post.comments,
-  //          dislikes: post.dislikes,
-  //          createdAt: post.createdAt,
-  //          imagePath: post.imagePath
-  //        };
-  //      }), maxPosts: postData.maxPosts  };
-  //   }))// change rterieving data
-  //    .subscribe(transformedPostData => {
-  //     this.posts = transformedPostData.posts;
-  //     this.postsUpdated.next({
-  //         posts: [...this.posts],
-  //         postCount: transformedPostData.maxPosts
-  //       }
-  //     );
-  //    }); // subscribe is to liosten
-  // }
-  //
-  // getPostUpdateListener() {
-  //   return this.postsUpdated.asObservable();
-  // }
+
+  getEvents(eventsPerPage: number, currentPage: number) { // httpclientmodule
+    const queryParams = `?pagesize=${eventsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
+    this.http
+      .get<{message: string, events: any,  username: string, maxEvents: number}>(
+        'http://localhost:3000/api/events' + queryParams
+      )
+      .pipe(map((eventData) => {
+        return { events: eventData.events.map(event => {
+            return {
+              eventname: event.eventname,
+              description: event.description,
+              id: event._id,
+              eventdate: event.eventdate,
+              username : event.username,
+              creator: event.eventcreator,
+              category: event.category,
+              // imagePath: post.imagePath
+            };
+          }), maxEvents: eventData.maxEvents  };
+      }))// change rterieving data
+      .subscribe(transformedEventData => {
+        this.events = transformedEventData.events;
+        this.eventsUpdated.next({
+            events: [...this.events],
+          eventCount: transformedEventData.maxEvents
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getEventUpdateListener() {
+    return this.eventsUpdated.asObservable();
+  }
 
   addEvent(eventname: string,  category: string, description: string, eventdate: Date, username: string) {
     return this.http

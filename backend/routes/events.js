@@ -33,7 +33,31 @@ router.post(
   }
 );
 
+router.get("", (req, res, next) => {
+  const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  const currentPage = +req.query.page;
 
+  const eventQuery = Event.find().sort({ '_id': -1 });
+  let fetchedEvent;
+  if (pageSize && currentPage) {
+    eventQuery
+      .skip(pageSize * (currentPage - 1))
+      .limit(pageSize);
+  }
+
+  eventQuery
+    .then(documents => {
+      fetchedEvent = documents;
+      return Event.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Events fetched successfully!",
+        events: fetchedEvent,
+        maxEvents: count
+      });
+    });
+});
 
 
 

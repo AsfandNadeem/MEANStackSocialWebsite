@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  margin-top: 1rem;
+}
+
+.info-text {
+  text-align: center;
+}
+
+mat-spinner{
+  margin:auto;
+}
+
+/*.commentspanel {*/
+/*list-style-type: none;*/
+/*margin: 0;*/
+/*padding: 0;*/
+/*overflow: hidden;*/
+
+/*}*/
+
+/*.commentspanel li {*/
+/*float: left;*/
+/*}*/
+
+
+
+
+/*.post-image{*/
+/*width: 100%;*/
+/*}*/
+
+/*.post-image img{*/
+/*width:30%;*/
+/*box-shadow: 1px 1px 5px rgba(0,0,0,0.5);*/
+/*}*/
+mat-paginator{
+  margin-top:1rem;
+}
+
+mat-expansion-panel-header{
+  padding: 1%;
+}
+
+::ng-deep .mat-input-wrapper{
+  width:400px !important;
+}
