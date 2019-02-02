@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
 
 const jwt = require("jsonwebtoken");
 const Post = require("../models/post");
@@ -8,8 +9,38 @@ const User = require('../models/user');
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
 
+const MIME_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg"
+};
 
-router.post('/signup', (req,res,next) => {
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE_MAP[file.mimetype];
+    let error = new Error("Invalid mime type");
+    if (isValid) {
+      error = null;
+    }
+    cb(error, "backend/profileimgs");
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname
+      .toLowerCase()
+      .split(" ")
+      .join("-");
+    const ext = MIME_TYPE_MAP[file.mimetype];
+    cb(null, name + "-" + Date.now() + "." + ext);
+  }
+});
+
+
+router.post('/signup',
+  multer({ storage: storage }).single("image"),
+  (req,res,next) => {
+    const url = req.protocol + "://" + req.get("host");
+    console.log(url.toString());
 
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
@@ -18,7 +49,8 @@ router.post('/signup', (req,res,next) => {
         password: hash,
         username: req.body.username,
         department: req.body.department,
-        registrationno: req.body.registration
+        registrationno: req.body.registration,
+        imagePath: url + "/profileimgs/" + req.file.filename
       });
       user.save()
         .then(result => {

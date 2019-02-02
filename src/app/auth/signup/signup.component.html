@@ -1,5 +1,16 @@
 <mat-card>
   <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+  <form [formGroup]="nform"  *ngIf="!isLoading">
+    <div>
+      <button mat-stroked-button type="button" (click)="filepicker.click()" >Add Image</button>
+      <input type="file" #filepicker (change)="onImagePicked($event)">
+    </div>
+    <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && nform.get('image').valid">
+      <img [src]="imagePreview" [alt]="nform.value.title">
+    </div>
+  </form>
+
   <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
     <mat-form-field>
       <input

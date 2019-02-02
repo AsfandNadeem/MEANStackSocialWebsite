@@ -39,9 +39,17 @@ export class AuthService {
     return this.userId;
   }
 
-  createUser(email: string, password: string , username: string, department: string, registration: string ) {
+  createUser(email: string, image: File, password: string , username: string, department: string, registration: string ) {
     // const authData: AuthData = {email: email, password: password};
-    this.http.post('http://localhost:3000/api/user/signup', {email, password, username, department, registration})
+    const userData =  new FormData();
+    userData.append('email', email);
+    userData.append('password', password);
+    userData.append('username', username);
+    userData.append('image', image, email);
+    userData.append( 'department', department);
+    userData.append('registration', registration);
+    console.log(userData);
+    this.http.post('http://localhost:3000/api/user/signup', userData)
       .subscribe(response => {
         console.log(response);
         this.router.navigate(['/login']);
