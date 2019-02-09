@@ -5,6 +5,7 @@ import {Group} from './group.model';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {Post} from '../posts/post.model';
 
 @Injectable({providedIn: 'root'})
 export class GroupsService {
@@ -56,6 +57,22 @@ export class GroupsService {
         {groupname, description, category, username})
       .subscribe( responseData  => {
         this.router.navigate(['/messages']);
+      });
+  }
+
+  addPost(id: string, title: string, content: string , image: File) {
+    const postData =  new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image, title);
+    postData.append('username', localStorage.getItem('username'));
+    console.log(postData);
+    this.http
+      .put<{ message: string }>(
+        'http://localhost:3000/api/groups/addgroupPost/' + id,
+        postData)
+      .subscribe( responseData  => {
+        this.router.navigate(['/grouplist']);
       });
   }
 

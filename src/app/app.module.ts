@@ -31,6 +31,7 @@ import { GroupCreateComponent } from './groups/group-create/group-create.compone
 import { GroupListComponent } from './groups/group-list/group-list.component';
 import { EventCreateComponent } from './events/event-create/event-create.component';
 import { EventListComponent } from './events/event-list/event-list.component';
+import { GroupPageComponent } from './groups/group-page/group-page.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { EventListComponent } from './events/event-list/event-list.component';
     GroupCreateComponent,
     GroupListComponent,
     EventCreateComponent,
-    EventListComponent
+    EventListComponent,
+    GroupPageComponent
   ],
   imports: [
     BrowserModule,
