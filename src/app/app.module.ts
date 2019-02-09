@@ -32,6 +32,7 @@ import { GroupListComponent } from './groups/group-list/group-list.component';
 import { EventCreateComponent } from './events/event-create/event-create.component';
 import { EventListComponent } from './events/event-list/event-list.component';
 import { GroupPageComponent } from './groups/group-page/group-page.component';
+import { EventPageComponent } from './events/event-page/event-page.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { GroupPageComponent } from './groups/group-page/group-page.component';
     GroupListComponent,
     EventCreateComponent,
     EventListComponent,
-    GroupPageComponent
+    GroupPageComponent,
+    EventPageComponent
   ],
   imports: [
     BrowserModule,

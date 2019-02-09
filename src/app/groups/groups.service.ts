@@ -56,7 +56,7 @@ export class GroupsService {
         'http://localhost:3000/api/groups',
         {groupname, description, category, username})
       .subscribe( responseData  => {
-        this.router.navigate(['/messages']);
+        this.router.navigate(['/grouplist']);
       });
   }
 

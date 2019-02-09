@@ -6,6 +6,12 @@ const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
+const MIME_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg"
+};
+
 
 router.post(
   "",
@@ -59,6 +65,69 @@ router.get("", (req, res, next) => {
     });
 });
 
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE_MAP[file.mimetype];
+    let error = new Error("Invalid mime type");
+    if (isValid) {
+      error = null;
+    }
+    cb(error, "backend/images");
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname
+      .toLowerCase()
+      .split(" ")
+      .join("-");
+    const ext = MIME_TYPE_MAP[file.mimetype];
+    cb(null, name + "-" + Date.now() + "." + ext);
+  }
+});
+
+router.put("/addeventPost/:id",
+  checkAuth,
+  multer({ storage: storage }).single("image"),
+  (req, res, next) => {
+
+    const url = req.protocol + "://" + req.get("host");
+    console.log(url.toString());
+    console.log("addingeventpost-----------------------\n"+req.params.id+"\n----------------------------");
+    if(!req.params.id){
+      res.json({success: false, message:'no id provided'});
+    }
+    else{
+      Event.findById({_id: req.params.id},(err,event) => {
+        if(err){
+          res.json({success:false, message:'invalid event id'});
+        } else {
+          if(!event){
+            res.json({success: false, message:'event not found'});
+          } else {
+            const post =({
+              title: req.body.title,
+              content: req.body.content,
+              username: req.body.username,
+              createdAt : Date.now(),
+              creator: req.userData.userId,
+              imagePath: url + "/images/" + req.file.filename
+            });
+            event.eventPosts.push( post );
+            event.save((err) => {
+              if(err) {
+                res.json({ success: false, message:'something went wrong'});
+              } else {
+                console.log(post);
+                res.json({ success: true, message: 'post added'});
+              }
+            });
+          }
+        }
+      });
+    }
+
+        }
+      );
 
 
 

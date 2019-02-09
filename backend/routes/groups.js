@@ -124,26 +124,6 @@ router.put("/addgroupPost/:id",
         }
       });
     }
-
-
-          // const post = new Post({
-          //   title: req.body.title,
-          //   content: req.body.content,
-          //   username: req.body.username,
-          //   createdAt : Date.now(),
-          //   category: req.body.category,
-          //   creator: req.userData.userId,
-          //   imagePath: url + "/images/" + req.file.filename
-          // });
-          // post.save().then(createdPost => {
-          //   res.status(201).json({
-          //     message: "Post added successfully",
-          //     post: {
-          //       ...createdPost,
-          //       id: createdPost._id
-          //     }
-          //   });
-          // });
         }
       );
 

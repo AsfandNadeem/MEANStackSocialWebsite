@@ -55,7 +55,23 @@ export class EventsService {
         'http://localhost:3000/api/events',
         {eventname, description, category, eventdate, username})
       .subscribe( responseData  => {
-        this.router.navigate(['/messages']);
+        this.router.navigate(['/eventlist']);
+      });
+  }
+
+  addPost(id: string, title: string, content: string , image: File) {
+    const postData =  new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image, title);
+    postData.append('username', localStorage.getItem('username'));
+    console.log(postData);
+    this.http
+      .put<{ message: string }>(
+        'http://localhost:3000/api/events/addeventPost/' + id,
+        postData)
+      .subscribe( responseData  => {
+        this.router.navigate(['/eventlist']);
       });
   }
 
