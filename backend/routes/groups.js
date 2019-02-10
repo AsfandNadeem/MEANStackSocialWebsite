@@ -84,6 +84,32 @@ const storage = multer.diskStorage({
   }
 });
 
+
+// Post.findById(req.params.id).then(post => {
+//   if (post) {
+//     res.status(200).json(post);
+//   } else {
+//     res.status(404).json({ message: "Post not found!" });
+//   }
+// });
+
+router.get("/:id", (req, res, next) => {
+  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  // const currentPage = +req.query.page;
+console.log("getiing group");
+  const groupQuery = Group.findById(req.params.id).then(group => {
+    if (group) {
+      console.log("group found");
+      res.status(200).json({
+               posts: group.groupPosts
+                   });
+      console.log(group.groupPosts);
+    } else {
+      res.status(404).json({ message: "Group not found!" });
+    }
+  });
+});
+
 router.put("/addgroupPost/:id",
   checkAuth,
   multer({ storage: storage }).single("image"),

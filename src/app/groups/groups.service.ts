@@ -11,11 +11,45 @@ import {Post} from '../posts/post.model';
 export class GroupsService {
   username = '';
   private groups: Group[] = [];
+  private posts: Post[] = [];
   private groupsUpdated = new Subject<{groups: Group[], groupCount: number}>();
+
+  private postsUpdated = new Subject<{posts: Post[]}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
 
+  getPosts(id: string) {
+    console.log('inservicee' + id);
+    this.http.get<{posts: any}>
+    ('http://localhost:3000/api/groups/' + id)
+      .pipe(map((postData) => {
+        return { posts: postData.posts.map(post => {
+          return {
+            title: post.title,
+            content: post.content,
+            username : post.username,
+            creator: post.creator,
+            likes: post.likes,
+            commentsNo: post.commentsNo,
+            comments: post.comments,
+            dislikes: post.dislikes,
+            createdAt: post.createdAt,
+            imagePath: post.imagePath
+          };
+          })};
+      }))
+      .subscribe( transformedGroupPost => {
+        this.posts = transformedGroupPost.posts;
+        this.postsUpdated.next( {
+          posts: [...this.posts]
+        });
+      });
+  }
+
+  getPostUpdateListener() {
+    return this.postsUpdated.asObservable();
+  }
 
   getGroups(groupsPerPage: number, currentPage: number) { // httpclientmodule
     const queryParams = `?pagesize=${groupsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings

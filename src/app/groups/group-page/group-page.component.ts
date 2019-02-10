@@ -38,8 +38,13 @@ export class GroupPageComponent implements OnInit {
       if (paramMap.has('groupId')) {
         this.groupid = paramMap.get('groupId');
         console.log(this.groupid);
-      }
+        this.getPosts();
+       }
     });
+  }
+
+  getPosts() {
+    this.groupsService.getPosts(this.groupid);
   }
 
   onImagePicked(event: Event) {
