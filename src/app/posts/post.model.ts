@@ -5,5 +5,10 @@ export interface Post {
   imagePath: string;
   username: string;
   category: string;
+  likes: any;
+  dislikes: any;
+  createdAt: any;
+  comments: any;
+  commentsNo: any;
   creator: string;
 }

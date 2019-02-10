@@ -47,6 +47,7 @@ export class PostCreateComponent implements OnInit {
         this.postsService.getPost(this.postId)
           .subscribe(postData => {
             this.isLoading = false;
+            // @ts-ignore
             this.post = {
               id: postData._id,
               title: postData.title,
@@ -54,7 +55,7 @@ export class PostCreateComponent implements OnInit {
               username: postData.username,
               category: postData.category,
               creator: postData.creator,
-              imagePath: postData.imagePath
+              imagePath: postData.imagePath,
             };
             this.form.setValue({
               'title': this.post.title,

@@ -98,6 +98,11 @@ export class PostsService {
         content: content,
          category: null,
          creator: null,
+         likes: null,
+         dislikes: null,
+         comments: null,
+         commentsNo: null,
+         createdAt: null,
          username: localStorage.getItem('username'),
         imagePath: image
       };

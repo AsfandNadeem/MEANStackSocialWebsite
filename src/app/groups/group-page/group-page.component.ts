@@ -5,6 +5,7 @@ import {GroupsService} from '../groups.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {AuthService} from '../../auth/auth.service';
 import {mimeType} from '../../posts/post-create/mime-type.validator';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-group-page',
@@ -17,8 +18,13 @@ export class GroupPageComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
 
-  post: Post;
+  posts: Post[] = [];
   @Input() groupid: string;
+  userIsAuthenticated = false;
+  private postsSub: Subscription;
+  private authStatusSub: Subscription;
+  private username: string;
+  private userId: string;
 
   constructor(public groupsService: GroupsService, private authService: AuthService, public route: ActivatedRoute) { }
 
@@ -41,6 +47,25 @@ export class GroupPageComponent implements OnInit {
         this.getPosts();
        }
     });
+
+    this.isLoading = true;
+    this.userId = this.authService.getUserId();
+    this.username = this.authService.getName();
+    this.postsSub = this.groupsService.getPostUpdateListener()
+       .subscribe((postData: { posts: Post[]}) => {
+        this.isLoading = false;
+    //     this.totalGroups = groupData.groupCount;
+        this.username = this.authService.getName();
+        this.posts = postData.posts;
+        console.log(this.posts);
+      });
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatusSub = this.authService
+      .getAuthStatusListener()
+      .subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
+      });
   }
 
   getPosts() {

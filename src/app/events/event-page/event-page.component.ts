@@ -40,6 +40,7 @@ export class EventPageComponent implements OnInit {
         console.log(this.eventid);
       }
     });
+
   }
 
   onImagePicked(event: Event) {
