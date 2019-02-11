@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'eventlist', component: EventListComponent, canActivate: [AuthGuard]},
   { path: 'groupcreate', component: GroupCreateComponent, canActivate: [AuthGuard]},
   { path: 'eventcreate', component: EventCreateComponent, canActivate: [AuthGuard]},
-  { path: 'profile/:userId', component: ProfileComponent, canActivate: [AuthGuard]},
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'grouppage/:groupId', component: GroupPageComponent, canActivate: [AuthGuard]},
   {path: 'eventpage/:eventId', component: EventPageComponent, canActivate: [AuthGuard]},
 ];

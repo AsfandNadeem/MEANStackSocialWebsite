@@ -29,6 +29,7 @@ mongoose.connect("mongodb://asfand:Nj3atbLzmaV5WZHJ@comsatssocial-shard-00-00-y7
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/images", express.static(path.join("backend/images")));
+app.use("/profileimgs", express.static(path.join("backend/profileimgs")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
