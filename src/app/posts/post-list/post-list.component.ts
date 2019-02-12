@@ -70,11 +70,17 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
   }
 
-  likePost(id: string) {
+  likePost(id: string, post) {
     this.postsService.likePost(id).subscribe( () => {
-      this.postsService.getPosts(this.postsPerPage, this.currentPage);
-    });
 
+      console.log(this.posts.indexOf(post));
+      this.posts[this.posts.indexOf(post)].likes++;
+      if (this.posts[this.posts.indexOf(post)].dislikes === 0 ){
+
+              } else {
+        this.posts[this.posts.indexOf(post)].dislikes--;
+      }
+      });
   }
 
   addComment(id: string, comment: string) {
