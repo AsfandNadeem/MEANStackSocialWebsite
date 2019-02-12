@@ -23,22 +23,27 @@ mat-spinner{
   float: left;
 }
 
-/*.example-card {*/
-  /*max-width: 90%;*/
-/*}*/
+.example-card {
+  max-width: 60%;
+  margin: 4px;
+}
 
-/*.example-header-image {*/
-  /*background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');*/
-  /*background-size: cover;*/
-/*}*/
+.example-header-image {
 
+  background-size: cover;
+}
+
+mat-card-image{
+  width:20%;
+}
 
 .post-image{
+  margin: 7px;
   width: 100%;
 }
 
 .post-image img{
-  width:30%;
+  width:50%;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
 }
 mat-paginator{

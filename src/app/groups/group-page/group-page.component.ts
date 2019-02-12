@@ -50,7 +50,7 @@ export class GroupPageComponent implements OnInit {
 
     this.isLoading = true;
     this.userId = this.authService.getUserId();
-    this.username = this.authService.getName();
+    // this.username = this.authService.getName();
     this.postsSub = this.groupsService.getPostUpdateListener()
        .subscribe((postData: { posts: Post[]}) => {
         this.isLoading = false;

@@ -129,13 +129,7 @@ export class PostsService {
 
   likePost(id) {
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/posts/likePost/' + id)
-      .subscribe(function (response) {
-
-      },
-        function (error) {
-        console.log(error);
-        });
+    return this.http.put( 'http://localhost:3000/api/posts/likePost/' + id);
   }
 
   dislikePost(id) {

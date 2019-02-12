@@ -138,7 +138,7 @@ router.put("/edit",checkAuth,(req,res,next) => {
       let fetchedUser;
       User.findOneAndUpdate({_id: req.userData.userId},user,{new:true}, (err,doc) => {
         if (err){
-          res.status(401).json({message: "Not authorized to update!"});
+          res.status(401).json({message: "1Not authorized to update!"});
           console.log(err);
         } else {
           fetchedUser = doc;
@@ -152,7 +152,7 @@ router.put("/edit",checkAuth,(req,res,next) => {
               console.log(result);
 
             } else {
-              console.log("Not authorized to update!");
+              console.log("2Not authorized to update!");
             }
           });
           res.status(200).json({

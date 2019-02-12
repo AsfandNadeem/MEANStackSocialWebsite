@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   createUser(email: string, image: File, password: string , username: string, department: string, registration: string ) {
-    // const authData: AuthData = {email: email, password: password};
+    const authData: AuthData = {email: email, password: password};
     const userData =  new FormData();
     userData.append('email', email);
     userData.append('password', password);
