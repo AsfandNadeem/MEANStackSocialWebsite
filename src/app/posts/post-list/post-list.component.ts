@@ -20,6 +20,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   username: string;
   userId: string;
+  profileimg: string;
   newComment = [];
   pageSizeOptions = [1, 2, 5, 10];
   userIsAuthenticated = false;
@@ -33,6 +34,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
     this.userId = this.authService.getUserId();
     this.username = this.authService.getName();
+     console.log(localStorage.getItem('profileimg'));
+    this.profileimg = localStorage.getItem('profileimg');
     this.postsSub = this.postsService.getPostUpdateListener()
       .subscribe((postData: { posts: Post[], postCount: number}) => {
         this.isLoading = false;

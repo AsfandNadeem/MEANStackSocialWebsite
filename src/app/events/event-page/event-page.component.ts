@@ -5,6 +5,7 @@ import {EventsService} from '../events.service';
 import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {mimeType} from '../../posts/post-create/mime-type.validator';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-event-page',
@@ -17,8 +18,13 @@ export class EventPageComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
 
-  post: Post;
+  posts: Post[] = [];
+  userIsAuthenticated = false;
+  private postsSub: Subscription;
+  private authStatusSub: Subscription;
   @Input() eventid: string;
+  private username: string;
+  private userId: string;
   constructor(public eventService: EventsService,  private authService: AuthService, public route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -35,13 +41,36 @@ export class EventPageComponent implements OnInit {
       })
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('eventId')) {
-        this.eventid = paramMap.get('eventId');
-        console.log(this.eventid);
-      }
-    });
+          if (paramMap.has('eventId')) {
+            this.eventid = paramMap.get('eventId');
+            console.log(this.eventid);
+            this.getPosts();
+           }
+        });
 
-  }
+        this.isLoading = true;
+        this.userId = this.authService.getUserId();
+        // this.username = this.authService.getName();
+        this.postsSub = this.eventService.getPostUpdateListener()
+           .subscribe((postData: { posts: Post[]}) => {
+            this.isLoading = false;
+        //     this.totalGroups = eventData.eventCount;
+            this.username = this.authService.getName();
+            this.posts = postData.posts;
+            console.log(this.posts);
+          });
+        this.userIsAuthenticated = this.authService.getIsAuth();
+        this.authStatusSub = this.authService
+          .getAuthStatusListener()
+          .subscribe(isAuthenticated => {
+            this.userIsAuthenticated = isAuthenticated;
+            this.userId = this.authService.getUserId();
+          });
+      }
+
+      getPosts() {
+        this.eventService.getPosts(this.eventid);
+      }
 
   onImagePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];

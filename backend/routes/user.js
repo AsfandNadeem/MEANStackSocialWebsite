@@ -113,7 +113,8 @@ router.post("/login", (req,res,next) => {
         expiresIn: 3600,
         userId: fetchedUser._id,
         username: fetchedUser.username,
-        department: fetchedUser.department
+        department: fetchedUser.department,
+        profileimg: fetchedUser.imagePath,
       });
     })
     .catch(err => {

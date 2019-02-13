@@ -58,7 +58,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
-    this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string}>(
+    this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string, profileimg: string}>(
       'http://localhost:3000/api/user/login',
       {email, password})
       .subscribe( response => {
@@ -75,7 +75,8 @@ export class AuthService {
           const now = new Date();
           const expirationDate = new Date(now.getTime() + (expiresInDuration * 1000));
           console.log(expirationDate);
-          this.saveAuthData( token, expirationDate, this.userId, this.userN, response.department);
+          console.log(response.profileimg);
+          this.saveAuthData( token, expirationDate, this.userId, this.userN, response.department, response.profileimg);
           this.router.navigate(['/messages']);
         }
       });
@@ -117,12 +118,13 @@ export class AuthService {
       duration * 1000);
   }
 
-  private saveAuthData(token: string, expirationDate: Date, userId: string, userNam: string, department: string) {
+  private saveAuthData(token: string, expirationDate: Date, userId: string, userNam: string, department: string, profileimg: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('username', userNam);
     localStorage.setItem('department', department);
+    localStorage.setItem('profileimg', profileimg);
   }
 
   private clearAuthData() {
@@ -131,6 +133,7 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
     localStorage.removeItem('department');
+    localStorage.removeItem('profileimg');
   }
 
   private getAuthData() {

@@ -5,14 +5,49 @@ import {Event} from './event.model';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {Post} from '../posts/post.model';
 
 @Injectable({providedIn: 'root'})
 export class EventsService {
   username = '';
   private events: Event[] = [];
+  private posts: Post[] = [];
   private eventsUpdated = new Subject<{events: Event[], eventCount: number}>();
+  private postsUpdated = new Subject<{posts: Post[]}>();
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  getPosts(id: string) {
+    console.log('eventinservicee' + id);
+    this.http.get<{posts: any}>
+    ('http://localhost:3000/api/events/' + id)
+      .pipe(map((postData) => {
+        return { posts: postData.posts.map(post => {
+          return {
+            title: post.title,
+            content: post.content,
+            username : post.username,
+            creator: post.creator,
+            likes: post.likes,
+            commentsNo: post.commentsNo,
+            comments: post.comments,
+            dislikes: post.dislikes,
+            createdAt: post.createdAt,
+            imagePath: post.imagePath
+          };
+          })};
+      }))
+      .subscribe( transformedEventPost => {
+        this.posts = transformedEventPost.posts;
+        this.postsUpdated.next( {
+          posts: [...this.posts]
+        });
+      });
+  }
+
+  getPostUpdateListener() {
+    return this.postsUpdated.asObservable();
+  }
 
 
   getEvents(eventsPerPage: number, currentPage: number) { // httpclientmodule

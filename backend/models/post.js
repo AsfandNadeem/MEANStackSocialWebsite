@@ -25,6 +25,7 @@ const commentValidators = [
 ];
 
 const postSchema = mongoose.Schema({
+  profileimg: { type: String},
   title: { type: String, required: true},
   content: { type: String, required: true},
   imagePath: { type: String},

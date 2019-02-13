@@ -85,6 +85,24 @@ const storage = multer.diskStorage({
   }
 });
 
+
+router.get("/:id", (req, res, next) => {
+  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  // const currentPage = +req.query.page;
+console.log("getiing event");
+  const eventQuery = Event.findById(req.params.id).then(event => {
+    if (event) {
+      console.log("event found");
+      res.status(200).json({
+               posts: event.eventPosts
+                   });
+      console.log(event.eventPosts);
+    } else {
+      res.status(404).json({ message: "Event not found!" });
+    }
+  });
+});
+
 router.put("/addeventPost/:id",
   checkAuth,
   multer({ storage: storage }).single("image"),
