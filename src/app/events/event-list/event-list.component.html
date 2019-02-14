@@ -83,9 +83,16 @@
 
 
 
-
-    <!--<mat-action-row *ngIf="userIsAuthenticated && userId == group.groupcreator">-->
     <a mat-button color="primary" [routerLink]="['/eventpage', event.id]">Open</a>
+
+    <mat-action-row *ngIf=" userId == event.creator">
+    <button mat-button color="warn" (click)="onDelete(event.id)">DELETE</button>
+    </mat-action-row>
+    <mat-action-row *ngIf=" userId != event.creator">
+      <button mat-button color="warn" (click)="onJoin(event.id)">JOIN</button>
+    </mat-action-row>
+    <!--<mat-action-row *ngIf="userIsAuthenticated && userId == group.groupcreator">-->
+
     <!--<a mat-button color="primary" [routerLink]="['/edit', groupt.id]">EDIT</a>-->
     <!--<button mat-button color="warn" (click)="onDelete(group.id)">DELETE</button>-->
     <!--</mat-action-row>-->

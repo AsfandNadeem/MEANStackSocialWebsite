@@ -116,6 +116,16 @@ export class GroupsService {
       });
   }
 
+  joinGroup( id: string) {
+    // @ts-ignore
+    this.http
+      .put<{ message: string }>(
+        'http://localhost:3000/api/groups/adduser/' + id)
+      .subscribe(responseData  => {
+        this.router.navigate(['/grouppage/' + id]);
+      });
+  }
+
   // getPost(id: string) {
   //   return this.http.get<{
   //     _id: string,

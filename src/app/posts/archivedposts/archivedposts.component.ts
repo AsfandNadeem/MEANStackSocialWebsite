@@ -85,18 +85,20 @@ export class ArchivedpostsComponent implements OnInit {
     }
 
   }
-  onArchive(id: string) {
-    console.log(id);
-    this.postsService.archivepost(id).subscribe( () => {
-      this.postsService.getPosts(this.postsPerPage, this.currentPage);
-    });
-  }
+
 
   dislikePost(id: string) {
     this.postsService.dislikePost(id).subscribe( () => {
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
 
+  }
+
+  onDelete(postId: string) {
+    this.isLoading = true;
+    this.postsService.removearchivePost(postId).subscribe(() => {
+      this.postsService.getarchivePosts(this.postsPerPage, this.currentPage);
+    });
   }
 
 }

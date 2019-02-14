@@ -70,6 +70,10 @@ export class GroupListComponent implements OnInit, OnDestroy {
      this.groupsService.getGroups(this.groupsPerPage, this.currentPage );
    }
 
+  onJoin(id: string) {
+    this.groupsService.joinGroup(id);
+  }
+
   //  likePost(id: string) {
   //    this.postsService.likePost(id).subscribe( () => {
   //      this.postsService.getPosts(this.postsPerPage, this.currentPage);

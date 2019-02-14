@@ -11,7 +11,9 @@ const userSchema = mongoose.Schema({
   likes: {type: Array},
   dislikes: {type: Array},
   commentson: {type: Array},
-  archives: [{type: mongoose.Schema.Types.ObjectId, ref: "Post"}]
+  archives: [{type: mongoose.Schema.Types.ObjectId, ref: "Post"}],
+  eventsjoined: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}],
+  groupsjoined: [{type: mongoose.Schema.Types.ObjectId, ref: "Group"}]
 });
 
 userSchema.plugin(uniqueValidator);

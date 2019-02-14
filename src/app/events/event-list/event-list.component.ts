@@ -71,4 +71,9 @@ export class EventListComponent implements OnInit, OnDestroy {
      this.eventsService.getEvents(this.eventsPerPage, this.currentPage );
    }
 
+   onJoin(id: string) {
+     this.eventsService.joinEvent(id);
+   }
+
+
 }

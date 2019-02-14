@@ -4,7 +4,7 @@ const multer = require("multer");
 const Group = require('../models/group');
 const checkAuth = require("../middleware/check-auth");
 
-
+const User = require('../models/user');
 
 const router = express.Router();
 
@@ -21,23 +21,56 @@ router.post(
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
     console.log("____________creating group_____________\n"+req.body+"-------------------");
-    const group = new Group({
+     User.findById({ _id: req.userData.userId}, (err,user)=> {
+       if(err){
+         res.json({success: false, message:'something went wrong'});
+       }
+       if(!user){
+         res.json({success: false, message:'user not found'});
+       } else {
+         const usera = ({
+           Guserid: req.userData.userId,
+           Guser: user.username
+         });
+         const group = new Group({
       groupname: req.body.groupname,
       description: req.body.description,
       groupcreator: req.userData.userId,
-      username: req.body.username,
+      username: user.username,
       category: req.body.category,
+      groupmembers: [usera]
     });
-    group.save().then(createdGroup => {
+         group.save().then(createdGroup => {
+           user.groupsjoined.push(createdGroup._id);
+           user.save().then( user => {
+             res.status(201).json({
+               message: 'Group Created',
+               result: createdGroup,
+             });
+             console.log(group);
+           });
 
-      res.status(201).json({
-        message: 'Group Created',
-        result: createdGroup,
-      });
-      console.log(group);
-    });
-  }
-);
+         });
+       }
+     });
+   });
+//     const group = new Group({
+//       groupname: req.body.groupname,
+//       description: req.body.description,
+//       groupcreator: req.userData.userId,
+//       username: req.body.username,
+//       category: req.body.category,
+//     });
+//     group.save().then(createdGroup => {
+//
+//       res.status(201).json({
+//         message: 'Group Created',
+//         result: createdGroup,
+//       });
+//       console.log(group);
+//     });
+//   }
+// );
 
 router.get("", (req, res, next) => {
   const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
@@ -85,13 +118,46 @@ const storage = multer.diskStorage({
 });
 
 
-// Post.findById(req.params.id).then(post => {
-//   if (post) {
-//     res.status(200).json(post);
-//   } else {
-//     res.status(404).json({ message: "Post not found!" });
-//   }
-// });
+router.put("/adduser/:id",checkAuth,(req,res,next) => {
+  console.log("getiing group");
+  const groupQuery = Group.findById(req.params.id).then(group => {
+    if (group) {
+      console.log("group found");
+      User.findById({ _id: req.userData.userId}, (err,user)=> {
+        if(err){
+          res.json({success: false, message:'something went wrong'});
+        }
+        if(!user){
+          res.json({success: false, message:'user not found'});
+        } else {
+          const usera =({
+            Guserid: req.userData.userId,
+            Guser: user.username
+          });
+          group.groupmembers.push( usera);
+          user.groupsjoined.push(req.params.id);
+          group.save((err) => {
+            if(err) {
+              res.json({ success: false, message:'something went wrong'});
+            } else {
+              user.save((err) => {
+                if(err){
+                  res.json({ success: false, message:'something went wrong'});
+                } else {
+                  console.log(group);
+                  res.json({success: true, message: 'user added in group'});
+                }
+              });
+
+            }
+          });
+        }
+      });
+    } else {
+      res.json({success: false, message:'event not found'});
+    }
+  });
+});
 
 router.get("/:id", (req, res, next) => {
   // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers

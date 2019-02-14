@@ -79,8 +79,8 @@ export class AuthService {
           this.saveAuthData( token, expirationDate, this.userId, this.userN, response.department, response.profileimg);
           this.router.navigate(['/messages']);
         }
-      } ,error => {
-        this.router.navigate(['/login']);
+      } , error => {
+        this.router.navigate(['/']);
     });
 
   }

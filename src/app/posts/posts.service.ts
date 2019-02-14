@@ -153,6 +153,11 @@ export class PostsService {
     return this.http.put( 'http://localhost:3000/api/posts/archivePost/' + id);
   }
 
+  removearchivePost(postId: string) {
+    return this.http
+      .delete('http://localhost:3000/api/posts/archives/' + postId);
+  }
+
   getarchivePosts(postsPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http

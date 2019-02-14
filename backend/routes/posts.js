@@ -150,6 +150,77 @@ router.get("/archives", checkAuth, (req, res, next) => {
     });
 });
 
+router.delete("/archives/:id",checkAuth, (req,res) => {
+  console.log("deleteingarchiving----------------------\n"+req.params.id+"\n----------------------------");
+  if(!req.params.id){
+    res.json({ success: false, message: 'ID not provided'});
+  } else {
+    User.findById({ _id: req.userData.userId}, (err,user)=>{
+      if(err) {
+        console.log("no user");
+        res.json({ success: false, message: 'Invalid user id'});
+      }else {
+        if(!user) {
+          console.log("no found user");
+          res.json({success: false,message:'user not Found'});
+        } else {
+          Post.findById({ _id: req.params.id}, (err,post)=>{
+            if(err) {
+              console.log("no user");
+              res.json({ success: false, message: 'Invalid user id'});
+            } else {
+              if(!post) {
+                console.log("no found post");
+                res.json({success: false,message:'user not Found'});
+              } else {
+                const arrayIndex = post.archivedBy.indexOf(user._id);
+                post.archivedBy.splice(arrayIndex,1);
+                const arrayIndexu = user.archives.indexOf(req.params.id);
+                user.archives.splice(arrayIndexu,1);
+                // post.archivedBy.push(req.userData.userId);
+                // user.archives.push(req.params.id);
+
+                user.save((err) => {
+                  if(err) {
+                    res.json({success: false, message:'something went wrong'});
+                  } else {
+                    post.save((err)=> {
+                      if(err) {
+                        res.json({success: false, message:'something went wrong'});
+                      } else {
+                        res.json({success: true, message: 'user archived removed'});
+                        console.log(user);
+                      }
+                    });
+
+                  }
+                });
+              }
+            }
+
+
+          });
+        }
+      }
+    });
+  }
+
+
+
+});
+
+// router.delete("/archives/:id" ,checkAuth,(req,res,next) => {
+//   User.findOne({_id: req.userData.userId}, (err, user) => {
+//     if(err) {
+//       res.json({success:false, message:'Something went wrong'});
+//     } else {
+//       if(!user){
+//         res.json({success:false, message:'user not found'});
+//       }
+//     }
+//   });
+// });
+
 router.get("/:id", (req, res, next) => {
   Post.findById(req.params.id).then(post => {
     if (post) {
@@ -424,8 +495,6 @@ router.put("/archivePost/:id",checkAuth, (req,res) => {
           res.json({success: false,message:'user not Found'});
         } else {
           Post.findById({ _id: req.params.id}, (err,post)=>{
-
-
             if(err) {
               console.log("no user");
               res.json({ success: false, message: 'Invalid user id'});
@@ -434,24 +503,30 @@ router.put("/archivePost/:id",checkAuth, (req,res) => {
                 console.log("no found post");
                 res.json({success: false,message:'user not Found'});
               } else {
-                post.archivedBy.push(req.userData.userId);
-                user.archives.push(req.params.id);
+                if(post.archivedBy.includes(user._id)) {
+                  res.json({success: false,message:'already archived'});
+                } else {
+                  post.archivedBy.push(req.userData.userId);
+                  user.archives.push(req.params.id);
 
-                user.save((err) => {
-                  if(err) {
-                    res.json({success: false, message:'something went wrong'});
-                  } else {
-                    post.save((err)=> {
-                      if(err) {
-                        res.json({success: false, message:'something went wrong'});
-                      } else {
-                        res.json({success: true, message: 'user archived'});
-                        console.log(user);
-                      }
-                    });
+                  user.save((err) => {
+                    if(err) {
+                      res.json({success: false, message:'something went wrong'});
+                    } else {
+                      post.save((err)=> {
+                        if(err) {
+                          res.json({success: false, message:'something went wrong'});
+                        } else {
+                          res.json({success: true, message: 'user archived'});
+                          console.log(user);
+                        }
+                      });
 
-                  }
-                });
+                    }
+                  });
+                }
+
+
               }
             }
 

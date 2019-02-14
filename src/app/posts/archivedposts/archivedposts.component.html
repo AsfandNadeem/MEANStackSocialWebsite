@@ -119,12 +119,10 @@
 
   </mat-accordion>
 
-  <mat-card-actions *ngIf="userIsAuthenticated && userId != post.creator">
-    <button mat-button  color="warn" (click)="onArchive(post.id)">SAVE</button>
-  </mat-card-actions>
-  <mat-card-actions *ngIf="userIsAuthenticated && userId == post.creator">
-    <button mat-button  color="warn" (click)="onDelete(post.id)">DELETE</button>
-    <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>
+
+  <mat-card-actions *ngIf="userIsAuthenticated">
+    <button mat-button  color="warn" (click)="onDelete(post.id)">REMOVE</button>
+    <!--<a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>-->
 
   </mat-card-actions>
 </mat-card>

@@ -35,8 +35,8 @@ const eventSchema = mongoose.Schema({
   eventdate: {type: Date, default: Date.now()},
   membersNo: {type: Number,default:0},
   eventfollowers: [{
-    Guserid:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    Guser: {type: String}
+    Euserid:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    Euser: {type: String}
   }],
   eventPosts : [{
     title: { type: String},

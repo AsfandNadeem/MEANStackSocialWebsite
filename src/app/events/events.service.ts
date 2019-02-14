@@ -106,9 +106,19 @@ export class EventsService {
         'http://localhost:3000/api/events/addeventPost/' + id,
         postData)
       .subscribe( responseData  => {
-        this.router.navigate(['/eventlist']);
+        this.router.navigate(['/eventpage/' + id]);
       });
   }
+
+  joinEvent( id: string) {
+    // @ts-ignore
+    this.http
+      .put<{ message: string }>(
+        'http://localhost:3000/api/events/adduser/' + id)
+      .subscribe(responseData  => {
+        this.router.navigate(['/eventpage/' + id]);
+      });
+         }
 
   // getPost(id: string) {
   //   return this.http.get<{

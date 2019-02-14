@@ -91,7 +91,6 @@ export class EventPageComponent implements OnInit {
     }
     this.isLoading = true;
     this.eventService.addPost(this.eventid, this.form.value.title, this.form.value.content, this.form.value.image);
-
     this.form.reset();
   }
 

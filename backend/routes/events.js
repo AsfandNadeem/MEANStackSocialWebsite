@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 
 const Event = require('../models/event');
+const User = require('../models/user');
 const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
@@ -20,24 +21,41 @@ router.post(
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
     console.log("____________creating event_____________\n"+req.body+"-------------------");
-    const event = new Event({
-      eventname: req.body.eventname,
-      description: req.body.description,
-     eventcreator: req.userData.userId,
-      eventdate: req.body.eventdate,
-      username: req.body.username,
-      category: req.body.category,
-    });
-    event.save().then(createdEvent => {
+    console.log("event found");
+    User.findById({ _id: req.userData.userId}, (err,user)=> {
+      if(err){
+          res.json({success: false, message:'something went wrong'});
+        }
+      if(!user){
+        res.json({success: false, message:'user not found'});
+      } else {
+        const usera = ({
+          Euserid: req.userData.userId,
+          Euser: user.username
+        });
+        const event = new Event({
+          eventname: req.body.eventname,
+          description: req.body.description,
+          eventcreator: req.userData.userId,
+          eventdate: req.body.eventdate,
+          username: user.username,
+          category: req.body.category,
+          eventfollowers: [usera]
+        });
+        event.save().then(createdEvent => {
+          user.eventsjoined.push(createdEvent._id);
+          user.save().then( user => {
+            res.status(201).json({
+              message: 'Event Created',
+              result: createdEvent,
+            });
+            console.log(event);
+          });
 
-      res.status(201).json({
-        message: 'Event Created',
-        result: createdEvent,
-      });
-      console.log(event);
+        });
+      }
     });
-  }
-);
+  });
 
 router.get("", (req, res, next) => {
   const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
@@ -85,6 +103,49 @@ const storage = multer.diskStorage({
   }
 });
 
+router.put("/adduser/:id",checkAuth,(req,res,next) => {
+  console.log("getiing event");
+  const eventQuery = Event.findById(req.params.id).then(event => {
+    if (event) {
+      console.log("event found");
+      User.findById({ _id: req.userData.userId}, (err,user)=> {
+        if(err){
+          res.json({success: false, message:'something went wrong'});
+        }
+        if(!user){
+          res.json({success: false, message:'user not found'});
+        } else {
+          const usera =({
+                  Euserid: req.userData.userId,
+                  Euser: user.username
+                });
+          event.eventfollowers.push( usera);
+          user.eventsjoined.push(req.params.id);
+          event.save((err) => {
+            if(err) {
+              res.json({ success: false, message:'something went wrong'});
+            } else {
+              user.save((err) => {
+                if(err){
+                  res.json({ success: false, message:'something went wrong'});
+                } else {
+                  console.log(event);
+                  res.json({success: true, message: 'user added in event'});
+                }
+              });
+
+            }
+          });
+        }
+      });
+    } else {
+      res.json({success: false, message:'event not found'});
+    }
+  });
+});
+
+
+
 
 router.get("/:id", (req, res, next) => {
   // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
@@ -93,8 +154,9 @@ console.log("getiing event");
   const eventQuery = Event.findById(req.params.id).then(event => {
     if (event) {
       console.log("event found");
+      postes = event.eventPosts.sort({ '_id': -1 });
       res.status(200).json({
-               posts: event.eventPosts
+               posts: postes
                    });
       console.log(event.eventPosts);
     } else {
