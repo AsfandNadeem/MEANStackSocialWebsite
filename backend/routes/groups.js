@@ -153,6 +153,31 @@ router.put("/addgroupPost/:id",
         }
       );
 
+// router.delete("/delete", checkAuth, (req, res, next) => {
+//   const groupid= +req.query.groupid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+//   const postid = +req.query.postid;
+//
+//   Group.findById({_id: req.params.id},(err,group) => {
+//
+//     if(err){
+//       res.json({success:false, message:'invalid group id'});
+//     } else {
+//       if(!group){
+//         res.json({success: false, message:'group not found'});
+//       } else {
+//       group.groupPosts
+//       }
+//
+//
+// //   Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
+// //     console.log(result);
+// //     if (result.n> 0) {
+// //       res.status(200).json({message: "Deleted successful!"});
+// //     } else {
+// //       res.status(401).json({message: "Not authorized to delete!"});
+// //     }
+// //   });
+//  });
 
 
 

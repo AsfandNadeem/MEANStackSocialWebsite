@@ -80,6 +80,12 @@ export class GroupsService {
      }); // subscribe is to liosten
   }
 
+  deletePost(groupId: string, postId: string) {
+    const queryParams = `?groupid=${groupId}&postid=${postId}`;
+    return this.http
+      .delete('http://localhost:3000/api/groups/delete' + queryParams);
+  }
+
   getGroupUpdateListener() {
     return this.groupsUpdated.asObservable();
   }

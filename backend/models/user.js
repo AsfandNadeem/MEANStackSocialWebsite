@@ -7,7 +7,11 @@ const userSchema = mongoose.Schema({
   username: {type: String, required: true},
   imagePath: { type: String},
   department: {type: String, required: true},
-  registrationno: {type: String, required: true, unique: true}
+  registrationno: {type: String, required: true, unique: true},
+  likes: {type: Array},
+  dislikes: {type: Array},
+  commentson: {type: Array},
+  archives: {type: Array}
 });
 
 userSchema.plugin(uniqueValidator);

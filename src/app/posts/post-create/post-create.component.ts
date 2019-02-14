@@ -91,7 +91,8 @@ export class PostCreateComponent implements OnInit {
     }
     this.isLoading = true;
     if (this.mode === 'create') {
-      this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image, this.form.value.cname);
+      this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image,
+        this.form.value.cname, localStorage.getItem('profileimg'));
     } else {
       this.postsService.updatePost(
         this.postId,

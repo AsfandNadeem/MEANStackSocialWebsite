@@ -46,7 +46,8 @@ router.post(
       createdAt : Date.now(),
       category: req.body.category,
       creator: req.userData.userId,
-      imagePath: url + "/images/" + req.file.filename
+      imagePath: url + "/images/" + req.file.filename,
+      profileimg: req.body.profileimg
     });
     post.save().then(createdPost => {
       res.status(201).json({
@@ -185,6 +186,7 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                       } else {
                         post.likes++;
                         post.likedBy.push(user.username);
+                        user.likes.push(req.params.id.toString());
                         post.save((err) => {
                           if(err) {
                             res.json({ success: false, message:'something went wrong'});
@@ -193,6 +195,14 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                             res.json({ success: true, message: 'post liked!'});
                           }
                         });
+                        // user.save((err)=>{
+                        //   if(err){
+                        //     res.json({ success: false, message:'something went wrong'});
+                        //   } else {
+                        //     console.log(user);
+                        //     res.json({ success: true, message: 'post liked!'});
+                        //   }
+                        // });
 
                       }
 
@@ -202,6 +212,7 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
 
               }
             });
+
           }
         }
 
@@ -251,6 +262,7 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
 
                       post.dislikes++;
                       post.dislikedBy.push(user.username);
+                      user.dislikes.push(req.params.id.toString());
                       post.save((err) => {
                         if(err) {
                           res.json({ success: false, message:'something went wrong'});
@@ -258,6 +270,14 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                           res.json({ success: true, message: 'post disliked!'});
                         }
                       });
+                      // user.save((err)=>{
+                      //   if(err){
+                      //     res.json({ success: false, message:'something went wrong'});
+                      //   } else {
+                      //     console.log(user);
+                      //     res.json({ success: true, message: 'post liked!'});
+                      //   }
+                      // });
 
                     }
 
@@ -305,7 +325,8 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                     commentator:user.username,
                     commentatorid: user._id
                   });
-                  post.commentsNo++;
+                  post.commentsNo++
+
 
                   post.save((err) => {
                     if(err){
@@ -315,16 +336,57 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                       console.log(post);
                     }
                   });
+                  user.commentson.push(post._id.toString());
+                  // user.save((err)=>{
+                  //   if(err){
+                  //     res.json({ success: false, message:'something went wrong'});
+                  //   } else {
+                  //     console.log(user);
+                  //     res.json({ success: true, message: 'post liked!'});
+                  //   }
+                  // });
                 }
               }
             });
-          }
-        }
+          }        }
 
       });
     }
   }
 
 });
+
+router.put("/archivePost/:id",checkAuth, (req,res) => {
+  console.log("archiving----------------------\n"+req.params.id+"\n----------------------------");
+  if(!req.params.id){
+    res.json({ success: false, message: 'ID not provided'});
+  } else {
+    User.findById({ _id: req.userData.userId}, (err,user)=>{
+      if(err) {
+        console.log("no user");
+                res.json({ success: false, message: 'Invalid user id'});
+              }else {
+        if(!user) {
+          console.log("found user");
+          res.json({success: false,message:'user not Found'});
+        } else {
+          user.archives.push(req.params.id.toString());
+          user.save((err) => {
+            if(err) {
+              res.json({success: false, message:'something went wrong'});
+            } else {
+              res.json({success: true, message:'user archived'});
+                                  console.log(user);
+            }
+          });
+        }
+      }
+    });
+  }
+
+
+
+});
+
 
 module.exports = router;

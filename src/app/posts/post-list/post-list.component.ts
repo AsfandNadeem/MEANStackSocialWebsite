@@ -98,6 +98,12 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   }
+  onArchive(id: string) {
+    console.log(id);
+    this.postsService.archivepost(id).subscribe( () => {
+      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+    });
+  }
 
   dislikePost(id: string) {
     this.postsService.dislikePost(id).subscribe( () => {

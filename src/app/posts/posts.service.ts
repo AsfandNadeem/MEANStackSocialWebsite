@@ -24,6 +24,7 @@ export class PostsService {
      .pipe(map((postData) => {
        return { posts: postData.posts.map(post => {
          return {
+           profileimg: post.profileimg,
            title: post.title,
            content: post.content,
            id: post._id,
@@ -53,13 +54,14 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string , image: File, category: string) {
+  addPost(title: string, content: string , image: File, category: string, profileimg: string) {
     const postData =  new FormData();
     postData.append('title', title);
       postData.append('content', content);
     postData.append('image', image, title);
     postData.append( 'category', category);
     postData.append('username', localStorage.getItem('username'));
+    postData.append('profileimg', profileimg);
     console.log(postData);
     this.http
       .post<{ message: string, post: Post }>(
@@ -144,5 +146,10 @@ export class PostsService {
     };
     // @ts-ignore
     return this.http.put( 'http://localhost:3000/api/posts/comment/' + id, postdata);
+  }
+
+  archivepost(id: string) {
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/posts/archivePost/' + id);
   }
 }

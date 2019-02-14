@@ -83,6 +83,12 @@ export class GroupPageComponent implements OnInit {
     reader.readAsDataURL(file);
 
   }
+  onDelete(postId: string) {
+    this.isLoading = true;
+    this.groupsService.deletePost(this.groupid, postId).subscribe(() => {
+      this.groupsService.getPosts(this.groupid);
+    });
+  }
 
   onSavePost() {
     // console.log(this.form.value.title, this.form.value.content,  this.form.value.cname);
