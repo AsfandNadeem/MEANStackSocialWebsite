@@ -12,6 +12,7 @@ import {GroupListComponent} from './groups/group-list/group-list.component';
 import {EventListComponent} from './events/event-list/event-list.component';
 import {GroupPageComponent} from './groups/group-page/group-page.component';
 import {EventPageComponent} from './events/event-page/event-page.component';
+import {ArchivedpostsComponent} from './posts/archivedposts/archivedposts.component';
 
 const routes: Routes = [
   { path: '' , component: LoginComponent},
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'groupcreate', component: GroupCreateComponent, canActivate: [AuthGuard]},
   { path: 'eventcreate', component: EventCreateComponent, canActivate: [AuthGuard]},
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+  { path: 'archives', component: ArchivedpostsComponent, canActivate: [AuthGuard]},
   {path: 'grouppage/:groupId', component: GroupPageComponent, canActivate: [AuthGuard]},
   {path: 'eventpage/:eventId', component: EventPageComponent, canActivate: [AuthGuard]},
 ];

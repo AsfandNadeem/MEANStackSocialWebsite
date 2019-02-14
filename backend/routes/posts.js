@@ -123,6 +123,33 @@ router.get("", (req, res, next) => {
     });
 });
 
+router.get("/archives", checkAuth, (req, res, next) => {
+  const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  const currentPage = +req.query.page;
+
+  const postQuery = Post.find({ archivedBy: req.userData.userId }).sort({'id':-1});
+
+  let fetchedPosts;
+  if (pageSize && currentPage) {
+    postQuery
+      .skip(pageSize * (currentPage - 1))
+      .limit(pageSize);
+  }
+
+  postQuery
+    .then(documents => {
+      fetchedPosts = documents;
+      return Post.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        posts: fetchedPosts,
+        maxPosts: count
+      });
+    });
+});
+
 router.get("/:id", (req, res, next) => {
   Post.findById(req.params.id).then(post => {
     if (post) {
@@ -176,11 +203,21 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                         post.dislikedBy.splice(arrayIndex,1);
                         post.likes++;
                         post.likedBy.push(user.username);
+                        user.likes.push(req.params.id.toString());
                         post.save((err) => {
                           if(err) {
                             res.json({ success: false, message:'something went wrong'});
                           } else {
-                            res.json({ success: true, message: 'post liked!'});
+                            user.save((err)=>{
+                              if(err){
+                                console.log("error");
+                                res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log(user);
+
+                                res.json({ success: true, message: 'post liked!'});
+                              }
+                            });
                           }
                         });
                       } else {
@@ -192,17 +229,20 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                             res.json({ success: false, message:'something went wrong'});
                           } else {
                             console.log(post);
-                            res.json({ success: true, message: 'post liked!'});
+                            user.save((err)=>{
+                              if(err){
+                                console.log("error");
+                                res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log(user);
+
+                                res.json({ success: true, message: 'post liked!'});
+                              }
+                            });
+
                           }
                         });
-                        // user.save((err)=>{
-                        //   if(err){
-                        //     res.json({ success: false, message:'something went wrong'});
-                        //   } else {
-                        //     console.log(user);
-                        //     res.json({ success: true, message: 'post liked!'});
-                        //   }
-                        // });
+
 
                       }
 
@@ -251,11 +291,20 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                       post.likedBy.splice(arrayIndex,1);
                       post.dislikes++;
                       post.dislikedBy.push(user.username);
+                      user.dislikes.push(req.params.id.toString());
                       post.save((err) => {
                         if(err) {
                           res.json({ success: false, message:'something went wrong'});
                         } else {
-                          res.json({ success: true, message: 'post disliked!'});
+                          user.save((err)=>{
+                            if(err){
+                              console.log("error");
+                              res.json({ success: false, message:'something went wrong'});
+                            } else {
+                              console.log(user);
+                              res.json({ success: true, message: 'post liked!'});
+                            }
+                          });
                         }
                       });
                     } else {
@@ -267,17 +316,18 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                         if(err) {
                           res.json({ success: false, message:'something went wrong'});
                         } else {
-                          res.json({ success: true, message: 'post disliked!'});
+                          user.save((err)=>{
+                            if(err){
+                              console.log("error");
+                              res.json({ success: false, message:'something went wrong'});
+                            } else {
+                              console.log(user);
+                              res.json({ success: true, message: 'post liked!'});
+                            }
+                          });
                         }
                       });
-                      // user.save((err)=>{
-                      //   if(err){
-                      //     res.json({ success: false, message:'something went wrong'});
-                      //   } else {
-                      //     console.log(user);
-                      //     res.json({ success: true, message: 'post liked!'});
-                      //   }
-                      // });
+
 
                     }
 
@@ -325,26 +375,29 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                     commentator:user.username,
                     commentatorid: user._id
                   });
-                  post.commentsNo++
+                  post.commentsNo++;
+                  user.commentson.push(post._id.toString());
 
 
                   post.save((err) => {
                     if(err){
                       res.json({success: false, message:'something went wrong'});
                     }else{
-                      res.json({success: true, message:'Comment added'});
+
                       console.log(post);
+
+                      user.save((err)=>{
+                        if(err){
+                          console.log("error");
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          console.log(user);
+                          res.json({ success: true, message: 'conmment added!'});
+                        }
+                      });
                     }
                   });
-                  user.commentson.push(post._id.toString());
-                  // user.save((err)=>{
-                  //   if(err){
-                  //     res.json({ success: false, message:'something went wrong'});
-                  //   } else {
-                  //     console.log(user);
-                  //     res.json({ success: true, message: 'post liked!'});
-                  //   }
-                  // });
+
                 }
               }
             });
@@ -367,17 +420,42 @@ router.put("/archivePost/:id",checkAuth, (req,res) => {
                 res.json({ success: false, message: 'Invalid user id'});
               }else {
         if(!user) {
-          console.log("found user");
+          console.log("no found user");
           res.json({success: false,message:'user not Found'});
         } else {
-          user.archives.push(req.params.id.toString());
-          user.save((err) => {
+          Post.findById({ _id: req.params.id}, (err,post)=>{
+
+
             if(err) {
-              res.json({success: false, message:'something went wrong'});
+              console.log("no user");
+              res.json({ success: false, message: 'Invalid user id'});
             } else {
-              res.json({success: true, message:'user archived'});
-                                  console.log(user);
+              if(!post) {
+                console.log("no found post");
+                res.json({success: false,message:'user not Found'});
+              } else {
+                post.archivedBy.push(req.userData.userId);
+                user.archives.push(req.params.id);
+
+                user.save((err) => {
+                  if(err) {
+                    res.json({success: false, message:'something went wrong'});
+                  } else {
+                    post.save((err)=> {
+                      if(err) {
+                        res.json({success: false, message:'something went wrong'});
+                      } else {
+                        res.json({success: true, message: 'user archived'});
+                        console.log(user);
+                      }
+                    });
+
+                  }
+                });
+              }
             }
+
+
           });
         }
       }

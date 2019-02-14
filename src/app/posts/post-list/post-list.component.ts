@@ -32,15 +32,16 @@ export class PostListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
-    this.userId = this.authService.getUserId();
-    this.username = this.authService.getName();
+     this.userId = this.authService.getUserId();
+    // this.username = this.authService.getName();
      console.log(localStorage.getItem('profileimg'));
     this.profileimg = localStorage.getItem('profileimg');
+    this.username =  localStorage.getItem('username');
     this.postsSub = this.postsService.getPostUpdateListener()
       .subscribe((postData: { posts: Post[], postCount: number}) => {
         this.isLoading = false;
         this.totalPosts = postData.postCount;
-        this.username = this.authService.getName();
+        // this.username = this.authService.getName();
         this.posts = postData.posts;
         console.log(this.posts);
       });

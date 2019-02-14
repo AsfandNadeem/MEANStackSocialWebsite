@@ -8,7 +8,7 @@
          [src]="profileimg" >
       </li>
       <li>
-    <mat-card-title>Hello Asfand</mat-card-title>
+    <mat-card-title>Hello {{username}}</mat-card-title>
     <mat-card-subtitle>Having a Good Day</mat-card-subtitle>
       </li>
     </ul>
@@ -119,7 +119,7 @@
 
   </mat-accordion>
 
-<mat-card-actions *ngIf="userIsAuthenticated && userId != post.creator">
+<mat-card-actions *ngIf="userId != post.creator">
   <button mat-button  color="warn" (click)="onArchive(post.id)">SAVE</button>
 </mat-card-actions>
   <mat-card-actions *ngIf="userIsAuthenticated && userId == post.creator">

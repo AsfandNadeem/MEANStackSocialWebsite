@@ -37,6 +37,7 @@ const postSchema = mongoose.Schema({
   likedBy: {type: Array},
   dislikes: {type: Number, default: 0},
   dislikedBy: {type: Array},
+  archivedBy: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
   commentsNo: {type: Number,default:0},
   comments: [{
     comment:{type: String, validate: commentValidators},

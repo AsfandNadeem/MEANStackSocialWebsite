@@ -152,4 +152,40 @@ export class PostsService {
     // @ts-ignore
     return this.http.put( 'http://localhost:3000/api/posts/archivePost/' + id);
   }
+
+  getarchivePosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
+    this.http
+      .get<{message: string, posts: any,  username: string, maxPosts: number}>(
+        'http://localhost:3000/api/posts/archives' + queryParams
+      )
+      .pipe(map((postData) => {
+        return { posts: postData.posts.map(post => {
+            return {
+              profileimg: post.profileimg,
+              title: post.title,
+              content: post.content,
+              id: post._id,
+              username : post.username,
+              creator: post.creator,
+              likes: post.likes,
+              category: post.category,
+              commentsNo: post.commentsNo,
+              comments: post.comments,
+              dislikes: post.dislikes,
+              createdAt: post.createdAt,
+              imagePath: post.imagePath
+            };
+          }), maxPosts: postData.maxPosts  };
+      }))// change rterieving data
+      .subscribe(transformedPostData => {
+        this.posts = transformedPostData.posts;
+        this.postsUpdated.next({
+            posts: [...this.posts],
+            postCount: transformedPostData.maxPosts
+          }
+        );
+      }); // subscribe is to liosten
+
+  }
 }
