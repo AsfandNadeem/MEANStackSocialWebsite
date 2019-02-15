@@ -102,4 +102,29 @@ export class GroupPageComponent implements OnInit {
     this.form.reset();
   }
 
+  likePost(postid: string) {
+    console.log(postid + ' ' + this.groupid);
+    this.groupsService.likePost(postid, this.groupid).subscribe( () => {
+      this.groupsService.getPosts(this.groupid);
+    });
+  }
+
+  dislikePost(postid: string) {
+    console.log(postid + ' ' + this.groupid);
+    this.groupsService.dislikePost(postid, this.groupid).subscribe( () => {
+      this.groupsService.getPosts(this.groupid);
+    });
+  }
+
+  addComment(postid: string, comment: string) {
+    console.log(postid + '\n' + comment + '\n' + this.groupid );
+    if (comment === '') {
+      return;
+    } else {
+      this.groupsService.addComment(postid, this.groupid, comment).subscribe(() => {
+        this.groupsService.getPosts(this.groupid);
+      });
+    }
+}
+
 }

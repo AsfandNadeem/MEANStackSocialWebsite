@@ -95,4 +95,29 @@ export class EventPageComponent implements OnInit {
     this.form.reset();
   }
 
+  likePost(postid: string) {
+    console.log(postid + ' ' + this.eventid);
+    this.eventService.likePost(postid, this.eventid).subscribe( () => {
+      this.eventService.getPosts(this.eventid);
+    });
+  }
+
+  dislikePost(postid: string) {
+    console.log(postid + ' ' + this.eventid);
+    this.eventService.dislikePost(postid, this.eventid).subscribe( () => {
+      this.eventService.getPosts(this.eventid);
+    });
+  }
+
+  addComment(postid: string, comment: string) {
+    console.log(postid + '\n' + comment + '\n' + this.eventid );
+    if (comment === '') {
+      return;
+    } else {
+      this.eventService.addComment(postid, this.eventid, comment).subscribe(() => {
+        this.eventService.getPosts(this.eventid);
+      });
+    }
+  }
+
 }

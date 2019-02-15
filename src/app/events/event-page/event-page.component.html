@@ -67,7 +67,7 @@
     <strong>Date: </strong>{{ post.createdAt | date:'MMM dd, yyyy' }}
   </mat-card-content>
 
-  <button mat-icon-button  (click)="likePost(post.id,post)" >
+  <button mat-icon-button  (click)="likePost(post.id)" >
     <mat-icon >thumb_up</mat-icon>
     {{ post.likes }}
   </button>
@@ -144,14 +144,12 @@
 
   </mat-accordion>
 
-  <mat-card-actions *ngIf="userId != post.creator">
-    <button mat-button  color="warn" (click)="onArchive(post.id)">SAVE</button>
-  </mat-card-actions>
-  <mat-card-actions *ngIf="userIsAuthenticated && userId == post.creator">
-    <button mat-button  color="warn" (click)="onDelete(post.id)">DELETE</button>
-    <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>
 
-  </mat-card-actions>
+  <!--<mat-card-actions *ngIf="userIsAuthenticated && userId == post.creator">-->
+    <!--<button mat-button  color="warn" (click)="onDelete(post.id)">DELETE</button>-->
+    <!--<a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>-->
+
+  <!--</mat-card-actions>-->
 </mat-card>
 
 

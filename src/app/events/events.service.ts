@@ -29,6 +29,7 @@ export class EventsService {
             username : post.username,
             creator: post.creator,
             likes: post.likes,
+            id: post._id,
             commentsNo: post.commentsNo,
             comments: post.comments,
             profileimg: post.profileimg,
@@ -174,22 +175,31 @@ export class EventsService {
   // //   return this.http.post('http://localhost:3000/api/posts/comment/' + id, postData);
   // // }
   //
-  // likePost(id) {
-  //   // @ts-ignore
-  //   return this.http.put( 'http://localhost:3000/api/posts/likePost/' + id);
-  // }
+  likePost(postid: string, eventid: string) {
+    const eventData =  {
+      eventid: eventid,
+      postid: postid
+    };
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/events/likeeventpost', eventData);
+  }
   //
-  // dislikePost(id) {
-  //   // @ts-ignore
-  //   return this.http.put( 'http://localhost:3000/api/posts/dislikePost/' + id);
-  // }
-  //
-  // addComment(id, comment) {
-  //   const postdata = {
-  //     id: id,
-  //     comment: comment
-  //   };
-  //   // @ts-ignore
-  //   return this.http.put( 'http://localhost:3000/api/posts/comment/' + id, postdata);
-  // }
+  dislikePost(postid: string, eventid: string) {
+    const eventData =  {
+      eventid: eventid,
+      postid: postid
+    };
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/events/dislikeeventpost', eventData);
+  }
+
+   addComment(postid: string, eventid: string, comment: string) {
+    const eventData =  {
+      eventid: eventid,
+      postid: postid,
+      comment: comment
+    };
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/events/commenteventpost', eventData);
+  }
 }

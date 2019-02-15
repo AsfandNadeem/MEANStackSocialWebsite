@@ -176,6 +176,251 @@ console.log("getiing group");
   });
 });
 
+router.put("/likegrouppost",checkAuth,(req,res,next) => {
+
+  console.log("liking group post"+ req.body.groupid);
+  Group.findById({_id: req.body.groupid}, (err, group) => {
+    if(err){
+      console.log("error1");
+      res.json({success:false, message:'invalid group id'});
+    } else {
+      if(!group) {
+        console.log("error");
+        res.json({success: false, message:'group not found'});
+      } else {
+        group.groupPosts.forEach( function( element) {
+          console.log("inloop");
+          if (element._id == req.body.postid) {
+            console.log(element);
+            User.findById({_id: req.userData.userId}, (err, user) => {
+              if(err) {
+                res.json({success:false, message:'Something went wrong'});
+              } else {
+                if(!user) {
+                  res.json({ success: false, message:'Could not find user'});
+                } else {
+                  if(user.username === element.username){
+                    res.json({ success: false, message: 'Cannot like own post'});
+                  } else {
+                    if(element.likedBy.includes(user.username)){
+                      res.json({success: false, message: 'You already liked this post'});
+                    } else {
+                      if(element.dislikedBy.includes(user.username)){
+                        element.dislikes--;
+                        const arrayIndex = element.dislikedBy.indexOf(user.username);
+                        element.dislikedBy.splice(arrayIndex,1);
+                        element.likes++;
+                        element.likedBy.push(user.username);
+                        user.likes.push(req.body.postid.toString());
+                        group.save((err) => {
+                          if(err){
+                            res.json({ success: false, message:'something went wrong'});
+                          } else {
+                            user.save((err)=>{
+                              if(err){
+                                console.log("error");
+                                res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log(user);
+
+                                res.json({ success: true, message: 'post liked!'});
+                              }
+                            });
+                          }
+                        });
+                      } else {
+                        element.likes++;
+                        element.likedBy.push(user.username);
+                        user.likes.push(req.body.postid.toString());
+                        group.save((err) => {
+                          if(err){
+                            res.json({ success: false, message:'something went wrong'});
+                          } else {
+                            user.save((err)=>{
+                              if(err){
+                                console.log("error");
+                                res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log(user);
+                                console.log(element);
+
+                                res.json({ success: true, message: 'post liked!'});
+                              }
+                            });
+                          }
+                        });
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          }
+        });
+
+
+
+      }
+    }
+  });
+
+});
+
+router.put("/dislikegrouppost",checkAuth,(req,res,next) => {
+
+  console.log("disliking group post"+ req.body.groupid);
+  Group.findById({_id: req.body.groupid}, (err, group) => {
+    if(err){
+      console.log("error1");
+      res.json({success:false, message:'invalid group id'});
+    } else {
+      if(!group) {
+        console.log("error");
+        res.json({success: false, message:'group not found'});
+      } else {
+        group.groupPosts.forEach( function( element) {
+          console.log("inloop");
+          if (element._id == req.body.postid) {
+            console.log(element);
+            User.findById({_id: req.userData.userId}, (err, user) => {
+              if(err) {
+                res.json({success:false, message:'Something went wrong'});
+              } else {
+                if(!user) {
+                  res.json({ success: false, message:'Could not find user'});
+                } else {
+                  if(user.username === element.username){
+                    res.json({ success: false, message: 'Cannot dislike own post'});
+                  } else {
+                    if(element.dislikedBy.includes(user.username)){
+                      res.json({success: false, message: 'You already disliked this post'});
+                    } else {
+                      if(element.likedBy.includes(user.username)){
+                        element.likes--;
+                        const arrayIndex = element.likedBy.indexOf(user.username);
+                        element.likedBy.splice(arrayIndex,1);
+                        element.dislikes++;
+                        element.dislikedBy.push(user.username);
+                        user.dislikes.push(req.body.postid.toString());
+                        group.save((err) => {
+                          if(err){
+                            res.json({ success: false, message:'something went wrong'});
+                          } else {
+                            user.save((err)=>{
+                              if(err){
+                                console.log("error");
+                                res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log(user);
+
+                                res.json({ success: true, message: 'post disliked!'});
+                              }
+                            });
+                          }
+                        });
+                      } else {
+                        element.dislikes++;
+                        element.dislikedBy.push(user.username);
+                        user.dislikes.push(req.body.postid.toString());
+                        group.save((err) => {
+                          if(err){
+                            res.json({ success: false, message:'something went wrong'});
+                          } else {
+                            user.save((err)=>{
+                              if(err){
+                                console.log("error");
+                                res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log(user);
+                                console.log(element);
+
+                                res.json({ success: true, message: 'post disliked!'});
+                              }
+                            });
+                          }
+                        });
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          }
+        });
+
+
+
+      }
+    }
+  });
+
+});
+
+router.put("/commentgrouppost",checkAuth,(req,res,next) => {
+
+  console.log("commenting group post"+ req.body.groupid);
+  Group.findById({_id: req.body.groupid}, (err, group) => {
+    if(err){
+      console.log("error1");
+      res.json({success:false, message:'invalid group id'});
+    } else {
+      if(!group) {
+        console.log("error");
+        res.json({success: false, message:'group not found'});
+      } else {
+        group.groupPosts.forEach( function( element) {
+          console.log("inloop");
+          if (element._id == req.body.postid) {
+
+            console.log(element);
+            User.findById({_id: req.userData.userId}, (err, user) => {
+              if(err) {
+                res.json({success:false, message:'Something went wrong'});
+              } else {
+                if(!user) {
+                  res.json({ success: false, message:'Could not find user'});
+                } else {
+                  element.comments.push({
+                    comment:req.body.comment,
+                    commentator:user.username,
+                    commentatorid: user._id
+                  });
+                  element.commentsNo++;
+                  user.commentson.push(req.body.postid.toString());
+
+                      group.save((err) => {
+                                if(err) {
+                                  res.json({success: false, message: 'something went wrong'});
+                                } else {
+                                  user.save((err)=>{
+                                    if(err){
+                                                    console.log("error");
+                                                    res.json({ success: false, message:'something went wrong'});
+                                                  } else {
+                                                    console.log(user);
+                                                    console.log(element);
+
+                                                    res.json({ success: true, message: 'post commented!'});
+                                                  }
+                                  });
+                                }
+                      });
+
+                }
+              }
+            });
+          }
+        });
+
+
+
+      }
+    }
+  });
+
+});
+
+
 router.put("/addgroupPost/:id",
   checkAuth,
   multer({ storage: storage }).single("image"),

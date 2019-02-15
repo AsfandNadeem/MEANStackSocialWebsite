@@ -35,6 +35,7 @@ export class GroupsService {
             comments: post.comments,
             dislikes: post.dislikes,
             profileimg: post.profileimg,
+            id: post._id,
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
@@ -180,22 +181,31 @@ export class GroupsService {
   // //   return this.http.post('http://localhost:3000/api/posts/comment/' + id, postData);
   // // }
   //
-  // likePost(id) {
-  //   // @ts-ignore
-  //   return this.http.put( 'http://localhost:3000/api/posts/likePost/' + id);
-  // }
+  likePost(postid: string, groupid: string) {
+    const groupData =  {
+      groupid: groupid,
+      postid: postid
+    };
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/groups/likegrouppost', groupData);
+  }
   //
-  // dislikePost(id) {
-  //   // @ts-ignore
-  //   return this.http.put( 'http://localhost:3000/api/posts/dislikePost/' + id);
-  // }
-  //
-  // addComment(id, comment) {
-  //   const postdata = {
-  //     id: id,
-  //     comment: comment
-  //   };
-  //   // @ts-ignore
-  //   return this.http.put( 'http://localhost:3000/api/posts/comment/' + id, postdata);
-  // }
+  dislikePost(postid: string, groupid: string) {
+    const groupData =  {
+      groupid: groupid,
+      postid: postid
+    };
+    // @ts-ignore
+    return this.http.put( 'http://localhost:3000/api/groups/dislikegrouppost', groupData);
+  }
+
+  addComment(postid: string, groupid: string, comment: string) {
+    const groupData =  {
+      groupid: groupid,
+      postid: postid,
+      comment: comment
+    };
+    // @ts-ignore
+     return this.http.put( 'http://localhost:3000/api/groups/commentgrouppost', groupData);
+  }
 }
