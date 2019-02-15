@@ -201,6 +201,7 @@ router.put("/addgroupPost/:id",
               username: req.body.username,
               createdAt : Date.now(),
               creator: req.userData.userId,
+              profileimg: req.body.profileimg,
               imagePath: url + "/images/" + req.file.filename
             });
             group.groupPosts.push( post );

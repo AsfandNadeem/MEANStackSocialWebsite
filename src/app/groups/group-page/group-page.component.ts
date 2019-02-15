@@ -96,7 +96,8 @@ export class GroupPageComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-      this.groupsService.addPost(this.groupid, this.form.value.title, this.form.value.content, this.form.value.image);
+      this.groupsService.addPost(this.groupid, this.form.value.title, this.form.value.content, this.form.value.image
+        , localStorage.getItem('profileimg'));
 
     this.form.reset();
   }

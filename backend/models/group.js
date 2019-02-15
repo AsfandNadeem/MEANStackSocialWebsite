@@ -38,6 +38,7 @@ const groupSchema = mongoose.Schema({
     Guser: {type: String}
   }],
   groupPosts : [{
+    profileimg: { type: String},
     title: { type: String},
     content: { type: String},
     imagePath: { type: String},

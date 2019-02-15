@@ -67,3 +67,23 @@ mat-expansion-panel-header{
 ::ng-deep .mat-input-wrapper{
   width:400px !important;
 }
+.example-header-image {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-size: cover;
+}
+.example-header-image-post {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-size: cover;
+}
+.example-card {
+  max-width: 60%;
+  margin: 4px;
+}

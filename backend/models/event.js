@@ -39,6 +39,7 @@ const eventSchema = mongoose.Schema({
     Euser: {type: String}
   }],
   eventPosts : [{
+    profileimg: { type: String},
     title: { type: String},
     content: { type: String},
     imagePath: { type: String},

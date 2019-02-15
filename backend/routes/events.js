@@ -185,6 +185,7 @@ router.put("/addeventPost/:id",
             res.json({success: false, message:'event not found'});
           } else {
             const post =({
+              profileimg: req.body.profileimg,
               title: req.body.title,
               content: req.body.content,
               username: req.body.username,

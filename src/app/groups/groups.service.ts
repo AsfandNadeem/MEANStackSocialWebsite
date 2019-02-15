@@ -34,6 +34,7 @@ export class GroupsService {
             commentsNo: post.commentsNo,
             comments: post.comments,
             dislikes: post.dislikes,
+            profileimg: post.profileimg,
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
@@ -100,12 +101,13 @@ export class GroupsService {
       });
   }
 
-  addPost(id: string, title: string, content: string , image: File) {
+  addPost(id: string, title: string, content: string , image: File, profileimg: string) {
     const postData =  new FormData();
     postData.append('title', title);
     postData.append('content', content);
     postData.append('image', image, title);
     postData.append('username', localStorage.getItem('username'));
+    postData.append('profileimg', profileimg);
     console.log(postData);
     this.http
       .put<{ message: string }>(

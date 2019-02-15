@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="example-card">
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <form [formGroup]="form" (submit)="onSavePost()" *ngIf="!isLoading">
     <mat-form-field>
@@ -40,105 +40,121 @@
 
 
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-accordion multi="true" *ngIf="posts.length > 0 && !isLoading">
-  <mat-expansion-panel *ngFor="let post of posts">
-    <mat-expansion-panel-header>
-      <strong>{{post.username}}</strong>
-      <br/>
-      <br/>
-      {{ post.title }}
-    </mat-expansion-panel-header>
-    <div class="post-image">
-      <img [src]="post.imagePath" [alt]="post.title">
-    </div>
-    <strong>Date: </strong>{{ post.createdAt | date:'MMM dd, yyyy' }}
+<mat-card class="example-card" *ngFor="let post of posts">
+  <mat-card-header>
+    <ul style="list-style: none; display: flex;">
+      <li>
+        <img class="example-header-image-post"
+             [src]="post.profileimg" style="margin-right: 30px;" >
+      </li>
+      <li>
+        <mat-card-title><strong>{{post.username}}</strong></mat-card-title>
+
+
+        <mat-card-subtitle>
+          {{ post.title }}
+
+        </mat-card-subtitle>
+      </li>
+    </ul>
+  </mat-card-header>
+  <!--<div class="post-image">-->
+  <img mat-card-image [src]="post.imagePath" [alt]="post.title">
+  <!--</div>-->
+
+  <mat-card-content>
     <p>{{ post.content }}</p>
-    <!--<button mat-icon-button  (click)="likePost(post.id)" >-->
-    <!--<mat-icon >thumb_up</mat-icon>-->
-    <!--{{ post.likes }}-->
-    <!--</button>-->
+    <strong>Date: </strong>{{ post.createdAt | date:'MMM dd, yyyy' }}
+  </mat-card-content>
+
+  <button mat-icon-button  (click)="likePost(post.id,post)" >
+    <mat-icon >thumb_up</mat-icon>
+    {{ post.likes }}
+  </button>
 
 
 
 
-    <!--<button mat-icon-button (click)="dislikePost(post.id)" >-->
-    <!--<mat-icon >thumb_down</mat-icon>-->
-    <!--{{ post.dislikes }}-->
-    <!--</button>-->
+  <button mat-icon-button (click)="dislikePost(post.id)" >
+    <mat-icon >thumb_down</mat-icon>
+    {{ post.dislikes }}
+  </button>
 
-    <br/>
-    <br/>
-    <mat-accordion class="example-headers-align" >
-      <mat-expansion-panel  [class.mat-expansion-panel]="false" hideToggle>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
+  <br/>
 
-            <mat-icon >comment</mat-icon>
-            {{ post.commentsNo }}
+  <mat-accordion class="example-headers-align" >
+    <mat-expansion-panel  [class.mat-expansion-panel]="false" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
 
-          </mat-panel-title>
+          <mat-icon >comment</mat-icon>
+          {{ post.commentsNo }}
 
-        </mat-expansion-panel-header>
+        </mat-panel-title>
 
-        <ul class="commentspanel">
-          <li >
-            <mat-form-field style="width:700px; !important; " >
-              <input  matInput
-                      placeholder="Add a Comment"
-                      ngModel
-                      #commentInput="ngModel"
-                      required
-                      comment>
-              <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
+      </mat-expansion-panel-header>
 
-            </mat-form-field>
-          </li>
-          <li>
-            <!--<button (click)="addComment(post.id,commentInput.value)">-->
-            <!--<mat-icon >send</mat-icon>-->
-            <!--</button>-->
-          </li>
-        </ul>
+      <ul class="commentspanel">
+        <li >
+          <mat-form-field style="width:700px; !important; " >
+            <input  matInput
+                    placeholder="Add a Comment"
+                    ngModel
+                    #commentInput="ngModel"
+                    required
+                    comment>
+            <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
 
-        <mat-card class="example-card" *ngFor="let comment of post.comments">
-          <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title style="font-weight: bold">{{comment.commentator}}</mat-card-title>
+          </mat-form-field>
+        </li>
+        <li>
+          <button (click)="addComment(post.id,commentInput.value)">
+            <mat-icon >send</mat-icon>
+          </button>
+        </li>
+      </ul>
 
-          </mat-card-header>
+      <mat-card class="example-card" *ngFor="let comment of post.comments">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title style="font-weight: bold">{{comment.commentator}}</mat-card-title>
 
-          <mat-card-content>
-            <p>
-              {{comment.comment}}
-            </p>
-          </mat-card-content>
+        </mat-card-header>
 
-        </mat-card>
+        <mat-card-content>
+          <p>
+            {{comment.comment}}
+          </p>
+        </mat-card-content>
 
-
-
-
-
-
-
-      </mat-expansion-panel>
+      </mat-card>
 
 
 
 
 
 
-    </mat-accordion>
+
+    </mat-expansion-panel>
 
 
 
 
-    <!--<mat-action-row *ngIf="userIsAuthenticated && userId == post.creator">-->
-    <!--<a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>-->
-    <!--<button mat-button color="warn" (click)="onDelete(post.id)">DELETE</button>-->
-    <!--</mat-action-row>-->
-  </mat-expansion-panel>
-</mat-accordion>
+
+
+  </mat-accordion>
+
+  <mat-card-actions *ngIf="userId != post.creator">
+    <button mat-button  color="warn" (click)="onArchive(post.id)">SAVE</button>
+  </mat-card-actions>
+  <mat-card-actions *ngIf="userIsAuthenticated && userId == post.creator">
+    <button mat-button  color="warn" (click)="onDelete(post.id)">DELETE</button>
+    <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>
+
+  </mat-card-actions>
+</mat-card>
+
+
 <!--<mat-paginator [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"-->
 <!--*ngIf="posts.length > 0"></mat-paginator>-->
 
