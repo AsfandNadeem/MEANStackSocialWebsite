@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Group } from '../group.model';
 import { GroupsService } from '../groups.service';
 import {AuthService} from '../../auth/auth.service';
+import {EventsService} from '../../events/events.service';
+import {Events} from '../../events/event.model';
 
 @Component({
   selector: 'app-group-list',
@@ -14,6 +16,8 @@ import {AuthService} from '../../auth/auth.service';
 export class GroupListComponent implements OnInit, OnDestroy {
 
   groups: Group[] = [];
+  // groupsjoined: Group[] = [];
+  events: Events[] = [];
    isLoading = false;
    totalGroups = 0;
    groupsPerPage = 5;
@@ -25,10 +29,29 @@ export class GroupListComponent implements OnInit, OnDestroy {
    userIsAuthenticated = false;
    private groupsSub: Subscription;
    private authStatusSub: Subscription;
+  // private groupsjoinedSub: Subscription;
+  private eventsSub: Subscription;
 
-   constructor(public groupsService: GroupsService, private authService: AuthService) {}
+   constructor(public groupsService: GroupsService, private authService: AuthService,
+               private eventsService: EventsService) {}
 
    ngOnInit() {
+     // console.log(this.groupsService.getJoinedGroups());
+     // this.groupsjoinedSub = this.groupsService.getGroupUpdateListener()
+     //   .subscribe((groupData: { groups: Group[]}) => {
+     //     this.isLoading = false;
+     //     this.groupsjoined = groupData.groups;
+     //     console.log(this.groupsjoined);
+     //   });
+
+     console.log(this.eventsService.getJoinedEvents());
+     this.eventsSub = this.eventsService.getEventUpdateListener()
+       .subscribe((eventData: { events: Events[]}) => {
+         this.isLoading = false;
+         this.events = eventData.events;
+         console.log(this.events);
+       });
+
      this.isLoading = true;
      this.groupsService.getGroups(this.groupsPerPage, this.currentPage );
      this.userId = this.authService.getUserId();
@@ -74,30 +97,6 @@ export class GroupListComponent implements OnInit, OnDestroy {
     this.groupsService.joinGroup(id);
   }
 
-  //  likePost(id: string) {
-  //    this.postsService.likePost(id).subscribe( () => {
-  //      this.postsService.getPosts(this.postsPerPage, this.currentPage);
-  //    });
-  //
-  //  }
-  //
-  //  addComment(id: string, comment: string) {
-  //    console.log(id + '\n' + comment);
-  //    if (comment === '') {
-  //      return;
-  //    } else {
-  //    this.postsService.addComment(id, comment).subscribe(() => {
-  //      this.postsService.getPosts(this.postsPerPage, this.currentPage);
-  //    });
-  //  }
-  //
-  //  }
-  //
-  //  dislikePost(id: string) {
-  //    this.postsService.dislikePost(id).subscribe( () => {
-  //      this.postsService.getPosts(this.postsPerPage, this.currentPage);
-  //    });
-  //
-  //  }
+
 
 }

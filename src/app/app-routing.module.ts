@@ -13,8 +13,14 @@ import {EventListComponent} from './events/event-list/event-list.component';
 import {GroupPageComponent} from './groups/group-page/group-page.component';
 import {EventPageComponent} from './events/event-page/event-page.component';
 import {ArchivedpostsComponent} from './posts/archivedposts/archivedposts.component';
+import {AdminLoginComponent} from './admin/admin-login/admin-login.component';
+import {AdminPageComponent} from './admin/admin-page/admin-page.component';
+import {AdminUsersComponent} from './admin/admin-users/admin-users.component';
 
 const routes: Routes = [
+  {path: 'admin', component: AdminLoginComponent},
+  {path: 'adminpage', component: AdminPageComponent},
+  {path: 'adminusers', component: AdminUsersComponent},
   { path: '' , component: LoginComponent},
   { path: 'messages' , component: PostListComponent, canActivate: [AuthGuard] },
   {path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },

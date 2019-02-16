@@ -2,9 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PageEvent} from '@angular/material';
 import { Subscription } from 'rxjs';
 
-import { Event } from '../event.model';
+import { Events } from '../event.model';
 import { EventsService } from '../events.service';
 import {AuthService} from '../../auth/auth.service';
+import {GroupsService} from '../../groups/groups.service';
+import {Group} from '../../groups/group.model';
 
 
 @Component({
@@ -14,7 +16,8 @@ import {AuthService} from '../../auth/auth.service';
 })
 export class EventListComponent implements OnInit, OnDestroy {
 
-  events: Event[] = [];
+  events: Events[] = [];
+  groupsjoined: Group[] = [];
    isLoading = false;
    totalEvents = 0;
    eventsPerPage = 5;
@@ -25,17 +28,28 @@ export class EventListComponent implements OnInit, OnDestroy {
    pageSizeOptions = [1, 2, 5, 10];
    userIsAuthenticated = false;
    private eventsSub: Subscription;
+  private groupsSub: Subscription;
    private authStatusSub: Subscription;
 
-   constructor(public eventsService: EventsService, private authService: AuthService) {}
+   constructor(public eventsService: EventsService, private authService: AuthService,
+               private groupsService: GroupsService) {}
 
    ngOnInit() {
+     console.log(this.groupsService.getJoinedGroups());
+     this.groupsSub = this.groupsService.getGroupUpdateListener()
+       .subscribe((groupData: { groups: Group[]}) => {
+         this.isLoading = false;
+         this.groupsjoined = groupData.groups;
+         console.log(this.groupsjoined);
+       });
+
+
      this.isLoading = true;
      this.eventsService.getEvents(this.eventsPerPage, this.currentPage );
      this.userId = this.authService.getUserId();
      this.username = this.authService.getName();
      this.eventsSub = this.eventsService.getEventUpdateListener()
-       .subscribe((eventData: { events: Event[], eventCount: number}) => {
+       .subscribe((eventData: { events: Events[], eventCount: number}) => {
          this.isLoading = false;
          this.totalEvents = eventData.eventCount;
          this.username = this.authService.getName();

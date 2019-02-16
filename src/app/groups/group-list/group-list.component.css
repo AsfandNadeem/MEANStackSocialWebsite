@@ -1,7 +1,22 @@
-:host {
-  display: block;
-  margin-top: 1rem;
+.example-container {
+  width: 100%;
 }
+mat-drawer {
+  /*background-color: lightblue;*/
+  /*border: 1px solid #555;*/
+  width: 20%;
+}
+
+mat-drawer-content{
+  /*background-color: beige;*/
+  width:80%;
+  height: 850px;
+}
+
+/*:host {*/
+  /*display: block;*/
+  /*margin-top: 1rem;*/
+/*}*/
 
 .info-text {
   text-align: center;
@@ -11,29 +26,7 @@ mat-spinner{
   margin:auto;
 }
 
-/*.commentspanel {*/
-  /*list-style-type: none;*/
-  /*margin: 0;*/
-  /*padding: 0;*/
-  /*overflow: hidden;*/
 
-/*}*/
-
-/*.commentspanel li {*/
-  /*float: left;*/
-/*}*/
-
-
-
-
-/*.post-image{*/
-  /*width: 100%;*/
-/*}*/
-
-/*.post-image img{*/
-  /*width:30%;*/
-  /*box-shadow: 1px 1px 5px rgba(0,0,0,0.5);*/
-/*}*/
 mat-paginator{
   margin-top:1rem;
 }

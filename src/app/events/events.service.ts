@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import {Event} from './event.model';
+import {Events} from './event.model';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
@@ -10,9 +10,9 @@ import {Post} from '../posts/post.model';
 @Injectable({providedIn: 'root'})
 export class EventsService {
   username = '';
-  private events: Event[] = [];
+  private events: Events[] = [];
   private posts: Post[] = [];
-  private eventsUpdated = new Subject<{events: Event[], eventCount: number}>();
+  private eventsUpdated = new Subject<{events: Events[], eventCount: number}>();
   private postsUpdated = new Subject<{posts: Post[]}>();
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -82,6 +82,33 @@ export class EventsService {
       }); // subscribe is to liosten
   }
 
+  getJoinedEvents() { // httpclientmodule
+    this.http
+      .get<{message: string, events: any,  maxEvents: number}>(
+        'http://localhost:3000/api/events/joinedevents')
+      .pipe(map((eventData) => {
+        return { events: eventData.events.map(event => {
+            return {
+              eventname: event.eventname,
+              // description: group.description,
+              id: event._id,
+              // username : group.username,
+              // creator: group.groupcreator,
+              // category: group.category,
+              // // imagePath: post.imagePath
+            };
+          }), maxEvents: eventData.maxEvents };
+      }))// change rterieving data
+      .subscribe(transformedEventData => {
+        this.events = transformedEventData.events;
+        this.eventsUpdated.next({
+            events: [...this.events],
+            eventCount: transformedEventData.maxEvents
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
   getEventUpdateListener() {
     return this.eventsUpdated.asObservable();
   }
@@ -96,13 +123,13 @@ export class EventsService {
       });
   }
 
-  addPost(id: string, title: string, content: string , image: File, profileimg: string) {
+  addPost(id: string, title: string, content: string , image: File) {
     const postData =  new FormData();
     postData.append('title', title);
     postData.append('content', content);
     postData.append('image', image, title);
-    postData.append('username', localStorage.getItem('username'));
-    postData.append('profileimg', profileimg);
+    // postData.append('username', localStorage.getItem('username'));
+    // postData.append('profileimg', profileimg);
     console.log(postData);
     this.http
       .put<{ message: string }>(
@@ -123,58 +150,6 @@ export class EventsService {
       });
          }
 
-  // getPost(id: string) {
-  //   return this.http.get<{
-  //     _id: string,
-  //     title: string,
-  //     content: string,
-  //     username: string,
-  //     category: string,
-  //     creator: string,
-  //     imagePath: string
-  //   }>('http://localhost:3000/api/posts/' + id) ;
-  // }
-  //
-  // updatePost(id: string , title: string, content: string, image: File | string) {
-  //   let postData: Post |FormData ;
-  //   if (typeof(image) === 'object') {
-  //      postData = new FormData();
-  //      postData.append('id', id);
-  //     postData.append('title', title);
-  //     postData.append('content', content);
-  //     postData.append('username', localStorage.getItem('username'));
-  //     postData.append('image', image, title);
-  //   } else {
-  //      postData = {
-  //       id: id,
-  //       title: title,
-  //       content: content,
-  //        category: null,
-  //        creator: null,
-  //        username: localStorage.getItem('username'),
-  //       imagePath: image
-  //     };
-  //
-  //   }
-  //   this.http.put('http://localhost:3000/api/posts/' + id, postData)
-  //     .subscribe(response => {
-  //       this.router.navigate(['/messages']);
-  //     });
-  // }
-  //
-  // deletePost(postId: string) {
-  //   return this.http
-  //     .delete('http://localhost:3000/api/posts/' + postId);
-  // }
-  //
-  // // postComment(id, comment) {
-  // //   const postData = {
-  // //     id: id,
-  // //     comment: comment
-  // //   };
-  // //   return this.http.post('http://localhost:3000/api/posts/comment/' + id, postData);
-  // // }
-  //
   likePost(postid: string, eventid: string) {
     const eventData =  {
       eventid: eventid,

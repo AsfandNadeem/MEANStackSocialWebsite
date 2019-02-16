@@ -10,7 +10,7 @@ import {
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatPaginatorModule,
-  MatSelectModule, MatIconModule, MatDividerModule, MatListModule, MatNativeDateModule
+  MatSelectModule, MatIconModule, MatDividerModule, MatListModule, MatNativeDateModule, MatSidenavModule, MatTableModule
 } from '@angular/material';
 import { MatDatepickerModule} from '@angular/material/datepicker';
 
@@ -34,6 +34,9 @@ import { EventListComponent } from './events/event-list/event-list.component';
 import { GroupPageComponent } from './groups/group-page/group-page.component';
 import { EventPageComponent } from './events/event-page/event-page.component';
 import { ArchivedpostsComponent } from './posts/archivedposts/archivedposts.component';
+import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
+import { AdminPageComponent } from './admin/admin-page/admin-page.component';
+import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 
 
 @NgModule({
@@ -51,7 +54,10 @@ import { ArchivedpostsComponent } from './posts/archivedposts/archivedposts.comp
     EventListComponent,
     GroupPageComponent,
     EventPageComponent,
-    ArchivedpostsComponent
+    ArchivedpostsComponent,
+    AdminLoginComponent,
+    AdminPageComponent,
+    AdminUsersComponent
   ],
   imports: [
     BrowserModule,
@@ -70,11 +76,13 @@ import { ArchivedpostsComponent } from './posts/archivedposts/archivedposts.comp
     MatProgressSpinnerModule,
     MatSelectModule,
     MatMenuModule,
+    MatSidenavModule,
     MatNativeDateModule,
     ScrollDispatchModule,
     MatDividerModule,
     MatListModule,
     MatIconModule,
+    MatTableModule,
     HttpClientModule
   ],
   providers: [

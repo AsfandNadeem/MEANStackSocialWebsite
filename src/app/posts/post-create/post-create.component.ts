@@ -5,6 +5,11 @@ import { PostsService } from '../posts.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Post} from '../post.model';
 import {mimeType} from './mime-type.validator';
+import {Subscription} from 'rxjs';
+import {GroupsService} from '../../groups/groups.service';
+import {EventsService} from '../../events/events.service';
+import {Group} from '../../groups/group.model';
+import {Events} from '../../events/event.model';
 
 
 @Component({
@@ -16,15 +21,35 @@ export class PostCreateComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
+  groups: Group[] = [];
+  events: Events[] = [];
+  private groupsSub: Subscription;
+  private eventsSub: Subscription;
 
   private mode = 'create';
   private postId: string;
   post: Post;
   categories = ['General', localStorage.getItem('department')];
 
-  constructor(public postsService: PostsService, public route: ActivatedRoute) {}
+  constructor(public postsService: PostsService, public route: ActivatedRoute,
+              private groupsService: GroupsService, private eventsService: EventsService) {}
 
   ngOnInit() {
+    console.log(this.groupsService.getJoinedGroups());
+    this.groupsSub = this.groupsService.getGroupUpdateListener()
+      .subscribe((groupData: { groups: Group[]}) => {
+        this.isLoading = false;
+        this.groups = groupData.groups;
+        console.log(this.groups);
+      });
+
+    console.log(this.eventsService.getJoinedEvents());
+    this.eventsSub = this.eventsService.getEventUpdateListener()
+      .subscribe((eventData: { events: Events[]}) => {
+        this.isLoading = false;
+        this.events = eventData.events;
+        console.log(this.events);
+      });
     this.form = new FormGroup({
       title : new FormControl(null, {
         validators : [Validators.required, Validators.minLength(3)]
@@ -92,7 +117,7 @@ export class PostCreateComponent implements OnInit {
     this.isLoading = true;
     if (this.mode === 'create') {
       this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image,
-        this.form.value.cname, localStorage.getItem('profileimg'));
+        this.form.value.cname);
     } else {
       this.postsService.updatePost(
         this.postId,

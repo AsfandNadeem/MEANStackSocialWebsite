@@ -14,7 +14,7 @@ const MIME_TYPE_MAP = {
 };
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+ destination: (req, file, cb) => {
     const isValid = MIME_TYPE_MAP[file.mimetype];
     let error = new Error("Invalid mime type");
     if (isValid) {
@@ -22,6 +22,7 @@ const storage = multer.diskStorage({
     }
     cb(error, "backend/images");
   },
+
   filename: (req, file, cb) => {
     const name = file.originalname
       .toLowerCase()
@@ -39,25 +40,63 @@ router.post(
   (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
-    const post = new Post({
-      title: req.body.title,
-      content: req.body.content,
-      username: req.body.username,
-      createdAt : Date.now(),
-      category: req.body.category,
-      creator: req.userData.userId,
-      imagePath: url + "/images/" + req.file.filename,
-      profileimg: req.body.profileimg
-    });
-    post.save().then(createdPost => {
-      res.status(201).json({
-        message: "Post added successfully",
-        post: {
-          ...createdPost,
-          id: createdPost._id
+    User.findById({ _id: req.userData.userId}, (err, user) => {
+      if(err){
+        console.log("no user");
+        res.json({ success: false, message: 'soemthing went worng'});
+      } else {
+        if(!user){
+          console.log("no found user");
+          res.json({success: false,message:'user not Found'});
+        } else {
+          if(req.file) {
+            const post = new Post({
+              title: req.body.title,
+              content: req.body.content,
+              username: user.username,
+              createdAt: Date.now(),
+              category: req.body.category,
+              creator: req.userData.userId,
+              imagePath: url + "/images/" + req.file.filename,
+              profileimg: user.imagePath
+            });
+
+
+            post.save().then(createdPost => {
+              res.status(201).json({
+                message: "Post added successfully",
+                post: {
+                  ...createdPost,
+                  id: createdPost._id
+                }
+              });
+            });
+          }
+          else {
+            const post = new Post({
+              title: req.body.title,
+              content: req.body.content,
+              username: user.username,
+              createdAt: Date.now(),
+              category: req.body.category,
+              creator: req.userData.userId,
+              profileimg: user.imagePath
+            });
+
+            post.save().then(createdPost => {
+              res.status(201).json({
+                message: "Post added successfully",
+                post: {
+                  ...createdPost,
+                  id: createdPost._id
+                }
+              });
+            });
+          }
         }
-      });
+      }
     });
+
   }
 );
 
@@ -75,25 +114,37 @@ router.put(
       imagePath = url + "/images/" + req.file.filename;
     }
 
-
-    const post =({
-      _id: req.body.id,
-      title: req.body.title,
-      content: req.body.content,
-      username: req.body.username,
-      creator: req.userData.userId,
-      createdAt : Date.now(),
-      imagePath: imagePath
-    });
-    console.log(post);
-    Post.updateOne({ _id: req.params.id, creator: req.userData.userId}, post).then(result => {
-      if (result.nModified > 0) {
-        console.log(result);
-        res.status(200).json({message: "Update successful!"});
+    User.findById({ _id: req.userData.userId}, (err, user) => {
+      if(err){
+        res.json({ success: false, message: 'soemthing wrong'});
       } else {
-        res.status(401).json({message: "Not authorized to update!"});
+        if(!user){
+          console.log("no found user");
+          res.json({success: false,message:'user not Found'});
+        }
+        else {
+          const post =({
+            _id: req.body.id,
+            title: req.body.title,
+            content: req.body.content,
+            username: user.username,
+            creator: req.userData.userId,
+            createdAt : Date.now(),
+            imagePath: imagePath
+          });
+          console.log(post);
+          Post.updateOne({ _id: req.params.id, creator: req.userData.userId}, post).then(result => {
+            if (result.nModified > 0) {
+              console.log(result);
+              res.status(200).json({message: "Update successful!"});
+            } else {
+              res.status(401).json({message: "Not authorized to update!"});
+            }
+          });
+        }
       }
     });
+
   }
 );
 

@@ -38,6 +38,7 @@ router.post(
       groupcreator: req.userData.userId,
       username: user.username,
       category: req.body.category,
+           membersNo: 1,
       groupmembers: [usera]
     });
          group.save().then(createdGroup => {
@@ -54,23 +55,7 @@ router.post(
        }
      });
    });
-//     const group = new Group({
-//       groupname: req.body.groupname,
-//       description: req.body.description,
-//       groupcreator: req.userData.userId,
-//       username: req.body.username,
-//       category: req.body.category,
-//     });
-//     group.save().then(createdGroup => {
-//
-//       res.status(201).json({
-//         message: 'Group Created',
-//         result: createdGroup,
-//       });
-//       console.log(group);
-//     });
-//   }
-// );
+
 
 router.get("", (req, res, next) => {
   const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
@@ -95,6 +80,33 @@ router.get("", (req, res, next) => {
         groups: fetchedGroup,
         maxGroups: count
       });
+    });
+});
+
+router.get("/joinedgroups", checkAuth, (req, res, next) => {
+  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  // const currentPage = +req.query.page;
+let joinedgroups = [];
+let count = 0;
+  const groupQuery = Group.find().sort({ '_id': -1 });
+  groupQuery
+    .then(groups => {
+      groups.forEach( function( onegroup) {
+        console.log(onegroup);
+        onegroup.groupmembers.forEach( function( onemember){
+          console.log(onemember.Guserid);
+          if(onemember.Guserid == req.userData.userId) {
+            joinedgroups.push(onegroup);
+            count++;
+          }
+           });
+      });
+      console.log(joinedgroups);
+      res.status(200).json({
+        message: "Groups fetched successfully!",
+        groups: joinedgroups,
+        maxGroups: count
+       });
     });
 });
 
@@ -135,6 +147,7 @@ router.put("/adduser/:id",checkAuth,(req,res,next) => {
             Guser: user.username
           });
           group.groupmembers.push( usera);
+          group.membersNo++;
           user.groupsjoined.push(req.params.id);
           group.save((err) => {
             if(err) {
@@ -433,34 +446,68 @@ router.put("/addgroupPost/:id",
       res.json({success: false, message:'no id provided'});
     }
     else{
-      Group.findById({_id: req.params.id},(err,group) => {
+      User.findById({ _id: req.userData.userId}, (err, user) => {
         if(err){
-          res.json({success:false, message:'invalid group id'});
+          console.log("no user");
+          res.json({ success: false, message: 'soemthing went worng'});
         } else {
-          if(!group){
-            res.json({success: false, message:'group not found'});
-          } else {
-            const post =({
-              title: req.body.title,
-              content: req.body.content,
-              username: req.body.username,
-              createdAt : Date.now(),
-              creator: req.userData.userId,
-              profileimg: req.body.profileimg,
-              imagePath: url + "/images/" + req.file.filename
-            });
-            group.groupPosts.push( post );
-            group.save((err) => {
-              if(err) {
-                res.json({ success: false, message:'something went wrong'});
+          if(!user){
+            console.log("no found user");
+            res.json({success: false,message:'user not Found'});
+          }
+          else {
+            Group.findById({_id: req.params.id},(err,group) => {
+              if(err){
+                res.json({success:false, message:'invalid group id'});
               } else {
-                console.log(post);
-                res.json({ success: true, message: 'post added'});
+                if(!group){
+                  res.json({success: false, message:'group not found'});
+                } else {
+                  if(req.file){
+                    const post =({
+                      title: req.body.title,
+                      content: req.body.content,
+                      username: user.username,
+                      createdAt : Date.now(),
+                      creator: req.userData.userId,
+                      profileimg: user.imagePath,
+                      imagePath: url + "/images/" + req.file.filename
+                    });
+                    group.groupPosts.push( post );
+                    group.save((err) => {
+                      if(err) {
+                        res.json({ success: false, message:'something went wrong'});
+                      } else {
+                        console.log(post);
+                        res.json({ success: true, message: 'post added'});
+                      }
+                    });
+                  } else {
+                    const post =({
+                      title: req.body.title,
+                      content: req.body.content,
+                      username: user.username,
+                      createdAt : Date.now(),
+                      creator: req.userData.userId,
+                      profileimg: user.imagePath
+                    });
+                    group.groupPosts.push( post );
+                    group.save((err) => {
+                      if(err) {
+                        res.json({ success: false, message:'something went wrong'});
+                      } else {
+                        console.log(post);
+                        res.json({ success: true, message: 'post added'});
+                      }
+                    });
+                  }
+                }
               }
             });
           }
         }
       });
+
     }
         }
       );

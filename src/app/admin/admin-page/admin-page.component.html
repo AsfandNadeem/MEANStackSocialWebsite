@@ -1,0 +1,27 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <mat-list>
+      <ul>
+        <li *ngIf="isadminauthenticated">
+          <a mat-button routerLink="/postsAdmin" routerLinkActive="mat-accent">Posts</a>
+        </li>
+      <li *ngIf="isadminauthenticated">
+        <a mat-button routerLink="/adminusers">Users</a>
+      </li>
+      <li *ngIf="isadminauthenticated">
+        <a mat-button routerLink="/groupadmin" routerLinkActive="mat-accent">Groups</a>
+      </li>
+      <li *ngIf="isadminauthenticated">
+        <a mat-button routerLink="/eventsadmin" routerLinkActive="mat-accent">Events</a>
+      </li>
+     <li>
+       <button mat-stroked-button color="warn">Logout</button>
+     </li>
+      </ul>
+
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet *ngIf="isadminauthenticated" ></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

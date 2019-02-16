@@ -1,3 +1,19 @@
+.example-container {
+  width: 100%;
+}
+mat-drawer {
+  /*background-color: lightblue;*/
+  /*border: 1px solid #555;*/
+  width: 20%;
+}
+
+mat-drawer-content{
+  /*background-color: beige;*/
+  width:80%;
+  height: 850px;
+}
+
+
 mat-form-field,
 textarea {
   width: 100%;

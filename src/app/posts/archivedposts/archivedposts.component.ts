@@ -4,6 +4,10 @@ import {Subscription} from 'rxjs';
 import {PostsService} from '../posts.service';
 import {AuthService} from '../../auth/auth.service';
 import {PageEvent} from '@angular/material';
+import {GroupsService} from '../../groups/groups.service';
+import {EventsService} from '../../events/events.service';
+import {Group} from '../../groups/group.model';
+import {Events} from '../../events/event.model';
 
 @Component({
   selector: 'app-archivedposts',
@@ -13,6 +17,8 @@ import {PageEvent} from '@angular/material';
 export class ArchivedpostsComponent implements OnInit {
 
   posts: Post[] = [];
+  groups: Group[] = [];
+  events: Events[] = [];
   isLoading = false;
   totalPosts = 0;
   postsPerPage = 5;
@@ -24,11 +30,29 @@ export class ArchivedpostsComponent implements OnInit {
   pageSizeOptions = [1, 2, 5, 10];
   userIsAuthenticated = false;
   private postsSub: Subscription;
+  private groupsSub: Subscription;
+  private eventsSub: Subscription;
   private authStatusSub: Subscription;
 
-  constructor(public postsService: PostsService, private authService: AuthService) { }
+  constructor(public postsService: PostsService, private authService: AuthService,
+              private groupsService: GroupsService, private eventsService: EventsService) { }
 
   ngOnInit() {
+    console.log(this.groupsService.getJoinedGroups());
+    this.groupsSub = this.groupsService.getGroupUpdateListener()
+      .subscribe((groupData: { groups: Group[]}) => {
+        this.isLoading = false;
+        this.groups = groupData.groups;
+        console.log(this.groups);
+      });
+
+    console.log(this.eventsService.getJoinedEvents());
+    this.eventsSub = this.eventsService.getEventUpdateListener()
+      .subscribe((eventData: { events: Events[]}) => {
+        this.isLoading = false;
+        this.events = eventData.events;
+        console.log(this.events);
+      });
     this.isLoading = true;
     this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
     this.userId = this.authService.getUserId();

@@ -6,6 +6,9 @@ import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {mimeType} from '../../posts/post-create/mime-type.validator';
 import {Subscription} from 'rxjs';
+import {Group} from '../../groups/group.model';
+import {Events} from '../event.model';
+import {GroupsService} from '../../groups/groups.service';
 
 @Component({
   selector: 'app-event-page',
@@ -19,15 +22,36 @@ export class EventPageComponent implements OnInit {
   imagePreview: string;
 
   posts: Post[] = [];
+  groups: Group[] = [];
+  events: Events[] = [];
   userIsAuthenticated = false;
   private postsSub: Subscription;
   private authStatusSub: Subscription;
   @Input() eventid: string;
   private username: string;
+  private groupsSub: Subscription;
+  private eventsSub: Subscription;
   private userId: string;
-  constructor(public eventService: EventsService,  private authService: AuthService, public route: ActivatedRoute) { }
+  constructor(public eventService: EventsService, public groupsService: GroupsService,
+              private authService: AuthService, public route: ActivatedRoute) { }
 
   ngOnInit() {
+
+    console.log(this.groupsService.getJoinedGroups());
+    this.groupsSub = this.groupsService.getGroupUpdateListener()
+      .subscribe((groupData: { groups: Group[]}) => {
+        this.isLoading = false;
+        this.groups = groupData.groups;
+        console.log(this.groups);
+      });
+
+    console.log(this.eventService.getJoinedEvents());
+    this.eventsSub = this.eventService.getEventUpdateListener()
+      .subscribe((eventData: { events: Events[]}) => {
+        this.isLoading = false;
+        this.events = eventData.events;
+        console.log(this.events);
+      });
 
     this.form = new FormGroup({
       title : new FormControl(null, {
@@ -90,8 +114,7 @@ export class EventPageComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-    this.eventService.addPost(this.eventid, this.form.value.title, this.form.value.content, this.form.value.image
-    , localStorage.getItem('profileimg'));
+    this.eventService.addPost(this.eventid, this.form.value.title, this.form.value.content, this.form.value.image);
     this.form.reset();
   }
 

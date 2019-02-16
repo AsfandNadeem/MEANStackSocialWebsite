@@ -1,0 +1,27 @@
+.example-container {
+  width: 100%;
+  height: 1080px;
+
+}
+ mat-drawer {
+   background-color: lightblue;
+   border: 1px solid #555;
+   width: 20%;
+ }
+
+ mat-drawer-content{
+   background-color: beige;
+   width:80%;
+ }
+
+ul{
+  list-style:none ;
+  padding: 0;
+  margin:0;
+}
+a{
+  text-decoration: none;
+  color: white;
+
+}
+

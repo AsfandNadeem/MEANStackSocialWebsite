@@ -54,14 +54,14 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string , image: File, category: string, profileimg: string) {
+  addPost(title: string, content: string , image: File, category: string) {
     const postData =  new FormData();
     postData.append('title', title);
       postData.append('content', content);
     postData.append('image', image, title);
     postData.append( 'category', category);
-    postData.append('username', localStorage.getItem('username'));
-    postData.append('profileimg', profileimg);
+    // postData.append('username', localStorage.getItem('username'));
+    // postData.append('profileimg', profileimg);
     console.log(postData);
     this.http
       .post<{ message: string, post: Post }>(

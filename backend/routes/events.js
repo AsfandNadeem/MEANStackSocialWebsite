@@ -40,6 +40,7 @@ router.post(
           eventdate: req.body.eventdate,
           username: user.username,
           category: req.body.category,
+          membersNo:1,
           eventfollowers: [usera]
         });
         event.save().then(createdEvent => {
@@ -56,6 +57,33 @@ router.post(
       }
     });
   });
+
+router.get("/joinedevents", checkAuth, (req, res, next) => {
+  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  // const currentPage = +req.query.page;
+  let joinedevents = [];
+  let count = 0;
+  const eventQuery = Event.find().sort({ '_id': -1 });
+  eventQuery
+    .then(events => {
+      events.forEach( function( oneevent) {
+        console.log(oneevent);
+        oneevent.eventfollowers.forEach( function( onemember){
+          console.log(onemember.Euserid);
+          if(onemember.Euserid == req.userData.userId) {
+            joinedevents.push(oneevent);
+            count++;
+          }
+        });
+      });
+      console.log(joinedevents);
+      res.status(200).json({
+        message: "Events fetched successfully!",
+        events: joinedevents,
+        maxEvents: count
+      });
+    });
+});
 
 router.get("", (req, res, next) => {
   const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
@@ -120,6 +148,7 @@ router.put("/adduser/:id",checkAuth,(req,res,next) => {
                   Euser: user.username
                 });
           event.eventfollowers.push( usera);
+          event.membersNo++;
           user.eventsjoined.push(req.params.id);
           event.save((err) => {
             if(err) {
@@ -424,34 +453,68 @@ router.put("/addeventPost/:id",
       res.json({success: false, message:'no id provided'});
     }
     else{
-      Event.findById({_id: req.params.id},(err,event) => {
-        if(err){
-          res.json({success:false, message:'invalid event id'});
+      User.findById({ _id: req.userData.userId}, (err, user) => {
+        if (err) {
+          console.log("no user");
+          res.json({success: false, message: 'soemthing went worng'});
         } else {
-          if(!event){
-            res.json({success: false, message:'event not found'});
+          if(!user){
+            console.log("no found user");
+            res.json({success: false,message:'user not Found'});
           } else {
-            const post =({
-              profileimg: req.body.profileimg,
-              title: req.body.title,
-              content: req.body.content,
-              username: req.body.username,
-              createdAt : Date.now(),
-              creator: req.userData.userId,
-              imagePath: url + "/images/" + req.file.filename
-            });
-            event.eventPosts.push( post );
-            event.save((err) => {
-              if(err) {
-                res.json({ success: false, message:'something went wrong'});
+            Event.findById({_id: req.params.id},(err,event) => {
+              if (err) {
+                res.json({success: false, message: 'invalid event id'});
               } else {
-                console.log(post);
-                res.json({ success: true, message: 'post added'});
+                if(!event){
+                  res.json({success: false, message:'event not found'});
+                } else {
+                  if(req.file){
+                    const post =({
+                      profileimg: user.imagePath,
+                      title: req.body.title,
+                      content: req.body.content,
+                      username: user.username,
+                      createdAt : Date.now(),
+                      creator: req.userData.userId,
+                      imagePath: url + "/images/" + req.file.filename
+                    });
+                    event.eventPosts.push( post );
+                    event.save((err) => {
+                      if(err) {
+                        res.json({ success: false, message:'something went wrong'});
+                      } else {
+                        console.log(post);
+                        res.json({ success: true, message: 'post added'});
+                      }
+                    });
+                  } else {
+                    const post =({
+                      profileimg: user.imagePath,
+                      title: req.body.title,
+                      content: req.body.content,
+                      username: user.username,
+                      createdAt : Date.now(),
+                      creator: req.userData.userId,
+                    });
+                    event.eventPosts.push( post );
+                    event.save((err) => {
+                      if(err) {
+                        res.json({ success: false, message:'something went wrong'});
+                      } else {
+                        console.log(post);
+                        res.json({ success: true, message: 'post added'});
+                      }
+                    });
+                  }
+                }
               }
             });
           }
         }
       });
+
+
     }
 
         }

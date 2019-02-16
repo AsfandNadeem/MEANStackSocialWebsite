@@ -6,6 +6,9 @@ import {ActivatedRoute, ParamMap} from '@angular/router';
 import {AuthService} from '../../auth/auth.service';
 import {mimeType} from '../../posts/post-create/mime-type.validator';
 import {Subscription} from 'rxjs';
+import {Group} from '../group.model';
+import {Events} from '../../events/event.model';
+import {EventsService} from '../../events/events.service';
 
 @Component({
   selector: 'app-group-page',
@@ -19,16 +22,36 @@ export class GroupPageComponent implements OnInit {
   imagePreview: string;
 
   posts: Post[] = [];
+  groups: Group[] = [];
+  events: Events[] = [];
   @Input() groupid: string;
   userIsAuthenticated = false;
   private postsSub: Subscription;
   private authStatusSub: Subscription;
+  private groupsSub: Subscription;
+  private eventsSub: Subscription;
   private username: string;
   private userId: string;
 
-  constructor(public groupsService: GroupsService, private authService: AuthService, public route: ActivatedRoute) { }
+  constructor(public groupsService: GroupsService, private eventsService: EventsService,
+              private authService: AuthService, public route: ActivatedRoute) { }
 
   ngOnInit() {
+    console.log(this.groupsService.getJoinedGroups());
+    this.groupsSub = this.groupsService.getGroupUpdateListener()
+      .subscribe((groupData: { groups: Group[]}) => {
+        this.isLoading = false;
+        this.groups = groupData.groups;
+        console.log(this.groups);
+      });
+
+    console.log(this.eventsService.getJoinedEvents());
+    this.eventsSub = this.eventsService.getEventUpdateListener()
+      .subscribe((eventData: { events: Events[]}) => {
+        this.isLoading = false;
+        this.events = eventData.events;
+        console.log(this.events);
+      });
     this.form = new FormGroup({
       title : new FormControl(null, {
         validators : [Validators.required, Validators.minLength(3)]
@@ -96,8 +119,7 @@ export class GroupPageComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-      this.groupsService.addPost(this.groupid, this.form.value.title, this.form.value.content, this.form.value.image
-        , localStorage.getItem('profileimg'));
+      this.groupsService.addPost(this.groupid, this.form.value.title, this.form.value.content, this.form.value.image);
 
     this.form.reset();
   }

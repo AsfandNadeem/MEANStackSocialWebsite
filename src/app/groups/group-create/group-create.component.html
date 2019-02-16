@@ -1,4 +1,36 @@
-<mat-card>
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <mat-list style="
+      margin-top: 11px !important;"
+    >
+      <ul style="padding: 4px; font-family: Bahnschrift; margin-top:0px !important;">
+        <li>
+          <strong> Joined Groups </strong>
+        </li>
+        <li *ngFor="let group of groups" style="padding: 5px;">
+          <a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', group.id]">{{ group.groupname}}</a>
+        </li>
+        <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
+          Following No Groups
+        </li>
+        <br/>
+        <li>
+          <strong> Joined Events </strong>
+        </li>
+        <li *ngFor="let event of events" style="padding: 5px;">
+          <a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
+        </li>
+        <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
+          No events joined
+        </li>
+
+      </ul>
+
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+
+<mat-card style="margin-left: 5px; margin-right: 60px;">
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <form [formGroup]="form" (submit)="onSaveGroup()" *ngIf="!isLoading">
     <mat-form-field>
@@ -48,3 +80,5 @@
       type="submit">Save Group</button>
   </form>
 </mat-card>
+  </mat-drawer-content>
+</mat-drawer-container>
