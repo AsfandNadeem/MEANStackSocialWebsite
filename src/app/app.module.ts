@@ -10,7 +10,14 @@ import {
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatPaginatorModule,
-  MatSelectModule, MatIconModule, MatDividerModule, MatListModule, MatNativeDateModule, MatSidenavModule, MatTableModule
+  MatSelectModule,
+  MatIconModule,
+  MatDividerModule,
+  MatListModule,
+  MatNativeDateModule,
+  MatSidenavModule,
+  MatTableModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import { MatDatepickerModule} from '@angular/material/datepicker';
 
@@ -79,6 +86,7 @@ import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
     MatSidenavModule,
     MatNativeDateModule,
     ScrollDispatchModule,
+    MatAutocompleteModule,
     MatDividerModule,
     MatListModule,
     MatIconModule,

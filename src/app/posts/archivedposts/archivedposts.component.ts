@@ -38,21 +38,7 @@ export class ArchivedpostsComponent implements OnInit {
               private groupsService: GroupsService, private eventsService: EventsService) { }
 
   ngOnInit() {
-    console.log(this.groupsService.getJoinedGroups());
-    this.groupsSub = this.groupsService.getGroupUpdateListener()
-      .subscribe((groupData: { groups: Group[]}) => {
-        this.isLoading = false;
-        this.groups = groupData.groups;
-        console.log(this.groups);
-      });
 
-    console.log(this.eventsService.getJoinedEvents());
-    this.eventsSub = this.eventsService.getEventUpdateListener()
-      .subscribe((eventData: { events: Events[]}) => {
-        this.isLoading = false;
-        this.events = eventData.events;
-        console.log(this.events);
-      });
     this.isLoading = true;
     this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
     this.userId = this.authService.getUserId();
@@ -74,6 +60,22 @@ export class ArchivedpostsComponent implements OnInit {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
+      });
+
+    console.log(this.groupsService.getJoinedGroups());
+    this.groupsSub = this.groupsService.getGroupUpdateListener()
+      .subscribe((groupData: { groups: Group[]}) => {
+        this.isLoading = false;
+        this.groups = groupData.groups;
+        console.log(this.groups);
+      });
+
+    console.log(this.eventsService.getJoinedEvents());
+    this.eventsSub = this.eventsService.getEventUpdateListener()
+      .subscribe((eventData: { events: Events[]}) => {
+        this.isLoading = false;
+        this.events = eventData.events;
+        console.log(this.events);
       });
   }
 

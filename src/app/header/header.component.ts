@@ -1,6 +1,15 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Subscription} from 'rxjs';
+import {SearchService} from './search.service';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import { debounceTime, tap, finalize, distinctUntilChanged} from 'rxjs/operators';
+// import 'rxjs/add/operator/debounceTime';
+// import 'rxjs/add/operator/distinctUntilChanged';
+import { switchMap } from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {User} from '../auth/user.model';
+
 
 @Component({
   selector: 'app-header',
@@ -11,12 +20,38 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   username = 'nothing';
   private authListenerSubs: Subscription;
-  constructor( private authService: AuthService) {
+  results: User[] = [];
+  queryField: FormControl = new FormControl();
+  constructor(private _searchService: SearchService,
+              private authService: AuthService) {
 
 
   }
 
   ngOnInit() {
+
+    this.queryField.valueChanges
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap(query => (this._searchService.search(query)))
+      )
+      .subscribe( (userData: {users: User[]}) => {
+        this.results = userData.users;
+        console.log(this.results);
+        }, error => {
+      this.results = null;
+    }
+        // result => {
+        // if (result.status === 400) {
+        //   return;
+        // } else {
+        // console.log(result.valueOf());
+          // this.results = result.toString();
+        // }
+      // }
+      );
+
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.username = localStorage.getItem('username');
     this.authListenerSubs = this.authService

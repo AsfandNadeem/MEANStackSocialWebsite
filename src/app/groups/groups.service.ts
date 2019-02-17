@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-
 import {Group} from './group.model';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';

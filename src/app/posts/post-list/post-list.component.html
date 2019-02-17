@@ -29,7 +29,7 @@
     </mat-list>
   </mat-drawer>
   <mat-drawer-content>
-<mat-spinner *ngIf="isLoading"></mat-spinner>
+
 
 <mat-card class="example-card">
   <mat-card-header>
@@ -45,7 +45,7 @@
     </ul>
   </mat-card-header>
 </mat-card>
-
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-card class="example-card" *ngFor="let post of posts">
   <mat-card-header>
     <ul style="list-style: none; display: flex;">

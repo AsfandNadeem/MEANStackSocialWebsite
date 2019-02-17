@@ -36,24 +36,7 @@ export class EventPageComponent implements OnInit {
               private authService: AuthService, public route: ActivatedRoute) { }
 
   ngOnInit() {
-
-    console.log(this.groupsService.getJoinedGroups());
-    this.groupsSub = this.groupsService.getGroupUpdateListener()
-      .subscribe((groupData: { groups: Group[]}) => {
-        this.isLoading = false;
-        this.groups = groupData.groups;
-        console.log(this.groups);
-      });
-
-    console.log(this.eventService.getJoinedEvents());
-    this.eventsSub = this.eventService.getEventUpdateListener()
-      .subscribe((eventData: { events: Events[]}) => {
-        this.isLoading = false;
-        this.events = eventData.events;
-        console.log(this.events);
-      });
-
-    this.form = new FormGroup({
+   this.form = new FormGroup({
       title : new FormControl(null, {
         validators : [Validators.required, Validators.minLength(3)]
       }),
@@ -90,6 +73,23 @@ export class EventPageComponent implements OnInit {
             this.userIsAuthenticated = isAuthenticated;
             this.userId = this.authService.getUserId();
           });
+
+
+    console.log(this.groupsService.getJoinedGroups());
+    this.groupsSub = this.groupsService.getGroupUpdateListener()
+      .subscribe((groupData: { groups: Group[]}) => {
+        this.isLoading = false;
+        this.groups = groupData.groups;
+        console.log(this.groups);
+      });
+
+    console.log(this.eventService.getJoinedEvents());
+    this.eventsSub = this.eventService.getEventUpdateListener()
+      .subscribe((eventData: { events: Events[]}) => {
+        this.isLoading = false;
+        this.events = eventData.events;
+        console.log(this.events);
+      });
       }
 
       getPosts() {

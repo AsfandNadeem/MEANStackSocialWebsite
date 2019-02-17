@@ -3,7 +3,9 @@ import {HttpClient} from '@angular/common/http';
 import {AuthData} from './auth-data.model';
 import {Subject} from 'rxjs';
 import {Router} from '@angular/router';
-import {Post} from '../posts/post.model';
+import {Observable} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
+import {User} from './user.model';
 
 
 @Injectable({

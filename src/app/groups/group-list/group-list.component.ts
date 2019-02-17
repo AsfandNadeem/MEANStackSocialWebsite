@@ -44,13 +44,7 @@ export class GroupListComponent implements OnInit, OnDestroy {
      //     console.log(this.groupsjoined);
      //   });
 
-     console.log(this.eventsService.getJoinedEvents());
-     this.eventsSub = this.eventsService.getEventUpdateListener()
-       .subscribe((eventData: { events: Events[]}) => {
-         this.isLoading = false;
-         this.events = eventData.events;
-         console.log(this.events);
-       });
+
 
      this.isLoading = true;
      this.groupsService.getGroups(this.groupsPerPage, this.currentPage );
@@ -70,6 +64,14 @@ export class GroupListComponent implements OnInit, OnDestroy {
        .subscribe(isAuthenticated => {
          this.userIsAuthenticated = isAuthenticated;
          this.userId = this.authService.getUserId();
+       });
+
+     console.log(this.eventsService.getJoinedEvents());
+     this.eventsSub = this.eventsService.getEventUpdateListener()
+       .subscribe((eventData: { events: Events[]}) => {
+         this.isLoading = false;
+         this.events = eventData.events;
+         console.log(this.events);
        });
    }
 

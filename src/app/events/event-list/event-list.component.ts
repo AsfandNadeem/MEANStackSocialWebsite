@@ -35,15 +35,6 @@ export class EventListComponent implements OnInit, OnDestroy {
                private groupsService: GroupsService) {}
 
    ngOnInit() {
-     console.log(this.groupsService.getJoinedGroups());
-     this.groupsSub = this.groupsService.getGroupUpdateListener()
-       .subscribe((groupData: { groups: Group[]}) => {
-         this.isLoading = false;
-         this.groupsjoined = groupData.groups;
-         console.log(this.groupsjoined);
-       });
-
-
      this.isLoading = true;
      this.eventsService.getEvents(this.eventsPerPage, this.currentPage );
      this.userId = this.authService.getUserId();
@@ -62,6 +53,14 @@ export class EventListComponent implements OnInit, OnDestroy {
        .subscribe(isAuthenticated => {
          this.userIsAuthenticated = isAuthenticated;
          this.userId = this.authService.getUserId();
+       });
+
+     console.log(this.groupsService.getJoinedGroups());
+     this.groupsSub = this.groupsService.getGroupUpdateListener()
+       .subscribe((groupData: { groups: Group[]}) => {
+         this.isLoading = false;
+         this.groupsjoined = groupData.groups;
+         console.log(this.groupsjoined);
        });
    }
 

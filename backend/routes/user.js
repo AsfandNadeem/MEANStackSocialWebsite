@@ -174,5 +174,30 @@ router.put("/edit",checkAuth,(req,res,next) => {
 
 });
 
+router.get("",(req,res,next) => {
+  const username = req.query.user;
+
+
+  if(username == "" || username == " "){
+    res.status(200).json({users:[]});
+    return;
+  }
+else {
+  User.find({"username": {"$regex": username, "$options": "i"}})
+    .then(users => {
+      if (users) {
+        fetchedusers = users;
+        res.status(200).json({
+          users: fetchedusers
+        });
+      } else {
+        res.status(200).json({users:[]});
+      }
+    });
+}
+
+  });
+
+
 
 module.exports = router;
