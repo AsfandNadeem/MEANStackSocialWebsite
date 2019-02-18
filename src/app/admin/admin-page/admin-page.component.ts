@@ -10,15 +10,37 @@ import {Router} from '@angular/router';
 export class AdminPageComponent implements OnInit {
 
   isadminauthenticated = false;
+  showuser = false;
+  showgroups = false;
+  showposts = false;
+  showevents = false;
   constructor(private adminService: AdminServiceService, private router: Router) { }
 
   ngOnInit() {
     // if (this.adminService.getisAdmin()) {
+    this.showuser = true;
+    this.showgroups = false;
+    this.showposts = false;
+    this.showevents = false;
       this.isadminauthenticated = true;
     // } else {
     //   this.isadminauthenticated = false;
     //   this.router.navigate(['/admin']).then();
     // }
+  }
+
+  onUser() {
+    this.showgroups = false;
+    this.showposts = false;
+    this.showevents = false;
+    this.showuser = true;
+  }
+
+  onGroup() {
+   this.showposts = false;
+    this.showevents = false;
+    this.showuser = false;
+    this.showgroups = true;
   }
 
 

@@ -44,6 +44,7 @@ import { ArchivedpostsComponent } from './posts/archivedposts/archivedposts.comp
 import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
 import { AdminPageComponent } from './admin/admin-page/admin-page.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
+import { SidebarComponent } from './sidebar/sidebar/sidebar.component';
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
     ArchivedpostsComponent,
     AdminLoginComponent,
     AdminPageComponent,
-    AdminUsersComponent
+    AdminUsersComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

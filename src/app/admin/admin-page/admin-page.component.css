@@ -10,7 +10,9 @@
  }
 
  mat-drawer-content{
+   margin-left: 90px;
    background-color: beige;
+   height: 100%;
    width:80%;
  }
 
@@ -24,4 +26,9 @@ a{
   color: white;
 
 }
-
+.positive {
+  color : blue;
+}
+.negative {
+  color: black;
+}
