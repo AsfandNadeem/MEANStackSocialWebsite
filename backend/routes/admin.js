@@ -35,16 +35,10 @@ router.post(
   });
 
 router.get("/users", (req, res, next) => {
-  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  // const currentPage = +req.query.page;
 
   const userQuery = User.find().sort({ '_id': -1 });
   let fetchedUsers;
-  // if (pageSize && currentPage) {
-  //   postQuery
-  //     .skip(pageSize * (currentPage - 1))
-  //     .limit(pageSize);
-  // }
+
 
   userQuery
     .then(documents => {
@@ -60,6 +54,42 @@ router.get("/users", (req, res, next) => {
     });
 });
 
+router.get("/groups", (req, res, next) => {
 
+  const groupQuery = Group.find().sort({ '_id': -1 });
+  let fetchedGroups;
+
+  groupQuery
+    .then(documents => {
+      fetchedGroups = documents;
+      return Group.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        groups: fetchedGroups,
+        maxGroups: count
+      });
+    });
+});
+
+router.get("/events", (req, res, next) => {
+
+  const eventQuery = Event.find().sort({ '_id': -1 });
+  let fetchedEvents;
+
+  eventQuery
+    .then(documents => {
+      fetchedEvents = documents;
+      return Event.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        events: fetchedEvents,
+        maxEvents: count
+      });
+    });
+});
 
 module.exports = router;

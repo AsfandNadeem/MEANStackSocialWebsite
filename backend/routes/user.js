@@ -174,7 +174,7 @@ router.put("/edit",checkAuth,(req,res,next) => {
 
 });
 
-router.get("",(req,res,next) => {
+router.get("",checkAuth,(req,res,next) => {
   const username = req.query.user;
 
 

@@ -45,6 +45,8 @@ import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
 import { AdminPageComponent } from './admin/admin-page/admin-page.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { SidebarComponent } from './sidebar/sidebar/sidebar.component';
+import { AdminGroupComponent } from './admin/admin-group/admin-group.component';
+import { AdminEventComponent } from './admin/admin-event/admin-event.component';
 
 
 @NgModule({
@@ -66,7 +68,9 @@ import { SidebarComponent } from './sidebar/sidebar/sidebar.component';
     AdminLoginComponent,
     AdminPageComponent,
     AdminUsersComponent,
-    SidebarComponent
+    SidebarComponent,
+    AdminGroupComponent,
+    AdminEventComponent
   ],
   imports: [
     BrowserModule,
@@ -82,6 +86,7 @@ import { SidebarComponent } from './sidebar/sidebar/sidebar.component';
     MatExpansionModule,
     MatCardModule,
     MatPaginatorModule,
+    MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatMenuModule,

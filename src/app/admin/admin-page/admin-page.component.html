@@ -10,13 +10,23 @@
          }">Users</button>
       </li>
         <li *ngIf="isadminauthenticated">
-          <button mat-button>Posts</button>
+          <button mat-button (click)="onPosts()" [ngClass]="{
+            'positive' : showposts,
+            'negative' : !showposts
+         }">Posts</button>
         </li>
       <li *ngIf="isadminauthenticated">
-        <button mat-button (click)="onGroup()" routerLinkActive="mat-accent">Groups</button>
+        <button mat-button (click)="onGroups()" routerLinkActive="mat-accent"[ngClass]="{
+            'positive' : showgroups,
+            'negative' : !showgroups
+         }"
+        >Groups</button>
       </li>
       <li *ngIf="isadminauthenticated">
-        <button mat-button >Events</button>
+        <button mat-button (click)="onEvents()" [ngClass]="{
+            'positive' : showevents,
+            'negative' : !showevents
+         }">Events</button>
       </li>
      <li>
        <button mat-button color="warn">Logout</button>
@@ -27,6 +37,7 @@
   </mat-drawer>
   <mat-drawer-content>
     <app-admin-users *ngIf="showuser"></app-admin-users>
-    <app-admin-login *ngIf="showgroups"></app-admin-login>
+    <app-admin-group *ngIf="showgroups"></app-admin-group>
+    <app-admin-event *ngIf="showevents"></app-admin-event>
   </mat-drawer-content>
 </mat-drawer-container>

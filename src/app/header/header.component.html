@@ -18,18 +18,34 @@
 
     </li>
     <li *ngIf="userIsAuthenticated">
-      <section class="filter-wrapper">
-        <div class="keyword-wrapper">
-          <input [formControl]="queryField" type="text" id="keyword" placeholder="search for artists..." autofocus/>
+      <section >
+        <div >
+          <input matInput [formControl]="queryField" type="text" placeholder="search..."  [matMenuTriggerFor]="createsearch" autofocus/>
         </div>
-        <ul class="filter-select" style="display: block !important;">
-          <li *ngFor="let result of results" class="filter-select-list">
-            <!--<img src="{{result.images['2']?.url}}" alt="" width="50" height="50">-->
-            <p class="artist-name">
-            {{result.username}}</p>
-            <!--<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>-->
-        </ul>
+        <mat-menu #createsearch="matMenu">
+          <button mat-menu-item *ngFor="let result of results" >
+            {{result.username}}
+          </button>
+        </mat-menu>
+        <!--<ul style="display: block !important;" >-->
+          <!--<li *ngFor="let result of results" >-->
+                         <!--{{result.username}}-->
+            <!--</li>-->
+            <!--&lt;!&ndash;<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>&ndash;&gt;-->
+        <!--</ul>-->
       </section>
+      <!--<section class="filter-wrapper">-->
+        <!--<div class="keyword-wrapper">-->
+          <!--<input [formControl]="queryField" type="text" id="keyword" placeholder="search for artists..." autofocus/>-->
+        <!--</div>-->
+        <!--<ul class="filter-select" style="display: block !important;">-->
+          <!--<li *ngFor="let result of results" class="filter-select-list">-->
+            <!--&lt;!&ndash;<img src="{{result.images['2']?.url}}" alt="" width="50" height="50">&ndash;&gt;-->
+            <!--<p class="artist-name">-->
+            <!--{{result.username}}</p>-->
+            <!--&lt;!&ndash;<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>&ndash;&gt;-->
+        <!--</ul>-->
+      <!--</section>-->
     </li>
   </ul>
   <span class="spacer"></span>

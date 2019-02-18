@@ -74,15 +74,17 @@ export class AuthService {
           this.userId = response.userId;
           this.userN = response.username;
           this.authStatusListener.next(true);
+          console.log('here');
           const now = new Date();
           const expirationDate = new Date(now.getTime() + (expiresInDuration * 1000));
           console.log(expirationDate);
           console.log(response.profileimg);
           this.saveAuthData( token, expirationDate, this.userId, this.userN, response.department, response.profileimg);
-          this.router.navigate(['/messages']);
+          this.router.navigate(['/messages']).then();
         }
       } , error => {
-        this.router.navigate(['/']);
+        console.log('error');
+        this.router.navigate(['/']).then();
     });
 
   }

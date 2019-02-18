@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AdminServiceService} from '../admin-service.service';
 import {Router} from '@angular/router';
 
@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
   templateUrl: './admin-page.component.html',
   styleUrls: ['./admin-page.component.css']
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent implements OnInit , OnDestroy {
 
   isadminauthenticated = false;
   showuser = false;
@@ -17,16 +17,16 @@ export class AdminPageComponent implements OnInit {
   constructor(private adminService: AdminServiceService, private router: Router) { }
 
   ngOnInit() {
-    // if (this.adminService.getisAdmin()) {
+    if (this.adminService.getisAdmin()) {
     this.showuser = true;
     this.showgroups = false;
     this.showposts = false;
     this.showevents = false;
       this.isadminauthenticated = true;
-    // } else {
-    //   this.isadminauthenticated = false;
-    //   this.router.navigate(['/admin']).then();
-    // }
+    } else {
+      this.isadminauthenticated = false;
+      this.router.navigate(['/admin']).then();
+    }
   }
 
   onUser() {
@@ -36,11 +36,29 @@ export class AdminPageComponent implements OnInit {
     this.showuser = true;
   }
 
-  onGroup() {
+  onGroups() {
    this.showposts = false;
     this.showevents = false;
     this.showuser = false;
     this.showgroups = true;
+  }
+
+  onPosts() {
+   this.showevents = false;
+    this.showuser = false;
+    this.showgroups = false;
+    this.showposts = true;
+  }
+
+  onEvents() {
+    this.showposts = false;
+    this.showuser = false;
+    this.showgroups = false;
+    this.showevents = true;
+  }
+
+  ngOnDestroy() {
+    this.isadminauthenticated = false;
   }
 
 

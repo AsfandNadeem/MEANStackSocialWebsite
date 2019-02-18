@@ -16,11 +16,15 @@ import {ArchivedpostsComponent} from './posts/archivedposts/archivedposts.compon
 import {AdminLoginComponent} from './admin/admin-login/admin-login.component';
 import {AdminPageComponent} from './admin/admin-page/admin-page.component';
 import {AdminUsersComponent} from './admin/admin-users/admin-users.component';
+import {AdminGroupComponent} from './admin/admin-group/admin-group.component';
+import {AdminEventComponent} from './admin/admin-event/admin-event.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
   {path: 'adminpage', component: AdminPageComponent},
   {path: 'adminusers', component: AdminUsersComponent},
+  {path: 'admingroups', component: AdminGroupComponent},
+  {path: 'adminevents',  component: AdminEventComponent},
   { path: '' , component: LoginComponent},
   { path: 'messages' , component: PostListComponent, canActivate: [AuthGuard] },
   {path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },

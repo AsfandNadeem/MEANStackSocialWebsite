@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {AdminServiceService} from '../admin-service.service';
-import {Post} from '../../posts/post.model';
 import {User} from '../../auth/user.model';
 import {Subscription} from 'rxjs';
 
