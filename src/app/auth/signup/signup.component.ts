@@ -21,7 +21,7 @@ export class SignupComponent implements OnInit  {
   constructor(public authService: AuthService) {}
   ngOnInit() {
     this.nform = new FormGroup({
-      image: new FormControl(null,{
+      image: new FormControl(null, {
         asyncValidators: [mimeType]
       })
     });
@@ -31,12 +31,14 @@ export class SignupComponent implements OnInit  {
     if ( form.invalid ) {
       return;
     }
-    if ( this.nform.invalid){
+    if ( this.nform.invalid) {
       return;
     }
     this.isLoading = true;
-    console.log(form.value.email, this.nform.value.image, form.value.password, form.value.uname, form.value.dname, form.value.regno);
-    this.authService.createUser(form.value.email, this.nform.value.image, form.value.password, form.value.uname, form.value.dname, form.value.regno);
+    console.log(form.value.email, this.nform.value.image,
+      form.value.password, form.value.uname, form.value.dname, form.value.regno);
+    this.authService.createUser(form.value.email, this.nform.value.image, form.value.password,
+      form.value.uname, form.value.dname, form.value.regno);
   }
 
   onImagePicked(event: Event) {

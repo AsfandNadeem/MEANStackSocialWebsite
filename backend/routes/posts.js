@@ -149,29 +149,53 @@ router.put(
 );
 
 router.get("", (req, res, next) => {
-  const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  const currentPage = +req.query.page;
+  if(req.query) {
+    const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+    const currentPage = +req.query.page;
 
-  const postQuery = Post.find().sort({ '_id': -1 });
-  let fetchedPosts;
-  if (pageSize && currentPage) {
+    const postQuery = Post.find().sort({'_id': -1});
+    let fetchedPosts;
+    if (pageSize && currentPage) {
+      postQuery
+        .skip(pageSize * (currentPage - 1))
+        .limit(pageSize);
+    }
+
     postQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
-  }
-
-  postQuery
-    .then(documents => {
-      fetchedPosts = documents;
-      return Post.count();
-    })
-    .then(count => {
-      res.status(200).json({
-        message: "Posts fetched successfully!",
-        posts: fetchedPosts,
-        maxPosts: count
+      .then(documents => {
+        fetchedPosts = documents;
+        return Post.count();
+      })
+      .then(count => {
+        res.status(200).json({
+          message: "Posts fetched successfully!",
+          posts: fetchedPosts,
+          maxPosts: count
+        });
       });
-    });
+  }
+  else {
+    const postQuery = Post.find().sort({'_id': -1});
+     let fetchedPosts;
+    // if (pageSize && currentPage) {
+    //   postQuery
+    //     .skip(pageSize * (currentPage - 1))
+    //     .limit(pageSize);
+    // }
+
+    postQuery
+      .then(documents => {
+        fetchedPosts = documents;
+        return Post.count();
+      })
+      .then(count => {
+        res.status(200).json({
+          message: "Posts fetched successfully!",
+          posts: fetchedPosts,
+          maxPosts: count
+        });
+      });
+  }
 });
 
 router.get("/archives", checkAuth, (req, res, next) => {

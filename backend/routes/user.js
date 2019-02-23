@@ -44,14 +44,15 @@ router.post('/signup',
 
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      const user  = new User({
-        email: req.body.email,
-        password: hash,
-        username: req.body.username,
-        department: req.body.department,
-        registrationno: req.body.registration,
-        imagePath: url + "/profileimgs/" + req.file.filename
-      });
+      if (req.file){
+        const user = new User({
+          email: req.body.email,
+          password: hash,
+          username: req.body.username,
+          department: req.body.department,
+          registrationno: req.body.registration,
+          imagePath: url + "/profileimgs/" + req.file.filename
+        });
       user.save()
         .then(result => {
           res.status(201).json({
@@ -62,9 +63,32 @@ router.post('/signup',
         })
         .catch(err => {
           res.status(500).json({
-            error:err
+            error: err
           })
         });
+    } else {
+        const user = new User({
+          email: req.body.email,
+          password: hash,
+          username: req.body.username,
+          department: req.body.department,
+          registrationno: req.body.registration,
+        });
+        user.save()
+          .then(result => {
+            res.status(201).json({
+              message: 'User Created',
+              result: result,
+            });
+            console.log(user);
+          })
+          .catch(err => {
+            res.status(500).json({
+              error: err
+            })
+          });
+
+      }
     });
 
 
