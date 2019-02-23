@@ -5,6 +5,8 @@ const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const Post = require("../models/post");
 const User = require('../models/user');
+const Group = require('../models/group');
+const Event = require('../models/event');
 
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
@@ -171,7 +173,31 @@ router.put("/edit",checkAuth,(req,res,next) => {
           const post = ({
             username: fetchedUser.username,
           });
+          const event = ({
+            username: fetchedUser.username,
+          });
+          const group = ({
+            username: fetchedUser.username,
+          });
           Post.updateMany({ creator: req.userData.userId}, post).then(result => {
+
+            if (result.nModified > 0) {
+              console.log(result);
+
+            } else {
+              console.log("2Not authorized to update!");
+            }
+          });
+          Group.updateMany({ groupcreator: req.userData.userId}, group).then(result => {
+
+            if (result.nModified > 0) {
+              console.log(result);
+
+            } else {
+              console.log("2Not authorized to update!");
+            }
+          });
+          Event.updateMany({ eventcreator: req.userData.userId}, event).then(result => {
 
             if (result.nModified > 0) {
               console.log(result);

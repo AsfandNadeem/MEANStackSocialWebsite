@@ -6,6 +6,8 @@ export interface Post {
   username: string;
   category: string;
   likes: any;
+  likedBy: any;
+  dislikedBy: any;
   dislikes: any;
   createdAt: any;
   comments: any;

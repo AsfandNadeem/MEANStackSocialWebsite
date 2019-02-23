@@ -90,3 +90,9 @@ mat-expansion-panel-header{
   object-fit: cover;
   background-size: cover;
 }
+.positive {
+  color : blue;
+}
+.negative {
+  color: black;
+}

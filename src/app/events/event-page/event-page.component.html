@@ -99,7 +99,8 @@
   </mat-card-content>
 
   <button mat-icon-button  (click)="likePost(post.id)" >
-    <mat-icon >thumb_up</mat-icon>
+    <mat-icon *ngIf="post.likedBy.includes(userId)" color="primary" >thumb_up</mat-icon>
+    <mat-icon *ngIf="!post.likedBy.includes(userId)"  >thumb_up</mat-icon>
     {{ post.likes }}
   </button>
 
@@ -107,7 +108,8 @@
 
 
   <button mat-icon-button (click)="dislikePost(post.id)" >
-    <mat-icon >thumb_down</mat-icon>
+    <mat-icon *ngIf="post.dislikedBy.includes(userId)" color="primary" >thumb_down</mat-icon>
+    <mat-icon *ngIf="!post.dislikedBy.includes(userId)"  >thumb_down</mat-icon>
     {{ post.dislikes }}
   </button>
 

@@ -29,6 +29,8 @@ export class EventsService {
             username : post.username,
             creator: post.creator,
             likes: post.likes,
+            likedBy: post.likedBy,
+            dislikedBy: post.dislikedBy,
             id: post._id,
             commentsNo: post.commentsNo,
             comments: post.comments,

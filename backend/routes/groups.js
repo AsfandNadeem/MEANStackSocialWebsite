@@ -58,29 +58,46 @@ router.post(
 
 
 router.get("", (req, res, next) => {
-  const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  const currentPage = +req.query.page;
+  if(req.query) {
+    const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+    const currentPage = +req.query.page;
 
-  const groupQuery = Group.find().sort({ '_id': -1 });
-  let fetchedGroup;
-  if (pageSize && currentPage) {
+    const groupQuery = Group.find().sort({'_id': -1});
+    let fetchedGroup;
+    if (pageSize && currentPage) {
+      groupQuery
+        .skip(pageSize * (currentPage - 1))
+        .limit(pageSize);
+    }
+
     groupQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
-  }
-
-  groupQuery
-    .then(documents => {
-      fetchedGroup = documents;
-      return Group.count();
-    })
-    .then(count => {
-      res.status(200).json({
-        message: "Groups fetched successfully!",
-        groups: fetchedGroup,
-        maxGroups: count
+      .then(documents => {
+        fetchedGroup = documents;
+        return Group.count();
+      })
+      .then(count => {
+        res.status(200).json({
+          message: "Groups fetched successfully!",
+          groups: fetchedGroup,
+          maxGroups: count
+        });
       });
-    });
+  } else {
+    const groupQuery = Group.find().sort({'_id': -1});
+    let fetchedGroup;
+    groupQuery
+      .then(documents => {
+        fetchedGroup = documents;
+        return Group.count();
+      })
+      .then(count => {
+        res.status(200).json({
+          message: "Groups fetched successfully!",
+          groups: fetchedGroup,
+          maxGroups: count
+        });
+      });
+  }
 });
 
 router.get("/joinedgroups", checkAuth, (req, res, next) => {
@@ -212,18 +229,18 @@ router.put("/likegrouppost",checkAuth,(req,res,next) => {
                 if(!user) {
                   res.json({ success: false, message:'Could not find user'});
                 } else {
-                  if(user.username === element.username){
+                  if(req.userData.userId === element.creator){
                     res.json({ success: false, message: 'Cannot like own post'});
                   } else {
-                    if(element.likedBy.includes(user.username)){
+                    if(element.likedBy.includes(req.userData.userId)){
                       res.json({success: false, message: 'You already liked this post'});
                     } else {
-                      if(element.dislikedBy.includes(user.username)){
+                      if(element.dislikedBy.includes(req.userData.userId)){
                         element.dislikes--;
-                        const arrayIndex = element.dislikedBy.indexOf(user.username);
+                        const arrayIndex = element.dislikedBy.indexOf(req.userData.userId);
                         element.dislikedBy.splice(arrayIndex,1);
                         element.likes++;
-                        element.likedBy.push(user.username);
+                        element.likedBy.push(req.userData.userId);
                         user.likes.push(req.body.postid.toString());
                         group.save((err) => {
                           if(err){
@@ -243,7 +260,7 @@ router.put("/likegrouppost",checkAuth,(req,res,next) => {
                         });
                       } else {
                         element.likes++;
-                        element.likedBy.push(user.username);
+                        element.likedBy.push(req.userData.userId);
                         user.likes.push(req.body.postid.toString());
                         group.save((err) => {
                           if(err){
@@ -302,18 +319,18 @@ router.put("/dislikegrouppost",checkAuth,(req,res,next) => {
                 if(!user) {
                   res.json({ success: false, message:'Could not find user'});
                 } else {
-                  if(user.username === element.username){
+                  if(req.userData.userId === element.creator){
                     res.json({ success: false, message: 'Cannot dislike own post'});
                   } else {
-                    if(element.dislikedBy.includes(user.username)){
+                    if(element.dislikedBy.includes(req.userData.userId)){
                       res.json({success: false, message: 'You already disliked this post'});
                     } else {
-                      if(element.likedBy.includes(user.username)){
+                      if(element.likedBy.includes(req.userData.userId)){
                         element.likes--;
-                        const arrayIndex = element.likedBy.indexOf(user.username);
+                        const arrayIndex = element.likedBy.indexOf(req.userData.userId);
                         element.likedBy.splice(arrayIndex,1);
                         element.dislikes++;
-                        element.dislikedBy.push(user.username);
+                        element.dislikedBy.push(req.userData.userId);
                         user.dislikes.push(req.body.postid.toString());
                         group.save((err) => {
                           if(err){
@@ -333,7 +350,7 @@ router.put("/dislikegrouppost",checkAuth,(req,res,next) => {
                         });
                       } else {
                         element.dislikes++;
-                        element.dislikedBy.push(user.username);
+                        element.dislikedBy.push(req.userData.userId);
                         user.dislikes.push(req.body.postid.toString());
                         group.save((err) => {
                           if(err){

@@ -337,18 +337,18 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                 if(!user) {
                   res.json({ success: false, message:'Could not find user'});
                 } else {
-                  if(user.username === post.username) {
+                  if(user._id === post.creator) {
                     res.json({ success: false, message: 'Cannot like own post'});
                   } else {
-                    if(post.likedBy.includes(user.username)) {
+                    if(post.likedBy.includes(user._id.toString())) {
                       res.json({success: false, message: 'You already liked this post'});
                     } else {
-                      if(post.dislikedBy.includes(user.username)) {
+                      if(post.dislikedBy.includes(user._id.toString())) {
                         post.dislikes--;
-                        const arrayIndex = post.dislikedBy.indexOf(user.username);
+                        const arrayIndex = post.dislikedBy.indexOf(user._id.toString());
                         post.dislikedBy.splice(arrayIndex,1);
                         post.likes++;
-                        post.likedBy.push(user.username);
+                        post.likedBy.push(user._id.toString());
                         user.likes.push(req.params.id.toString());
                         post.save((err) => {
                           if(err) {
@@ -368,7 +368,7 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                         });
                       } else {
                         post.likes++;
-                        post.likedBy.push(user.username);
+                        post.likedBy.push(user._id.toString());
                         user.likes.push(req.params.id.toString());
                         post.save((err) => {
                           if(err) {
@@ -425,18 +425,18 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
               if(!user) {
                 res.json({ success: false, message:'Could not find user'});
               } else {
-                if(user.username === post.username) {
+                if(req.userData.userId === post.creator) {
                   res.json({ success: false, message: 'Cannot dislike own post'});
                 } else {
-                  if(post.dislikedBy.includes(user.username)) {
+                  if(post.dislikedBy.includes(user._id.toString())) {
                     res.json({success: false, message: 'You already disliked this post'});
                   } else {
-                    if(post.likedBy.includes(user.username)) {
+                    if(post.likedBy.includes(user._id.toString())) {
                       post.likes--;
-                      const arrayIndex = post.likedBy.indexOf(user.username);
+                      const arrayIndex = post.likedBy.indexOf(user._id.toString());
                       post.likedBy.splice(arrayIndex,1);
                       post.dislikes++;
-                      post.dislikedBy.push(user.username);
+                      post.dislikedBy.push(user._id.toString());
                       user.dislikes.push(req.params.id.toString());
                       post.save((err) => {
                         if(err) {
@@ -456,7 +456,7 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                     } else {
 
                       post.dislikes++;
-                      post.dislikedBy.push(user.username);
+                      post.dislikedBy.push(user._id.toString());
                       user.dislikes.push(req.params.id.toString());
                       post.save((err) => {
                         if(err) {
