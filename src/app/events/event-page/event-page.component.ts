@@ -114,7 +114,10 @@ export class EventPageComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-    this.eventService.addPost(this.eventid, this.form.value.title, this.form.value.content, this.form.value.image);
+    this.eventService.addPost(this.eventid, this.form.value.title,
+    this.form.value.content, this.form.value.image).subscribe( () => {
+      this.eventService.getPosts(this.eventid);
+    });
     this.form.reset();
   }
 

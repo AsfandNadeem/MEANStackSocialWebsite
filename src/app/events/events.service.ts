@@ -133,13 +133,13 @@ export class EventsService {
     // postData.append('username', localStorage.getItem('username'));
     // postData.append('profileimg', profileimg);
     console.log(postData);
-    this.http
+    return this.http
       .put<{ message: string }>(
         'http://localhost:3000/api/events/addeventPost/' + id,
-        postData)
-      .subscribe( responseData  => {
-        this.router.navigate(['/eventpage/' + id]);
-      });
+        postData);
+      // .subscribe( responseData  => {
+      //   this.router.navigate(['/eventpage/' + id]);
+      // });
   }
 
   joinEvent( id: string) {

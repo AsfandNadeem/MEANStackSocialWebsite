@@ -139,13 +139,13 @@ export class GroupsService {
     // postData.append('username', localStorage.getItem('username'));
     // postData.append('profileimg', profileimg);
     console.log(postData);
-    this.http
+    return this.http
       .put<{ message: string }>(
         'http://localhost:3000/api/groups/addgroupPost/' + id,
-        postData)
-      .subscribe( responseData  => {
-        this.router.navigate(['/grouplist']);
-      });
+        postData);
+      // .subscribe( responseData  => {
+      //   this.router.navigate(['/grouplist']);
+      // });
   }
 
   joinGroup( id: string) {

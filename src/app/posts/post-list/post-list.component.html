@@ -42,7 +42,7 @@
       </li>
       <li>
         <mat-card-title>Hello {{username}}</mat-card-title>
-        <mat-card-subtitle>Having a Good Day</mat-card-subtitle>
+        <mat-card-subtitle>Having a Good Day?</mat-card-subtitle>
       </li>
     </ul>
   </mat-card-header>
@@ -127,20 +127,30 @@
         </li>
       </ul>
 
-      <mat-card class="example-card" *ngFor="let comment of post.comments">
-        <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title style="font-weight: bold">{{comment.commentator}}</mat-card-title>
+      <mat-list style="list-style: none;">
+        <mat-list-item *ngFor="let comment of post.comments" style="margin:0;">
+          <strong>{{comment.commentator}}: &nbsp; </strong>
 
-        </mat-card-header>
-
-        <mat-card-content>
           <p>
-            {{comment.comment}}
+          {{comment.comment}}
           </p>
-        </mat-card-content>
+          <mat-divider></mat-divider>
+        </mat-list-item>
 
-      </mat-card>
+      </mat-list>
+
+      <!--<mat-card class="example-card" style="width:80% !important;" *ngFor="let comment of post.comments">-->
+
+
+        <!--<mat-card-content>-->
+          <!--<strong>{{comment.commentator}}</strong>-->
+          <!--<br/>-->
+          <!--<p>-->
+            <!--{{comment.comment}}-->
+          <!--</p>-->
+        <!--</mat-card-content>-->
+
+      <!--</mat-card>-->
 
 
 

@@ -9,9 +9,9 @@ mat-drawer {
 
 mat-drawer-content{
   /*background-color: beige;*/
-  width:80%;
-  height: 850px;
+    height: 850px;
 }
+
 
 /*:host {*/
   /*display: block;*/
