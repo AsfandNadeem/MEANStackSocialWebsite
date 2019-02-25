@@ -14,6 +14,8 @@ import {Post} from '../posts/post.model';
 export class AdminServiceService {
 
   isadmin = false;
+  private posts: Post[] = [];
+  private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
   private users: User[] = [];
   private usersUpdated = new Subject<{users: User[], userCount: number}>();
   private groups: Group[] = [];
@@ -43,6 +45,48 @@ export class AdminServiceService {
   getisAdmin() {
     return this.isadmin;
   }
+
+  getPosts() { // httpclientmodule
+    // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
+    this.http
+      .get<{message: string, posts: any, maxPosts: number}>(
+        'http://localhost:3000/api/admin/posts'
+      )
+      .pipe(map((postData) => {
+        return { posts: postData.posts.map(post => {
+            return {
+             // profleimg: post.profileimg,
+              title: post.title,
+              content: post.content,
+              id: post._id,
+              username : post.username,
+              creator: post.creator,
+              // likes: post.likes,
+              // likedBy: post.likedBy,
+              // dislikedBy: post.dislikedBy,
+              // category: post.category,
+              // commentsNo: post.commentsNo,
+              // comments: post.comments,
+              // dislikes: post.dislikes,
+              // createdAt: post.createdAt,
+              // imagePath: post.imagePath
+            };
+          }), maxPosts: postData.maxPosts  };
+      }))// change rterieving data
+      .subscribe(transformedPostData => {
+        this.posts = transformedPostData.posts;
+        this.postsUpdated.next({
+            posts: [...this.posts],
+            postCount: transformedPostData.maxPosts
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getPostUpdateListener() {
+    return this.postsUpdated.asObservable();
+  }
+
 
   getUsers() { // httpclientmodule
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings

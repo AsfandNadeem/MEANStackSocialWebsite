@@ -23,7 +23,7 @@ export class AdminUsersComponent implements OnInit {
   users: User[] = [];
   private usersSub: Subscription;
   totalUsers = 0;
-  displayedColumns: string[] = ['name', 'id'];
+  displayedColumns: string[] = ['name', 'id', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(private adminService: AdminServiceService) {}

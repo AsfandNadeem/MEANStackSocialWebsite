@@ -67,6 +67,7 @@ export class EventsService {
               description: event.description,
               id: event._id,
               eventdate: event.eventdate,
+              eventmembersid: event.eventmembersid,
               username : event.username,
               creator: event.eventcreator,
               category: event.category,

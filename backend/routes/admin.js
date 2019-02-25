@@ -92,4 +92,23 @@ router.get("/events", (req, res, next) => {
     });
 });
 
+
+router.get("/posts", (req, res, next) => {
+
+  const postQuery = Post.find().sort({ '_id': -1 });
+  let fetchedPosts;
+
+  postQuery
+    .then(documents => {
+      fetchedPosts = documents;
+      return Post.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        posts: fetchedPosts,
+        maxPosts: count
+      });
+    });
+});
 module.exports = router;

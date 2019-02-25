@@ -68,6 +68,8 @@ export class GroupsService {
            id: group._id,
            username : group.username,
            creator: group.groupcreator,
+           groupmembers: group.groupmembers,
+           groupmembersid: group.groupmembersid,
            category: group.category,
            // imagePath: post.imagePath
          };

@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 
+
 const Event = require('../models/event');
 const User = require('../models/user');
 const checkAuth = require("../middleware/check-auth");
@@ -40,6 +41,7 @@ router.post(
           eventdate: req.body.eventdate,
           username: user.username,
           category: req.body.category,
+          eventmembersid: [req.userData.userId.toString()],
           membersNo:1,
           eventfollowers: [usera]
         });
@@ -165,6 +167,7 @@ router.put("/adduser/:id",checkAuth,(req,res,next) => {
                   Euser: user.username
                 });
           event.eventfollowers.push( usera);
+          event.eventmembersid.push(user._id.toString());
           event.membersNo++;
           user.eventsjoined.push(req.params.id);
           event.save((err) => {

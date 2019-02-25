@@ -41,11 +41,11 @@ export class AuthService {
     return this.userId;
   }
 
-  createUser(email: string, image: File, password: string , username: string, department: string, registration: string ) {
-    const authData: AuthData = {email: email, password: password};
+  createUser(email: string, image: File, username: string, department: string, registration: string ) {
+    // const authData: AuthData = {email: email};
     const userData =  new FormData();
     userData.append('email', email);
-    userData.append('password', password);
+    // userData.append('password', password);
     userData.append('username', username);
     userData.append('image', image, email);
     userData.append( 'department', department);

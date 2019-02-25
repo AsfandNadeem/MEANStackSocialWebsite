@@ -47,6 +47,7 @@ import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { SidebarComponent } from './sidebar/sidebar/sidebar.component';
 import { AdminGroupComponent } from './admin/admin-group/admin-group.component';
 import { AdminEventComponent } from './admin/admin-event/admin-event.component';
+import { AdminPostsComponent } from './admin/admin-posts/admin-posts.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { AdminEventComponent } from './admin/admin-event/admin-event.component';
     AdminUsersComponent,
     SidebarComponent,
     AdminGroupComponent,
-    AdminEventComponent
+    AdminEventComponent,
+    AdminPostsComponent
   ],
   imports: [
     BrowserModule,

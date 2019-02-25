@@ -33,6 +33,7 @@ const groupSchema = mongoose.Schema({
   username: {type: String, required: true},
   category: {type: String,required:true},
   membersNo: {type: Number,default:0},
+  groupmembersid: {type: Array},
   groupmembers: [{
     Guserid:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
     Guser: {type: String}

@@ -36,6 +36,7 @@ router.post(
       groupname: req.body.groupname,
       description: req.body.description,
       groupcreator: req.userData.userId,
+   groupmembersid: [req.userData.userId.toString()],
       username: user.username,
       category: req.body.category,
            membersNo: 1,
@@ -164,6 +165,7 @@ router.put("/adduser/:id",checkAuth,(req,res,next) => {
             Guser: user.username
           });
           group.groupmembers.push( usera);
+          group.groupmembersid.push(user._id.toString());
           group.membersNo++;
           user.groupsjoined.push(req.params.id);
           group.save((err) => {

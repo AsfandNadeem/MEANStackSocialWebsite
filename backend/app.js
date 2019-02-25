@@ -33,7 +33,7 @@ mongoose.connect("mongodb://127.0.0.1/FYP_Social")
 //   .catch(error =>{
 //     console.log(error);
 //     console.log("Connection failed");
-//   });
+//   });z
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

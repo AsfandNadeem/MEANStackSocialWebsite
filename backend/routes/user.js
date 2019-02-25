@@ -1,12 +1,16 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
+var Regex = require("regex");
 
 const jwt = require("jsonwebtoken");
 const Post = require("../models/post");
 const User = require('../models/user');
 const Group = require('../models/group');
 const Event = require('../models/event');
+var nodemailer = require('nodemailer');
+var randomstring = require("randomstring");
+
 
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
@@ -44,55 +48,110 @@ router.post('/signup',
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
 
-  bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-      if (req.file){
-        const user = new User({
-          email: req.body.email,
-          password: hash,
-          username: req.body.username,
-          department: req.body.department,
-          registrationno: req.body.registration,
-          imagePath: url + "/profileimgs/" + req.file.filename
-        });
-      user.save()
-        .then(result => {
-          res.status(201).json({
-            message: 'User Created',
-            result: result,
-          });
-          console.log(user);
-        })
-        .catch(err => {
-          res.status(500).json({
-            error: err
-          })
-        });
-    } else {
-        const user = new User({
-          email: req.body.email,
-          password: hash,
-          username: req.body.username,
-          department: req.body.department,
-          registrationno: req.body.registration,
-        });
-        user.save()
-          .then(result => {
-            res.status(201).json({
-              message: 'User Created',
-              result: result,
-            });
-            console.log(user);
-          })
-          .catch(err => {
-            res.status(500).json({
-              error: err
-            })
-          });
+    // var regex = new Regex(/[fa|sp][0-9]{2}-[a-z]{3}-[0-9]{3}@student.comsats.edu.pk/);
+    //  if(regex.test(req.body.email) == false) {
+    //    res.status(401).json({
+    //      message: "Auth failed"
+    //    });
+    //  }
+    //   else {
 
-      }
-    });
 
+       const passwordgen = randomstring.generate(7);
+       console.log(passwordgen);
+       bcrypt.hash(passwordgen, 10)
+         .then(hash => {
+           if (req.file) {
+             const user = new User({
+               email: req.body.email,
+               password: hash,
+               username: req.body.username,
+               department: req.body.department,
+               registrationno: req.body.registration,
+               imagePath: url + "/profileimgs/" + req.file.filename
+             });
+             console.log(passwordgen);
+             user.save()
+               .then(result => {
+                 res.status(201).json({
+                   message: 'User Created',
+                   result: result,
+                 });
+                 var transporter = nodemailer.createTransport({
+                   service: 'gmail',
+                   auth: {
+                     user: 'nodeemailsender1@gmail.com',
+                     pass: 'sendemailbynode'
+                   }
+                 });
+                 var mailOptions = {
+                   from: 'nodeemailsender@gmail.com',
+                   to: req.body.email,
+                   subject: 'Confirm your login to Comsats Student Portal',
+                   text: 'Your Password is  ' + passwordgen
+                 };
+                 transporter.sendMail(mailOptions, function (error, info) {
+                   if (error) {
+                     console.log(error);
+                   } else {
+                     console.log('Email sent: ' + info.response);
+                   }
+                 });
+
+                 console.log(user);
+               })
+               .catch(err => {
+                 res.status(500).json({
+                   error: err
+                 })
+               });
+           } else {
+
+             const user = new User({
+               email: req.body.email,
+               password: hash,
+               username: req.body.username,
+               department: req.body.department,
+               registrationno: req.body.registration,
+             });
+             console.log(passwordgen);
+             user.save()
+               .then(result => {
+                 res.status(201).json({
+                   message: 'User Created',
+                   result: result,
+                 });
+                 var transporter = nodemailer.createTransport({
+                   service: 'gmail',
+                   auth: {
+                     user: 'nodeemailsender1@gmail.com',
+                     pass: 'sendemailbynode'
+                   }
+                 });
+                 var mailOptions = {
+                   from: 'nodeemailsender@gmail.com',
+                   to: req.body.email,
+                   subject: 'Confirm your login to Comsats Student Portal',
+                   text: 'Your Password is  ' + passwordgen
+                 };
+                 transporter.sendMail(mailOptions, function (error, info) {
+                   if (error) {
+                     console.log(error);
+                   } else {
+                     console.log('Email sent: ' + info.response);
+                   }
+                 });
+                 console.log(user);
+               })
+               .catch(err => {
+                 res.status(500).json({
+                   error: err
+                 })
+               });
+
+           }
+         });
+     // }
 
 });
 

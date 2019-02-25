@@ -1,0 +1,155 @@
+<html>
+<head>
+  <title>Chat With Socket.io nad Node.js</title>
+  <!-- css in the same file -->
+  <style media="screen">
+    #chat{
+      height:500px;
+    }
+    #contentWrap{
+      display:none;
+    }
+    #chatWrap{
+      float:left:
+      border-style:solid;
+    }
+    .error{
+
+      color:red;
+    }
+  </style>
+
+</head>
+<body>
+<div id = 'nickWrap'>
+  <!-- Show error message if the username already exists -->
+  <p id='nickError'></p>
+  <h5>Enter Your Username</h5>
+  <form id='setNick'>
+    <input size='35' id='nickname'></input>
+    <input type='submit'></input>
+
+  </form>
+
+</div>
+<div id='contentWrap'>
+  <div id='chatWrap'>
+    <div id='chat'></div>
+    <form id='send-message'>
+      <input size="35" id="message"></input>
+      <input type="submit"></input>
+    </form>
+  </div>
+  <div id='users'></div>
+
+
+
+
+
+</div>
+
+
+<!-- We will use jquery -->
+<script src= http //code.jquery.com/jquery-latest.min.js></script>
+<script
+src="https://code.jquery.com/jquery-3.3.1.js"
+integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+crossorigin="anonymous"></script>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<!-- script so the client can send messages to the server -->
+<!-- Jquery function runs when all the elements of the document have finished loading -->
+<script>
+  jQuery(function($){
+    var socket= io.connect();
+    var $messageForm = $('#send-message');
+    var $messageBox = $('#message');
+    var $chat = $('#chat');
+
+    var $nickForm = $('#setNick');
+    var $nickError =$('#nickError');
+    var $nickBox = $('#nickname');
+    var $users = $('#users');
+
+    <!-- eventhandler to the nickname form -->
+    $nickForm.submit(function(e){
+      e.preventDefault();
+      <!-- checking for a valid username -->
+      socket.emit('new user',$nickBox.val(),function(data){
+        <!-- this data is the true or false we sent from the server method -->
+        if(data){
+          $('#nickWrap').hide();
+          $('#contentWrap').show();
+        }else{
+          $nickError.html('That username is already taken! Try another one');
+        }
+
+      });
+      $nickBox.val('');
+    });
+    <!-- Dispaly the list of users that are online at the moment  -->
+    socket.on('usernames',function(data){
+
+      <!-- loop through the array of nicknames  -->
+      var html='';
+      for (i=0;i<data.length;i++){
+        html += data[i] + '<br/>'
+      }
+      $users.html(html);
+    });
+
+    <!-- attaching a submit handler to the messageform -->
+
+    $messageForm.submit(function(e){
+      e.preventDefault();
+      <!-- sending message to the server -->
+      socket.emit('send message',$messageBox.val(),function(data){
+        //add stuff later
+        $chat.append('<span class="error">' + data + '</span><br/>');
+
+      });
+      $messageBox.val('');
+
+    });
+    <!--loading old messages-->
+    socket.on('load old msgs',function(docs){
+      //load the latest
+      for(var i=docs.length-1;i>=0;i--){
+        displayMsg(docs[i]);
+      }
+
+    });
+    <!-- message comes back on the client side and we are Receiving it -->
+    socket.on('new message',function(data){
+      displayMsg(data);
+    });
+    <!--function to display messages -->
+    function displayMsg(data){
+      $chat.append("<b>"+  data.nick + ': </b>' + data.msg +"<br/>");
+
+    }
+    //whisper function
+    socket.on('whisper',function(data){
+      $chat.append("<b>"+  data.nick + ': </b>' + data.msg +"<br/>");
+
+    });
+
+  });
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
