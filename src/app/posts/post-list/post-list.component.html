@@ -169,6 +169,46 @@
 
   <mat-card-actions *ngIf="userId != post.creator">
     <button mat-button  color="warn" (click)="onArchive(post.id)">SAVE</button>
+    <mat-accordion class="example-headers-align" >
+      <mat-expansion-panel  [class.mat-expansion-panel]="false" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+Report
+
+          </mat-panel-title>
+
+        </mat-expansion-panel-header>
+
+        <ul class="commentspanel">
+          <li >
+            <mat-form-field style="width:700px; !important; " >
+              <input  matInput
+                      placeholder="Add Reason"
+                      ngModel
+                      #reasonInput="ngModel"
+                      required
+                      reason>
+              <mat-error *ngIf="reasonInput.invalid">Please enter a reason.</mat-error>
+
+            </mat-form-field>
+          </li>
+          <li>
+            <button (click)="addReport(post.title, post.content, post.username,
+            post.creator, post.id, reasonInput.value)">
+              <mat-icon >send</mat-icon>
+            </button>
+          </li>
+        </ul>
+
+
+      </mat-expansion-panel>
+
+
+
+
+
+
+    </mat-accordion>
   </mat-card-actions>
   <mat-card-actions *ngIf="userIsAuthenticated && userId == post.creator">
     <button mat-button  color="warn" (click)="onDelete(post.id)">DELETE</button>

@@ -74,6 +74,28 @@ export class PostsService {
       });
   }
 
+ reportPost(title: string, content: string , username: string,
+            creator: string, postid: string, reason: string) {
+    const postData =  new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('username', username);
+   postData.append('creator', creator);
+    postData.append( 'postid', postid);
+   // postData.append( 'reportedby', localStorage.getItem('userId'));
+   postData.append('reason', reason);
+    // postData.append('username', localStorage.getItem('username'));
+    // postData.append('profileimg', profileimg);
+    console.log(postData);
+   return this.http
+      .post<{ message: string, post: Post }>(
+        'http://localhost:3000/api/posts/report',
+        {title, content, username, creator, postid, reason});
+      // .subscribe( responseData  => {
+      //   this.router.navigate(['/messages']);
+      // });
+  }
+
   getPost(id: string) {
     return this.http.get<{
       _id: string,

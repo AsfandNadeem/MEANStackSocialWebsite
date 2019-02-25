@@ -28,8 +28,14 @@
             'negative' : !showevents
          }">Events</button>
       </li>
+        <li *ngIf="isadminauthenticated">
+          <button mat-button (click)="onReports()" [ngClass]="{
+            'positive' : showreports,
+            'negative' : !showreports
+         }">Reports</button>
+        </li>
      <li>
-       <button mat-button color="warn">Logout</button>
+       <button mat-button (click)="onLogout()" color="warn">Logout</button>
      </li>
       </ul>
 
@@ -40,5 +46,6 @@
     <app-admin-group *ngIf="showgroups"></app-admin-group>
     <app-admin-event *ngIf="showevents"></app-admin-event>
     <app-admin-posts *ngIf="showposts"></app-admin-posts>
+    <app-report-page *ngIf="showreports"></app-report-page>
   </mat-drawer-content>
 </mat-drawer-container>

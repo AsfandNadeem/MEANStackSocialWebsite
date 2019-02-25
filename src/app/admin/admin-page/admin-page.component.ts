@@ -14,6 +14,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
   showgroups = false;
   showposts = false;
   showevents = false;
+  showreports = false;
   constructor(private adminService: AdminServiceService, private router: Router) { }
 
   ngOnInit() {
@@ -22,6 +23,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
     this.showgroups = false;
     this.showposts = false;
     this.showevents = false;
+    this.showreports = false;
       this.isadminauthenticated = true;
     } else {
       this.isadminauthenticated = false;
@@ -33,6 +35,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
     this.showgroups = false;
     this.showposts = false;
     this.showevents = false;
+    this.showreports = false;
     this.showuser = true;
   }
 
@@ -40,12 +43,14 @@ export class AdminPageComponent implements OnInit , OnDestroy {
    this.showposts = false;
     this.showevents = false;
     this.showuser = false;
+    this.showreports = false;
     this.showgroups = true;
   }
 
   onPosts() {
    this.showevents = false;
     this.showuser = false;
+    this.showreports = false;
     this.showgroups = false;
     this.showposts = true;
   }
@@ -53,8 +58,20 @@ export class AdminPageComponent implements OnInit , OnDestroy {
   onEvents() {
     this.showposts = false;
     this.showuser = false;
+    this.showreports = false;
     this.showgroups = false;
     this.showevents = true;
+  }
+  onReports() {
+    this.showposts = false;
+    this.showuser = false;
+    this.showgroups = false;
+    this.showevents = false;
+    this.showreports = true;
+  }
+  onLogout() {
+    this.isadminauthenticated = false;
+    this.router.navigate(['/admin']).then();
   }
 
   ngOnDestroy() {

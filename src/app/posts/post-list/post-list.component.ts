@@ -117,6 +117,21 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   }
+
+  addReport(title: string, content: string, username: string,
+            creatorid: string, postid: string, reason: string) {
+    console.log(title + '\n' + content + '\n' + username + '\n' + creatorid
+      + '\n' + postid + '\n' + reason);
+    if (reason === '') {
+      return;
+    } else {
+      this.postsService.reportPost(title, content,
+        username, creatorid, postid, reason).subscribe(() => {
+        this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      });
+    }
+
+  }
   onArchive(id: string) {
     console.log(id);
     this.postsService.archivepost(id).subscribe( () => {

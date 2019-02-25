@@ -3,6 +3,7 @@ const multer = require("multer");
 
 const Post = require("../models/post");
 const User = require('../models/user');
+const Report = require("../models/report");
 const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
@@ -99,6 +100,27 @@ router.post(
 
   }
 );
+
+router.post("/report", checkAuth, (req, res, next) => {
+  console.log(req.body.title);
+          const report = new Report({
+          title: req.body.title,
+          content: req.body.content,
+          username: req.body.username,
+          creator: req.body.creator,
+          postid: req.body.postid,
+          reportedby: req.userData.userId,
+          reason: req.body.reason,
+        });
+          report.save()
+            .then(result => {
+              res.status(201).json({
+                      message: 'Report Created',
+                      result: result,
+                    });
+            });
+});
+
 
 
 router.put(

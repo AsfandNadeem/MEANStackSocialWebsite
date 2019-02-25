@@ -8,9 +8,21 @@ import {Group} from '../groups/group.model';
 import {Events} from '../events/event.model';
 import {Post} from '../posts/post.model';
 
+export interface Report {
+  id: string;
+  title: string;
+  content: string;
+  username: string;
+  creator: string;
+  reason: string;
+  reportedby: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class AdminServiceService {
 
   isadmin = false;
@@ -22,6 +34,8 @@ export class AdminServiceService {
   private groupsUpdated = new Subject<{groups: Group[], groupCount: number}>();
   private events: Events[] = [];
   private eventsUpdated = new Subject<{events: Events[], eventCount: number}>();
+  private reports: Report[] = [];
+  private reportsUpdated = new Subject<{reports: Report[], reportCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -87,6 +101,48 @@ export class AdminServiceService {
     return this.postsUpdated.asObservable();
   }
 
+  getReports() { // httpclientmodule
+    // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
+    this.http
+      .get<{message: string, reports: any, maxReports: number}>(
+        'http://localhost:3000/api/admin/reports'
+      )
+      .pipe(map((reportData) => {
+        return { reports: reportData.reports.map(report => {
+            return {
+              // profleimg: post.profileimg,
+              reporttitle: report.title,
+              reportcontent: report.content,
+              reportid: report.postid,
+              reportusername : report.username,
+              reportcreator: report.creator,
+              reportreason: report.reason,
+              reportreportedby: report.reportedby
+              // likes: post.likes,
+              // likedBy: post.likedBy,
+              // dislikedBy: post.dislikedBy,
+              // category: post.category,
+              // commentsNo: post.commentsNo,
+              // comments: post.comments,
+              // dislikes: post.dislikes,
+              // createdAt: post.createdAt,
+              // imagePath: post.imagePath
+            };
+          }), maxReports: reportData.maxReports  };
+      }))// change rterieving data
+      .subscribe(transformedReportData => {
+        this.reports = transformedReportData.reports;
+        this.reportsUpdated.next({
+            reports: [...this.reports],
+           reportCount: transformedReportData.maxReports
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getReportUpdateListener() {
+    return this.reportsUpdated.asObservable();
+  }
 
   getUsers() { // httpclientmodule
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings

@@ -7,6 +7,7 @@ const Post = require("../models/post");
 const User = require('../models/user');
 const Group = require('../models/group');
 const Event = require('../models/event');
+const Report = require('../models/report');
 
 const router = express.Router();
 
@@ -108,6 +109,25 @@ router.get("/posts", (req, res, next) => {
         message: "Posts fetched successfully!",
         posts: fetchedPosts,
         maxPosts: count
+      });
+    });
+});
+
+router.get("/reports", (req, res, next) => {
+
+  const reportQuery = Report.find().sort({ '_id': -1 });
+  let fetchedReports;
+
+  reportQuery
+    .then(documents => {
+      fetchedReports = documents;
+      return Report.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        reports: fetchedReports,
+        maxReports: count
       });
     });
 });
