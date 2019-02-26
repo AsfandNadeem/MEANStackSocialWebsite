@@ -113,6 +113,9 @@ export class EventPageComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    if (this.form.value.title == null) {
+      return;
+    }
     this.isLoading = true;
     this.eventService.addPost(this.eventid, this.form.value.title,
     this.form.value.content, this.form.value.image).subscribe( () => {

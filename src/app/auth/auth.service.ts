@@ -84,7 +84,7 @@ export class AuthService {
         }
       } , error => {
         console.log('error');
-        this.router.navigate(['/']).then();
+        this.router.navigate(['/login']).then();
     });
 
   }

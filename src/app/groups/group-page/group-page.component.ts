@@ -119,6 +119,9 @@ export class GroupPageComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    if (this.form.value.title == null) {
+      return;
+    }
     this.isLoading = true;
       this.groupsService.addPost(this.groupid, this.form.value.title,
         this.form.value.content, this.form.value.image).subscribe( () => {

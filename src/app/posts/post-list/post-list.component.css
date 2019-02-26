@@ -4,15 +4,20 @@
 mat-drawer {
   /*background-color: lightblue;*/
   /*border: 1px solid #555;*/
+  padding: 10px;
+  padding-left: 20px;
   width: 20%;
 }
 
 mat-drawer-content{
-  /*background-color: beige;*/
-    height: 850px;
+  margin-left: 502px !important;
+  width: 50% !important;
+    height: 860px;
 }
 
-
+:host ::ng-deep.mat-paginator .mat-paginator-container{
+  justify-content: flex-start !important;
+}
 /*:host {*/
   /*display: block;*/
   /*margin-top: 1rem;*/
@@ -44,7 +49,7 @@ ul{
 }
 
 .example-card {
-  max-width: 40%;
+  max-width: 100% !important;
   margin: 4px;
 }
 

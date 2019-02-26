@@ -4,6 +4,7 @@
 mat-drawer {
   /*background-color: lightblue;*/
   /*border: 1px solid #555;*/
+  padding-left: 20px;
   width: 20%;
 }
 
