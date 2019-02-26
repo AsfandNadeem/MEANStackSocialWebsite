@@ -1,3 +1,10 @@
+mat-card {
+  width: 30%;
+  margin: auto;
+  margin-top: 10%;
+  /*margin-right: 35%;*/
+}
+
 mat-form-field,
 textarea {
   width: 100%;

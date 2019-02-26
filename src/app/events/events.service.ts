@@ -13,13 +13,13 @@ export class EventsService {
   private events: Events[] = [];
   private posts: Post[] = [];
   private eventsUpdated = new Subject<{events: Events[], eventCount: number}>();
-  private postsUpdated = new Subject<{posts: Post[]}>();
+  private postsUpdated = new Subject<{posts: Post[], eventmembers: any}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
   getPosts(id: string) {
     console.log('eventinservicee' + id);
-    this.http.get<{posts: any}>
+    this.http.get<{eventmembers: any, posts: any}>
     ('http://localhost:3000/api/events/' + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -39,12 +39,13 @@ export class EventsService {
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
-          })};
+          }), eventmembers:  postData.eventmembers};
       }))
       .subscribe( transformedEventPost => {
         this.posts = transformedEventPost.posts;
         this.postsUpdated.next( {
-          posts: [...this.posts]
+          posts: [...this.posts],
+          eventmembers: transformedEventPost.eventmembers
         });
       });
   }

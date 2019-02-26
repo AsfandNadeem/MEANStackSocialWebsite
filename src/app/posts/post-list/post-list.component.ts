@@ -17,6 +17,7 @@ import {EventsService} from '../../events/events.service';
   styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
+  friends = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
   posts: Post[] = [];
   groups: Group[] = [];
   events: Events[] = [];

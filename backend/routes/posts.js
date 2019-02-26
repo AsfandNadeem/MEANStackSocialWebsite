@@ -34,6 +34,49 @@ const storage = multer.diskStorage({
   }
 });
 
+router.post("/postmobile",
+  checkAuth,
+  (req, res, next) => {
+    console.log("addingpost-----------------------\n"+req.body.title+"\n----------------------------");
+
+      User.findById({ _id: req.userData.userId}, (err, user) => {
+        if(err){
+          console.log("no user");
+          res.json({ success: false, message: 'soemthing went worng'});
+        } else {
+          if(!user){
+            console.log("no found user");
+            res.json({success: false,message:'user not Found'});
+          }
+          else {
+
+                    const post = new Post({
+                      title: req.body.title,
+                      content: req.body.content,
+                      username: user.username,
+                      createdAt : Date.now(),
+                      creator: req.userData.userId,
+                      profileimg: user.imagePath
+                    });
+
+            post.save((err) => {
+              if(err) {
+                res.json({ success: false, message:'something went wrong'});
+              } else {
+                console.log(post);
+                res.json({ success: true, message: 'post added'});
+              }
+            });
+
+          }
+        }
+      });
+
+
+  }
+);
+
+
 router.post(
   "",
   checkAuth,

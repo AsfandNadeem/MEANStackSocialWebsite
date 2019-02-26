@@ -48,16 +48,12 @@ router.post('/signup',
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
 
-    // var regex = new Regex(/[fa|sp][0-9]{2}-[a-z]{3}-[0-9]{3}@student.comsats.edu.pk/);
-    //  if(regex.test(req.body.email) == false) {
-    //    res.status(401).json({
-    //      message: "Auth failed"
-    //    });
-    //  }
-    //   else {
-
-
-       const passwordgen = randomstring.generate(7);
+console.log(req.body.email);
+    var regex = new RegExp('^(fa|sp)[0-9]{2}-[a-z]{3}-[0-9]{3}@student.comsats.edu.pk$');
+    console.log(regex.test(req.body.email));
+     if(regex.test(req.body.email)) {
+       console.log("valid regex");
+const passwordgen = randomstring.generate(7);
        console.log(passwordgen);
        bcrypt.hash(passwordgen, 10)
          .then(hash => {
@@ -151,7 +147,15 @@ router.post('/signup',
 
            }
          });
-     // }
+     }
+      else {
+        return res.status(401).json({
+         message: "invalid email"
+       });
+
+     }
+
+
 
 });
 

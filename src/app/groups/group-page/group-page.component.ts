@@ -9,7 +9,11 @@ import {Subscription} from 'rxjs';
 import {Group} from '../group.model';
 import {Events} from '../../events/event.model';
 import {EventsService} from '../../events/events.service';
+import {EventMembers} from '../../events/event-page/event-page.component';
 
+export interface GroupMembers {
+  Guser: string;
+}
 @Component({
   selector: 'app-group-page',
   templateUrl: './group-page.component.html',
@@ -21,6 +25,7 @@ export class GroupPageComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
 
+ groupMembers: GroupMembers[] = [];
   posts: Post[] = [];
   groups: Group[] = [];
   events: Events[] = [];
@@ -60,12 +65,14 @@ export class GroupPageComponent implements OnInit {
     this.userId = this.authService.getUserId();
     // this.username = this.authService.getName();
     this.postsSub = this.groupsService.getPostUpdateListener()
-       .subscribe((postData: { posts: Post[]}) => {
+       .subscribe((postData: { groupmembers: any, posts: Post[]}) => {
         this.isLoading = false;
     //     this.totalGroups = groupData.groupCount;
         this.username = this.authService.getName();
         this.posts = postData.posts;
-        console.log(this.posts);
+         this.groupMembers = postData.groupmembers;
+         console.log(this.posts);
+         console.log(this.groupMembers);
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService

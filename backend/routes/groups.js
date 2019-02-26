@@ -199,6 +199,7 @@ console.log("getiing group");
     if (group) {
       console.log("group found");
       res.status(200).json({
+        groupmembers: group.groupmembers,
                posts: group.groupPosts
                    });
       console.log(group.groupPosts);

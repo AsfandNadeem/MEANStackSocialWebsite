@@ -205,9 +205,11 @@ console.log("getiing event");
       console.log("event found");
       postes = event.eventPosts.sort({ '_id': -1 });
       res.status(200).json({
+        eventmembers: event.eventfollowers,
                posts: postes
                    });
       console.log(event.eventPosts);
+      console.log("--------------------------------------------"+event.eventfollowers);
     } else {
       res.status(404).json({ message: "Event not found!" });
     }

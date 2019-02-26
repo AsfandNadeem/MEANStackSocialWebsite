@@ -228,24 +228,12 @@ Report
     >
       <ul style="padding: 4px; font-family: Bahnschrift;">
         <li>
-          <strong> Joined Groups </strong>
+          <strong> Friends </strong>
         </li>
-        <li *ngFor="let group of groups" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', group.id]">{{ group.groupname}}</a>
+        <li *ngFor="let friend of friends" style="padding: 5px;">
+          <strong>  {{friend}} </strong>
         </li>
-        <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
-          Following No Groups
-        </li>
-        <br/>
-        <li>
-          <strong> Joined Events </strong>
-        </li>
-        <li *ngFor="let event of events" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
-        </li>
-        <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
-          No events joined
-        </li>
+
 
       </ul>
 

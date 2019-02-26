@@ -15,7 +15,7 @@ import {Events} from '../../events/event.model';
   styleUrls: ['./archivedposts.component.css']
 })
 export class ArchivedpostsComponent implements OnInit {
-
+  friends = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
   posts: Post[] = [];
   groups: Group[] = [];
   events: Events[] = [];

@@ -10,6 +10,10 @@ import {Group} from '../../groups/group.model';
 import {Events} from '../event.model';
 import {GroupsService} from '../../groups/groups.service';
 
+export interface EventMembers {
+  Euser: string;
+}
+
 @Component({
   selector: 'app-event-page',
   templateUrl: './event-page.component.html',
@@ -21,6 +25,7 @@ export class EventPageComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
 
+  eventMembers: EventMembers[] = [];
   posts: Post[] = [];
   groups: Group[] = [];
   events: Events[] = [];
@@ -59,12 +64,14 @@ export class EventPageComponent implements OnInit {
         this.userId = this.authService.getUserId();
         // this.username = this.authService.getName();
         this.postsSub = this.eventService.getPostUpdateListener()
-           .subscribe((postData: { posts: Post[]}) => {
+           .subscribe((postData: {  eventmembers: any, posts: Post[]}) => {
             this.isLoading = false;
         //     this.totalGroups = eventData.eventCount;
             this.username = this.authService.getName();
             this.posts = postData.posts;
+            this.eventMembers = postData.eventmembers;
             console.log(this.posts);
+            console.log(this.eventMembers);
           });
         this.userIsAuthenticated = this.authService.getIsAuth();
         this.authStatusSub = this.authService
