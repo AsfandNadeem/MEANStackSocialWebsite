@@ -15,6 +15,7 @@ export interface Notification {
   created: Date;
   sendername: string;
   message: string;
+  senderimage: string;
 }
 @Component({
   selector: 'app-post-list',
@@ -98,7 +99,7 @@ this.notificationSub = this.postsService.getNotificationUpdateListener()
 
     this.socket.on('refreshpage', (data) => {
       this.postsService.getNotifications();
-      // this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
   }
 

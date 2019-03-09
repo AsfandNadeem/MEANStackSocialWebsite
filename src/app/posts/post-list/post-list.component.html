@@ -232,15 +232,42 @@ Report
         </mat-card>
         <mat-card class="example-card"*ngFor="let notification of notifications">
           <mat-card-header >
-            <ul style="list-style: none;">
+            <ul style="list-style: none; display: flex;">
               <li>
-                {{notification.message}}
+              <img *ngIf="notification.senderimage"
+              class="example-header-image-post"
+              [src]="notification.senderimage" style="margin-right: 10px;" >
               </li>
               <li>
+                <ul  style="list-style: none;">
+                  <li>
+                    {{notification.message}}
+                  </li>
+                  <li>
+                  <mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>
+                  </li>
+                </ul>
 
-                <mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>
               </li>
             </ul>
+            <!--<ul style="list-style: none;">-->
+              <!--<li>-->
+              <!--<ul style="list-style: none; display: flex;">-->
+              <!--<li>-->
+                <!--<img *ngIf="notification.senderimage"-->
+                     <!--class="example-header-image-post"-->
+                  <!--[src]="notification.senderimage">-->
+              <!--</li>-->
+              <!--<li>-->
+                <!--{{notification.message}}-->
+              <!--</li>-->
+              <!--</ul>-->
+              <!--</li>-->
+              <!--<li>-->
+
+                <!--<mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>-->
+              <!--</li>-->
+            <!--</ul>-->
           </mat-card-header>
         </mat-card>
 

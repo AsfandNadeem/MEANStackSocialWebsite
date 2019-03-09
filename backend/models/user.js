@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema({
     {
       senderId: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
       senderName: {type: String},
+      senderimage: {type: String},
       message: {type: String},
       created: {type: Date, default: Date.now()}
     }

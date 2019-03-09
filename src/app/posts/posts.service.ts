@@ -10,6 +10,7 @@ export interface Notification {
   created: Date;
   sendername: string;
   message: string;
+  senderimage: string;
 }
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -74,6 +75,7 @@ export class PostsService {
               created: notification.created,
              sendername: notification.sendername,
              message: notification.message,
+              senderimage: notification.senderimage,
             };
           }), maxNotifications: notificationData.maxNotifictaions  };
       }))// change rterieving data

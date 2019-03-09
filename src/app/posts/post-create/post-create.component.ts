@@ -121,9 +121,9 @@ export class PostCreateComponent implements OnInit {
     }
     this.isLoading = true;
     if (this.mode === 'create') {
-      this.socket.emit('refresh', {});
       this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image,
         this.form.value.cname);
+      // this.socket.emit('refresh', {});
     } else {
       this.postsService.updatePost(
         this.postId,

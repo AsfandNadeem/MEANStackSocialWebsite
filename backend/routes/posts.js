@@ -406,7 +406,16 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                     res.json({ success: false, message: 'Cannot like own post'});
                   } else {
                     if(post.likedBy.includes(user._id.toString())) {
-                      res.json({success: false, message: 'You already liked this post'});
+                      post.likes--;
+                      const arrayIndex = post.likedBy.indexOf(user._id.toString());
+                      post.likedBy.splice(arrayIndex,1);
+                      post.save((err) => {
+                        if(err) {
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          res.json({ success: true, message: 'post disliked!'});
+                        }
+                      });
                     } else {
                       if(post.dislikedBy.includes(user._id.toString())) {
                         post.dislikes--;
@@ -429,6 +438,7 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                                 const notification = ({
                                   senderId: user._id,
                                   senderName: user.username,
+                                  senderimage: user.imagePath,
                                   message: user.username.toString() + " likes your post",
                                 });
 
@@ -466,6 +476,7 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                                 const notification = ({
                                   senderId: user._id,
                                   senderName: user.username,
+                                  senderimage: user.imagePath,
                                   message: user.username.toString() + " likes your post",
                                 });
 
@@ -530,7 +541,16 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                   res.json({ success: false, message: 'Cannot dislike own post'});
                 } else {
                   if(post.dislikedBy.includes(user._id.toString())) {
-                    res.json({success: false, message: 'You already disliked this post'});
+                    post.dislikes--;
+                    const arrayIndex = post.dislikedBy.indexOf(user._id.toString());
+                    post.dislikedBy.splice(arrayIndex,1);
+                    post.save((err) => {
+                      if(err) {
+                        res.json({ success: false, message:'something went wrong'});
+                      } else {
+                        res.json({ success: true, message: 'post disliked!'});
+                      }
+                    });
                   } else {
                     if(post.likedBy.includes(user._id.toString())) {
                       post.likes--;
@@ -552,6 +572,7 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                               const notification = ({
                                 senderId: user._id,
                                 senderName: user.username,
+                                senderimage: user.imagePath,
                                 message: user.username.toString() + " dislikes your post",
                               });
 
@@ -587,6 +608,7 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                               const notification = ({
                                 senderId: user._id,
                                 senderName: user.username,
+                                senderimage: user.imagePath,
                                 message: user.username.toString() + " dislikes your post",
                               });
 
