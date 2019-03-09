@@ -83,6 +83,7 @@ import { ReportPageComponent } from './admin/report-page/report-page.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatInputModule,
+    MatIconModule,
     MatCardModule,
     MatDatepickerModule,
     MatButtonModule,

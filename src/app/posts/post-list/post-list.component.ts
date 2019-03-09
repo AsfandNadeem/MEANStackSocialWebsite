@@ -10,15 +10,21 @@ import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
 import {EventsService} from '../../events/events.service';
 import io from 'socket.io-client';
-
+import * as moment from 'moment';
+export interface Notification {
+  created: Date;
+  sendername: string;
+  message: string;
+}
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
+  socketHost: any;
   socket: any;
-  friends = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
+  notifications: Notification[] = [];
   posts: Post[] = [];
   groups: Group[] = [];
   events: Events[] = [];
@@ -36,6 +42,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private authStatusSub: Subscription;
+  private notificationSub: Subscription;
 
   constructor(public postsService: PostsService, private authService: AuthService,
               private groupsService: GroupsService, private eventsService: EventsService) {
@@ -66,6 +73,13 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
       });
+this.postsService.getNotifications();
+this.notificationSub = this.postsService.getNotificationUpdateListener()
+  .subscribe((notificationData: { notifications: Notification[]}) => {
+    this.notifications = notificationData.notifications;
+    console.log(this.notifications);
+  });
+
     console.log(this.groupsService.getJoinedGroups());
     this.groupsSub = this.groupsService.getGroupUpdateListener()
       .subscribe((groupData: { groups: Group[]}) => {
@@ -83,7 +97,8 @@ export class PostListComponent implements OnInit, OnDestroy {
       });
 
     this.socket.on('refreshpage', (data) => {
-      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      this.postsService.getNotifications();
+      // this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
   }
 
@@ -99,6 +114,9 @@ export class PostListComponent implements OnInit, OnDestroy {
     });
   }
 
+  TimeFromNow(time) {
+    return moment(time).fromNow();
+  }
 
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;
@@ -109,6 +127,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   likePost(id: string) {
     this.postsService.likePost(id).subscribe( () => {
+      this.socket.emit('refresh', {});
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
     }
@@ -119,7 +138,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     if (comment === '') {
       return;
     } else {
-    this.postsService.addComment(id, comment).subscribe(() => {
+      this.postsService.addComment(id, comment).subscribe(() => {
+        this.socket.emit('refresh', {});
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
   }
@@ -149,6 +169,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   dislikePost(id: string) {
     this.postsService.dislikePost(id).subscribe( () => {
+      this.socket.emit('refresh', {});
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
 

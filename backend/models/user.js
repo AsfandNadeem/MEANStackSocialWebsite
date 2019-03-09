@@ -13,7 +13,15 @@ const userSchema = mongoose.Schema({
   commentson: {type: Array},
   archives: [{type: mongoose.Schema.Types.ObjectId, ref: "Post"}],
   eventsjoined: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}],
-  groupsjoined: [{type: mongoose.Schema.Types.ObjectId, ref: "Group"}]
+  groupsjoined: [{type: mongoose.Schema.Types.ObjectId, ref: "Group"}],
+  notifications: [
+    {
+      senderId: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
+      senderName: {type: String},
+      message: {type: String},
+      created: {type: Date, default: Date.now()}
+    }
+  ]
 });
 
 userSchema.plugin(uniqueValidator);

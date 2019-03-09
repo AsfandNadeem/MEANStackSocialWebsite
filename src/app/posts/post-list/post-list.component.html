@@ -227,12 +227,22 @@ Report
       margin-top: 11px !important;"
     >
       <ul style="padding: 4px; font-family: Bahnschrift;">
-        <li>
-          <strong> Friends </strong>
-        </li>
-        <li *ngFor="let friend of friends" style="padding: 5px;">
-          <strong>  {{friend}} </strong>
-        </li>
+        <mat-card class="example-card">
+          <strong> <mat-icon>alarm</mat-icon> Notifcations</strong>
+        </mat-card>
+        <mat-card class="example-card"*ngFor="let notification of notifications">
+          <mat-card-header >
+            <ul style="list-style: none;">
+              <li>
+                {{notification.message}}
+              </li>
+              <li>
+
+                <mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>
+              </li>
+            </ul>
+          </mat-card-header>
+        </mat-card>
 
 
       </ul>

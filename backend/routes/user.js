@@ -311,6 +311,23 @@ else {
 
   });
 
+router.get("/notifications",checkAuth, (req,res,next) => {
+  const userQuery = User.findById(req.userData.userId);
+  let fetchedUser;
+ userQuery.then(documents => {
+   fetchedUser = documents;
+   return User.count();
+ })
+   .then(count => {
+     console.log("_________________________________________________________\n"+fetchedUser.notifications);
+     res.status(200).json({
+       message: "notifactions fecthed",
+       notifications: fetchedUser.notifications.reverse(),
+       maxNotifications: count
+     });
+   });
+});
+
 
 
 module.exports = router;

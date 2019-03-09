@@ -63,7 +63,7 @@ router.post("/postmobile",
               if(err) {
                 res.json({ success: false, message:'something went wrong'});
               } else {
-                // console.log(post);
+                console.log(post);
                 res.json({ success: true, message: 'post added'});
               }
             });
@@ -426,7 +426,22 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                               } else {
                                 console.log(user);
 
-                                res.json({ success: true, message: 'post liked!'});
+                                const notification = ({
+                                  senderId: user._id,
+                                  senderName: user.username,
+                                  message: user.username.toString() + " likes your post",
+                                });
+
+                                User.findOne({_id: post.creator}, (err, user2) => {
+                                  user2.notifications.push(notification);
+                                  user2.save((err) => {
+                                    if(err) {
+                                      res.json({ success: false, message:'something went wrong'});
+                                    } else {
+                                      res.json({ success: true, message: 'post liked!'});
+                                    }
+                                  });
+                                });
                               }
                             });
                           }
@@ -447,7 +462,28 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                               } else {
                                 console.log(user);
 
-                                res.json({ success: true, message: 'post liked!'});
+                                // res.json({ success: true, message: 'post liked!'});
+                                const notification = ({
+                                  senderId: user._id,
+                                  senderName: user.username,
+                                  message: user.username.toString() + " likes your post",
+                                });
+
+                                User.findOne({_id: post.creator}, (err, user2) => {
+                                  user2.notifications.push(notification);
+                                  user2.save((err) => {
+                                    if(err) {
+                                      res.json({ success: false, message:'something went wrong'});
+                                    } else {
+                                      res.json({ success: true, message: 'post liked!'});
+                                    }
+                                  });
+                                });
+
+
+
+
+
                               }
                             });
 
@@ -513,7 +549,22 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                               res.json({ success: false, message:'something went wrong'});
                             } else {
                               console.log(user);
-                              res.json({ success: true, message: 'post liked!'});
+                              const notification = ({
+                                senderId: user._id,
+                                senderName: user.username,
+                                message: user.username.toString() + " dislikes your post",
+                              });
+
+                              User.findOne({_id: post.creator}, (err, user2) => {
+                                user2.notifications.push(notification);
+                                user2.save((err) => {
+                                  if(err) {
+                                    res.json({ success: false, message:'something went wrong'});
+                                  } else {
+                                    res.json({ success: true, message: 'post disliked!'});
+                                  }
+                                });
+                              });
                             }
                           });
                         }
@@ -533,7 +584,22 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                               res.json({ success: false, message:'something went wrong'});
                             } else {
                               console.log(user);
-                              res.json({ success: true, message: 'post liked!'});
+                              const notification = ({
+                                senderId: user._id,
+                                senderName: user.username,
+                                message: user.username.toString() + " dislikes your post",
+                              });
+
+                              User.findOne({_id: post.creator}, (err, user2) => {
+                                user2.notifications.push(notification);
+                                user2.save((err) => {
+                                  if(err) {
+                                    res.json({ success: false, message:'something went wrong'});
+                                  } else {
+                                    res.json({ success: true, message: 'post disliked!'});
+                                  }
+                                });
+                              });
                             }
                           });
                         }
@@ -603,7 +669,22 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                           res.json({ success: false, message:'something went wrong'});
                         } else {
                           console.log(user);
-                          res.json({ success: true, message: 'conmment added!'});
+                          const notification = ({
+                            senderId: user._id,
+                            senderName: user.username,
+                            message: user.username.toString() + " commented on your post",
+                          });
+
+                          User.findOne({_id: post.creator}, (err, user2) => {
+                            user2.notifications.push(notification);
+                            user2.save((err) => {
+                              if(err) {
+                                res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                res.json({ success: true, message: 'comment added'});
+                              }
+                            });
+                          });
                         }
                       });
                     }

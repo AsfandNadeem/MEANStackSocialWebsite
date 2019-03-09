@@ -5,13 +5,21 @@ import { Post } from './post.model';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
-
+import * as moment from 'moment';
+export interface Notification {
+  created: Date;
+  sendername: string;
+  message: string;
+}
 @Injectable({providedIn: 'root'})
 export class PostsService {
+  private notifications: Notification [] = [];
+  private notificationUpdated = new Subject<{notifications: Notification[], notificationCount: number}>();
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
+
 
 
 
@@ -55,6 +63,34 @@ export class PostsService {
   getPostUpdateListener() {
     return this.postsUpdated.asObservable();
   }
+  getNotifications() {
+    this.http
+      .get<{message: string, notifications: any,  username: string, maxNotifictaions: number}>(
+        'http://localhost:3000/api/user/notifications'
+      )
+      .pipe(map((notificationData) => {
+        return { notifications: notificationData.notifications.map(notification => {
+            return {
+              created: notification.created,
+             sendername: notification.sendername,
+             message: notification.message,
+            };
+          }), maxNotifications: notificationData.maxNotifictaions  };
+      }))// change rterieving data
+      .subscribe(transformedNotifictaionData => {
+        this.notifications = transformedNotifictaionData.notifications;
+        this.notificationUpdated.next({
+            notifications: [...this.notifications],
+            notificationCount: transformedNotifictaionData.maxNotifications
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getNotificationUpdateListener() {
+    return this.notificationUpdated.asObservable();
+  }
+
 
   addPost(title: string, content: string , image: File, category: string) {
     const postData =  new FormData();
@@ -73,6 +109,7 @@ export class PostsService {
         this.router.navigate(['/messages']);
       });
   }
+
 
  reportPost(title: string, content: string , username: string,
             creator: string, postid: string, reason: string) {
