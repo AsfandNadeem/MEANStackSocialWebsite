@@ -63,7 +63,7 @@ router.post("/postmobile",
               if(err) {
                 res.json({ success: false, message:'something went wrong'});
               } else {
-                console.log(post);
+                // console.log(post);
                 res.json({ success: true, message: 'post added'});
               }
             });

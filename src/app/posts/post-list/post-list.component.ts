@@ -9,7 +9,7 @@ import {GroupsService} from '../../groups/groups.service';
 import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
 import {EventsService} from '../../events/events.service';
-
+import io from 'socket.io-client';
 
 @Component({
   selector: 'app-post-list',
@@ -17,6 +17,7 @@ import {EventsService} from '../../events/events.service';
   styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
+  socket: any;
   friends = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
   posts: Post[] = [];
   groups: Group[] = [];
@@ -37,7 +38,9 @@ export class PostListComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
 
   constructor(public postsService: PostsService, private authService: AuthService,
-              private groupsService: GroupsService, private eventsService: EventsService) {}
+              private groupsService: GroupsService, private eventsService: EventsService) {
+    this.socket = io('http://localhost:3000');
+  }
 
   ngOnInit() {
 
@@ -78,6 +81,10 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.events = eventData.events;
         console.log(this.events);
       });
+
+    this.socket.on('refreshpage', (data) => {
+      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+    });
   }
 
   ngOnDestroy() {

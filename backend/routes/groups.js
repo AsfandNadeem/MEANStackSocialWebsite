@@ -110,16 +110,16 @@ let count = 0;
   groupQuery
     .then(groups => {
       groups.forEach( function( onegroup) {
-        console.log(onegroup);
+        // console.log(onegroup);
         onegroup.groupmembers.forEach( function( onemember){
-          console.log(onemember.Guserid);
+          // console.log(onemember.Guserid);
           if(onemember.Guserid == req.userData.userId) {
             joinedgroups.push(onegroup);
             count++;
           }
            });
       });
-      console.log(joinedgroups);
+      // console.log(joinedgroups);
       res.status(200).json({
         message: "Groups fetched successfully!",
         groups: joinedgroups,

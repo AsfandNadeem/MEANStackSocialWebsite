@@ -69,16 +69,16 @@ router.get("/joinedevents", checkAuth, (req, res, next) => {
   eventQuery
     .then(events => {
       events.forEach( function( oneevent) {
-        console.log(oneevent);
+        // console.log(oneevent);
         oneevent.eventfollowers.forEach( function( onemember){
-          console.log(onemember.Euserid);
+          // console.log(onemember.Euserid);
           if(onemember.Euserid == req.userData.userId) {
             joinedevents.push(oneevent);
             count++;
           }
         });
       });
-      console.log(joinedevents);
+      // console.log(joinedevents);
       res.status(200).json({
         message: "Events fetched successfully!",
         events: joinedevents,

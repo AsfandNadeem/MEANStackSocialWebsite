@@ -11,13 +11,15 @@ import {EventsService} from '../../events/events.service';
 import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
 
-
+import io from 'socket.io-client';
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css']
 })
 export class PostCreateComponent implements OnInit {
+  socketHost: any;
+  socket: any;
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
@@ -32,7 +34,10 @@ export class PostCreateComponent implements OnInit {
   categories = ['General', localStorage.getItem('department')];
 
   constructor(public postsService: PostsService, public route: ActivatedRoute,
-              private groupsService: GroupsService, private eventsService: EventsService) {}
+              private groupsService: GroupsService, private eventsService: EventsService) {
+    this.socketHost = 'http://localhost:3000';
+    this.socket = io(this.socketHost);
+  }
 
   ngOnInit() {
     console.log(this.groupsService.getJoinedGroups());
@@ -116,6 +121,7 @@ export class PostCreateComponent implements OnInit {
     }
     this.isLoading = true;
     if (this.mode === 'create') {
+      this.socket.emit('refresh', {});
       this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image,
         this.form.value.cname);
     } else {

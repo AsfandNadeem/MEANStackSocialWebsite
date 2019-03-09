@@ -2,6 +2,8 @@ const app = require("./backend/app");
 const debug = require("debug")("node-angular");
 const http = require("http");
 
+// const socketEvents = require('./web/socket');
+
 const normalizePort = val => {
   var port = parseInt(val, 10);
 
@@ -48,6 +50,9 @@ const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);//setting server on express app
 
 const server = http.createServer(app);
+const io = require('socket.io').listen(server);
+
+require('./backend/socket/stream')(io);
 server.on("error", onError);
 server.on("listening", onListening);
 server.listen(port);
