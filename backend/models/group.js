@@ -34,6 +34,11 @@ const groupSchema = mongoose.Schema({
   category: {type: String,required:true},
   membersNo: {type: Number,default:0},
   groupmembersid: {type: Array},
+  grouprequestsid: {type: Array},
+  grouprequests: [{
+    Guserid:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    Guser: {type: String}
+  }],
   groupmembers: [{
     Guserid:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
     Guser: {type: String}

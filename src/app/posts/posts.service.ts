@@ -165,6 +165,7 @@ export class PostsService {
          creator: null,
          likes: null,
          likedBy: null,
+         profileimg: null,
          dislikedBy: null,
          dislikes: null,
          comments: null,

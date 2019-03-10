@@ -9,10 +9,15 @@ import {Subscription} from 'rxjs';
 import {Group} from '../group.model';
 import {Events} from '../../events/event.model';
 import {EventsService} from '../../events/events.service';
+import io from 'socket.io-client';
 import {EventMembers} from '../../events/event-page/event-page.component';
 
 export interface GroupMembers {
   Guser: string;
+}
+export interface GroupRequests {
+  Guser: string;
+  Guserid: string;
 }
 @Component({
   selector: 'app-group-page',
@@ -24,8 +29,9 @@ export class GroupPageComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
-
+  socket: any;
  groupMembers: GroupMembers[] = [];
+  groupRequests: GroupRequests[] = [];
   posts: Post[] = [];
   groups: Group[] = [];
   events: Events[] = [];
@@ -39,7 +45,9 @@ export class GroupPageComponent implements OnInit {
   private userId: string;
 
   constructor(public groupsService: GroupsService, private eventsService: EventsService,
-              private authService: AuthService, public route: ActivatedRoute) { }
+              private authService: AuthService, public route: ActivatedRoute) {
+    this.socket = io('http://localhost:3000');
+  }
 
   ngOnInit() {
    this.form = new FormGroup({
@@ -65,14 +73,16 @@ export class GroupPageComponent implements OnInit {
     this.userId = this.authService.getUserId();
     // this.username = this.authService.getName();
     this.postsSub = this.groupsService.getPostUpdateListener()
-       .subscribe((postData: { groupmembers: any, posts: Post[]}) => {
+       .subscribe((postData: { groupmembers: any, grouprequests: any, posts: Post[]}) => {
         this.isLoading = false;
     //     this.totalGroups = groupData.groupCount;
         this.username = this.authService.getName();
         this.posts = postData.posts;
          this.groupMembers = postData.groupmembers;
+         this.groupRequests = postData.grouprequests;
          console.log(this.posts);
          console.log(this.groupMembers);
+         console.log(this.groupRequests);
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService
@@ -82,21 +92,24 @@ export class GroupPageComponent implements OnInit {
         this.userId = this.authService.getUserId();
       });
 
-    console.log(this.groupsService.getJoinedGroups());
-    this.groupsSub = this.groupsService.getGroupUpdateListener()
-      .subscribe((groupData: { groups: Group[]}) => {
-        this.isLoading = false;
-        this.groups = groupData.groups;
-        console.log(this.groups);
-      });
-
-    console.log(this.eventsService.getJoinedEvents());
-    this.eventsSub = this.eventsService.getEventUpdateListener()
-      .subscribe((eventData: { events: Events[]}) => {
-        this.isLoading = false;
-        this.events = eventData.events;
-        console.log(this.events);
-      });
+    // console.log(this.groupsService.getJoinedGroups());
+    // this.groupsSub = this.groupsService.getGroupUpdateListener()
+    //   .subscribe((groupData: { groups: Group[]}) => {
+    //     this.isLoading = false;
+    //     this.groups = groupData.groups;
+    //     console.log(this.groups);
+    //   });
+    //
+    // console.log(this.eventsService.getJoinedEvents());
+    // this.eventsSub = this.eventsService.getEventUpdateListener()
+    //   .subscribe((eventData: { events: Events[]}) => {
+    //     this.isLoading = false;
+    //     this.events = eventData.events;
+    //     console.log(this.events);
+    //   });
+    this.socket.on('refreshpage', (data) => {
+      this.groupsService.getPosts(this.groupid);
+    });
   }
 
   getPosts() {
@@ -132,6 +145,7 @@ export class GroupPageComponent implements OnInit {
     this.isLoading = true;
       this.groupsService.addPost(this.groupid, this.form.value.title,
         this.form.value.content, this.form.value.image).subscribe( () => {
+        // this.socket.emit('refresh', {});
         this.groupsService.getPosts(this.groupid);
       });
     this.form.reset();
@@ -140,6 +154,7 @@ export class GroupPageComponent implements OnInit {
   likePost(postid: string) {
     console.log(postid + ' ' + this.groupid);
     this.groupsService.likePost(postid, this.groupid).subscribe( () => {
+      this.socket.emit('refresh', {});
       this.groupsService.getPosts(this.groupid);
     });
   }
@@ -147,6 +162,7 @@ export class GroupPageComponent implements OnInit {
   dislikePost(postid: string) {
     console.log(postid + ' ' + this.groupid);
     this.groupsService.dislikePost(postid, this.groupid).subscribe( () => {
+      this.socket.emit('refresh', {});
       this.groupsService.getPosts(this.groupid);
     });
   }
@@ -157,9 +173,18 @@ export class GroupPageComponent implements OnInit {
       return;
     } else {
       this.groupsService.addComment(postid, this.groupid, comment).subscribe(() => {
+        this.socket.emit('refresh', {});
         this.groupsService.getPosts(this.groupid);
       });
     }
 }
+
+  acceptRequest(id: string) {
+    console.log(id);
+    this.groupsService.joinGroup(id, this.groupid).subscribe( () => {
+      this.socket.emit('refresh', {});
+      this.groupsService.getPosts(this.groupid);
+    });
+  }
 
 }

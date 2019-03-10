@@ -1,5 +1,6 @@
 export interface Post {
   id: string;
+  profileimg: string;
   title: string;
   content: string;
   imagePath: string;

@@ -100,6 +100,7 @@ this.notificationSub = this.postsService.getNotificationUpdateListener()
     this.socket.on('refreshpage', (data) => {
       this.postsService.getNotifications();
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      this.groupsService.getJoinedGroups();
     });
   }
 

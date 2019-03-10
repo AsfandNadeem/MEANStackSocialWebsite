@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PageEvent} from '@angular/material';
 import { Subscription } from 'rxjs';
-
+import io from 'socket.io-client';
 import { Group } from '../group.model';
 import { GroupsService } from '../groups.service';
 import {AuthService} from '../../auth/auth.service';
@@ -24,6 +24,8 @@ export class GroupListComponent implements OnInit, OnDestroy {
    currentPage = 1;
    username: string;
    userId: string;
+  socketHost: any;
+  socket: any;
    // newComment = [];
    pageSizeOptions = [1, 2, 5, 10];
    userIsAuthenticated = false;
@@ -33,16 +35,12 @@ export class GroupListComponent implements OnInit, OnDestroy {
   private eventsSub: Subscription;
 
    constructor(public groupsService: GroupsService, private authService: AuthService,
-               private eventsService: EventsService) {}
+               private eventsService: EventsService) {
+     this.socket = io('http://localhost:3000');
+   }
 
    ngOnInit() {
-     // console.log(this.groupsService.getJoinedGroups());
-     // this.groupsjoinedSub = this.groupsService.getGroupUpdateListener()
-     //   .subscribe((groupData: { groups: Group[]}) => {
-     //     this.isLoading = false;
-     //     this.groupsjoined = groupData.groups;
-     //     console.log(this.groupsjoined);
-     //   });
+
 
 
 
@@ -96,7 +94,10 @@ export class GroupListComponent implements OnInit, OnDestroy {
    }
 
   onJoin(id: string) {
-    this.groupsService.joinGroup(id);
+    this.groupsService.requestGroup(id).subscribe(() => {
+      this.socket.emit('refresh', {});
+    this.groupsService.getGroups(this.groupsPerPage, this.currentPage );
+          });
   }
 
 

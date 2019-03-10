@@ -3,24 +3,24 @@
     <mat-list style="padding-top: 0px">
       <ul style=" list-style: none; padding: 4px; font-family: Bahnschrift; margin-top: 3px; !important;">
         <li>
-        <strong> Joined Groups </strong>
+        <strong> Group Requests </strong>
         </li>
-        <li *ngFor="let groupj of groups" style="padding: 5px;">
-        <a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', groupj.id]">{{ groupj.groupname}}</a>
+        <li *ngFor="let groupr of groupRequests" style="padding: 5px;">
+        {{groupr.Guser}} <br/> <button type="button" mat-stroked-button (click)="acceptRequest(groupr.Guserid)">Accept</button>
         </li>
-        <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
-        Following No Groups
+        <li *ngIf="groupRequests.length < 1" style="padding: 5px; color: gray;">
+        No Requests
         </li>
-        <br/>
-        <li>
-          <strong> Joined Events </strong>
-        </li>
-        <li *ngFor="let event of events" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
-        </li>
-        <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
-          No events joined
-        </li>
+        <!--<br/>-->
+        <!--<li>-->
+          <!--<strong> Joined Events </strong>-->
+        <!--</li>-->
+        <!--<li *ngFor="let event of events" style="padding: 5px;">-->
+          <!--<a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>-->
+        <!--</li>-->
+        <!--<li *ngIf="events.length<1" style="padding: 5px; color: gray;">-->
+          <!--No events joined-->
+        <!--</li>-->
 
       </ul>
 

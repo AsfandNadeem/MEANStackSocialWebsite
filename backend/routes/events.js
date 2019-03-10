@@ -206,7 +206,7 @@ console.log("getiing event");
       postes = event.eventPosts.sort({ '_id': -1 });
       res.status(200).json({
         eventmembers: event.eventfollowers,
-               posts: postes
+               posts: postes.reverse()
                    });
       console.log(event.eventPosts);
       console.log("--------------------------------------------"+event.eventfollowers);
@@ -244,7 +244,16 @@ router.put("/likeeventpost",checkAuth,(req,res,next) => {
                     res.json({ success: false, message: 'Cannot like own post'});
                   } else {
                     if(element.likedBy.includes(req.userData.userId)){
-                      res.json({success: false, message: 'You already liked this post'});
+                      element.likes--;
+                      const arrayIndex = element.likedBy.indexOf(user._id.toString());
+                      element.likedBy.splice(arrayIndex,1);
+                      event.save((err) => {
+                        if(err) {
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          res.json({ success: true, message: 'post disliked!'});
+                        }
+                      });
                     } else {
                       if(element.dislikedBy.includes(req.userData.userId)){
                         element.dislikes--;
@@ -335,7 +344,16 @@ router.put("/dislikeeventpost",checkAuth,(req,res,next) => {
                     res.json({ success: false, message: 'Cannot dislike own post'});
                   } else {
                     if(element.dislikedBy.includes(req.userData.userId)){
-                      res.json({success: false, message: 'You already disliked this post'});
+                      element.dislikes--;
+                      const arrayIndex = element.dislikedBy.indexOf(user._id.toString());
+                      element.dislikedBy.splice(arrayIndex,1);
+                      event.save((err) => {
+                        if(err) {
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          res.json({ success: true, message: 'post disliked!'});
+                        }
+                      });
                     } else {
                       if(element.likedBy.includes(req.userData.userId)){
                         element.likes--;
@@ -507,7 +525,28 @@ router.put("/addeventPost/:id",
                         res.json({ success: false, message:'something went wrong'});
                       } else {
                         console.log(post);
-                        res.json({ success: true, message: 'post added'});
+                        event.eventfollowers.forEach( function( element) {
+                          const notification = ({
+                            senderId: user._id,
+                            senderName: user.username,
+                            senderimage: user.imagePath,
+                            message: user.username.toString() + " posted in " + event.eventname,
+                          });
+
+                          User.findOne({_id: element.Euserid}, (err, user2) => {
+                            user2.notifications.push(notification);
+                            user2.save((err) => {
+                              if(err) {
+                                console.log("error");
+                                // res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log("success");
+
+                              }
+                            });
+                          });
+                        });
+                        res.json({ success: true, message: 'posted!'});
                       }
                     });
                   } else {
@@ -525,7 +564,27 @@ router.put("/addeventPost/:id",
                         res.json({ success: false, message:'something went wrong'});
                       } else {
                         console.log(post);
-                        res.json({ success: true, message: 'post added'});
+                        event.eventfollowers.forEach( function( element) {
+                          const notification = ({
+                            senderId: user._id,
+                            senderName: user.username,
+                            senderimage: user.imagePath,
+                            message: user.username.toString() + " posted in " + event.eventname,
+                          });
+
+                          User.findOne({_id: element.Euserid}, (err, user2) => {
+                            user2.notifications.push(notification);
+                            user2.save((err) => {
+                              if(err) {
+                                console.log("error");
+                                // res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log("success");
+                              }
+                            });
+                          });
+                        });
+                        res.json({ success: true, message: 'posted!'});
                       }
                     });
                   }

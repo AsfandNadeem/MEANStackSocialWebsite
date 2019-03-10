@@ -13,14 +13,14 @@ export class GroupsService {
   private posts: Post[] = [];
   private groupsUpdated = new Subject<{groups: Group[], groupCount: number}>();
 
-  private postsUpdated = new Subject<{posts: Post[], groupmembers: any}>();
+  private postsUpdated = new Subject<{posts: Post[], groupmembers: any, grouprequests: any}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
 
   getPosts(id: string) {
     console.log('inservicee' + id);
-    this.http.get<{groupmembers: any, posts: any}>
+    this.http.get<{groupmembers: any, grouprequests: any, posts: any}>
     ('http://localhost:3000/api/groups/' + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -40,13 +40,14 @@ export class GroupsService {
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
-          }), groupmembers:  postData.groupmembers};
+          }), groupmembers:  postData.groupmembers, grouprequests: postData.grouprequests};
       }))
       .subscribe( transformedGroupPost => {
         this.posts = transformedGroupPost.posts;
         this.postsUpdated.next( {
           posts: [...this.posts],
-          groupmembers: transformedGroupPost.groupmembers
+          groupmembers: transformedGroupPost.groupmembers,
+          grouprequests: transformedGroupPost.grouprequests
         });
       });
   }
@@ -69,6 +70,8 @@ export class GroupsService {
            id: group._id,
            username : group.username,
            creator: group.groupcreator,
+           grouprequests: group.grouprequests,
+           grouprequestsid: group.grouprequestsid,
            groupmembers: group.groupmembers,
            groupmembersid: group.groupmembersid,
            category: group.category,
@@ -151,14 +154,23 @@ export class GroupsService {
       // });
   }
 
-  joinGroup( id: string) {
+  joinGroup( userid: string, groupid: string) {
+    const groupData =  {
+      groupid: groupid,
+      userid: userid
+    };
     // @ts-ignore
-    this.http
+   return this.http
       .put<{ message: string }>(
-        'http://localhost:3000/api/groups/adduser/' + id)
-      .subscribe(responseData  => {
-        this.router.navigate(['/grouppage/' + id]);
-      });
+        'http://localhost:3000/api/groups/adduser', groupData);
+  }
+
+  requestGroup( id: string) {
+    // return this.http.put( 'http://localhost:3000/api/posts/dislikePost/' + id);
+    // @ts-ignore
+   return this.http
+      .put(
+        'http://localhost:3000/api/groups/requestuser/' + id);
   }
 
   likePost(postid: string, groupid: string) {

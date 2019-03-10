@@ -4,4 +4,7 @@ export interface Group {
   description: string;
   username: string;
   category: string;
+  creator: string;
+  groupmembersid: Array<string>;
+  grouprequestsid: Array<string>;
 }

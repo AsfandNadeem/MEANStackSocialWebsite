@@ -147,8 +147,7 @@ const storage = multer.diskStorage({
   }
 });
 
-
-router.put("/adduser/:id",checkAuth,(req,res,next) => {
+router.put("/requestuser/:id",checkAuth,(req,res,next) => {
   console.log("getiing group");
   const groupQuery = Group.findById(req.params.id).then(group => {
     if (group) {
@@ -164,9 +163,74 @@ router.put("/adduser/:id",checkAuth,(req,res,next) => {
             Guserid: req.userData.userId,
             Guser: user.username
           });
+          group.grouprequests.push( usera);
+          group.grouprequestsid.push(user._id.toString());
+          // group.membersNo++;
+          // user.groupsjoined.push(req.params.id);
+          group.save((err) => {
+            if(err) {
+              res.json({ success: false, message:'something went wrong'});
+            } else {
+              user.save((err) => {
+                if(err){
+                  res.json({ success: false, message:'something went wrong'});
+                } else {
+                  console.log(group);
+                  // res.json({success: true, message: 'user added in group'});
+                  const notification = ({
+                    senderId: user._id,
+                    senderName: user.username,
+                    senderimage: user.imagePath,
+                    message: user.username.toString() + " requests to join " + group.groupname,
+                  });
+
+                  User.findOne({_id: group.groupcreator}, (err, user2) => {
+                    user2.notifications.push(notification);
+                    user2.save((err) => {
+                      if(err) {
+                        res.json({ success: false, message:'something went wrong'});
+                      } else {
+                        res.json({ success: true, message: 'requests sent!'});
+                      }
+                    });
+                  });
+                }
+              });
+
+            }
+          });
+        }
+      });
+    } else {
+      res.json({success: false, message:'event not found'});
+    }
+  });
+});
+
+
+router.put("/adduser",checkAuth,(req,res,next) => {
+  console.log("getiing group");
+  const groupQuery = Group.findById(req.body.groupid).then(group => {
+    if (group) {
+      console.log("group found");
+      User.findById({ _id: req.body.userid}, (err,user)=> {
+        if(err){
+          res.json({success: false, message:'something went wrong'});
+        }
+        if(!user){
+          res.json({success: false, message:'user not found'});
+        } else {
+          const usera =({
+            Guserid: user._id,
+            Guser: user.username
+          });
           group.groupmembers.push( usera);
           group.groupmembersid.push(user._id.toString());
           group.membersNo++;
+          const arrayIndex = group.grouprequestsid.indexOf(user._id);
+          group.grouprequestsid.splice(arrayIndex,1);
+          const arrayIndex2 = group.grouprequests.indexOf(usera);
+          group.grouprequests.splice(arrayIndex2,1);
           user.groupsjoined.push(req.params.id);
           group.save((err) => {
             if(err) {
@@ -177,7 +241,24 @@ router.put("/adduser/:id",checkAuth,(req,res,next) => {
                   res.json({ success: false, message:'something went wrong'});
                 } else {
                   console.log(group);
-                  res.json({success: true, message: 'user added in group'});
+                  // res.json({success: true, message: 'user added in group'});
+                  const notification = ({
+                    senderId: user._id,
+                    senderName: user.username,
+                    senderimage: user.imagePath,
+                    message: " Your request to join " + group.groupname + " is accepted",
+                  });
+
+                  User.findOne({_id: user._id}, (err, user2) => {
+                    user2.notifications.push(notification);
+                    user2.save((err) => {
+                      if(err) {
+                        res.json({ success: false, message:'something went wrong'});
+                      } else {
+                        res.json({ success: true, message: 'group joined!'});
+                      }
+                    });
+                  });
                 }
               });
 
@@ -200,7 +281,8 @@ console.log("getiing group");
       console.log("group found");
       res.status(200).json({
         groupmembers: group.groupmembers,
-               posts: group.groupPosts
+        grouprequests: group.grouprequests,
+               posts: group.groupPosts.reverse()
                    });
       console.log(group.groupPosts);
     } else {
@@ -236,7 +318,16 @@ router.put("/likegrouppost",checkAuth,(req,res,next) => {
                     res.json({ success: false, message: 'Cannot like own post'});
                   } else {
                     if(element.likedBy.includes(req.userData.userId)){
-                      res.json({success: false, message: 'You already liked this post'});
+                      element.likes--;
+                      const arrayIndex = element.likedBy.indexOf(user._id.toString());
+                      element.likedBy.splice(arrayIndex,1);
+                      group.save((err) => {
+                        if(err) {
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          res.json({ success: true, message: 'post disliked!'});
+                        }
+                      });
                     } else {
                       if(element.dislikedBy.includes(req.userData.userId)){
                         element.dislikes--;
@@ -326,7 +417,16 @@ router.put("/dislikegrouppost",checkAuth,(req,res,next) => {
                     res.json({ success: false, message: 'Cannot dislike own post'});
                   } else {
                     if(element.dislikedBy.includes(req.userData.userId)){
-                      res.json({success: false, message: 'You already disliked this post'});
+                      element.dislikes--;
+                      const arrayIndex = element.dislikedBy.indexOf(user._id.toString());
+                      element.dislikedBy.splice(arrayIndex,1);
+                      group.save((err) => {
+                        if(err) {
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          res.json({ success: true, message: 'post disliked!'});
+                        }
+                      });
                     } else {
                       if(element.likedBy.includes(req.userData.userId)){
                         element.likes--;
@@ -499,7 +599,28 @@ router.put("/addgroupPost/:id",
                         res.json({ success: false, message:'something went wrong'});
                       } else {
                         console.log(post);
-                        res.json({ success: true, message: 'post added'});
+                        group.groupmembers.forEach( function( element) {
+                          const notification = ({
+                            senderId: user._id,
+                            senderName: user.username,
+                            senderimage: user.imagePath,
+                            message: user.username.toString() + " posted in " + group.groupname,
+                          });
+
+                          User.findOne({_id: element.Guserid}, (err, user2) => {
+                            user2.notifications.push(notification);
+                            user2.save((err) => {
+                              if(err) {
+                                console.log("error");
+                                // res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log("success");
+
+                              }
+                            });
+                          });
+                        });
+                        res.json({ success: true, message: 'posted!'});
                       }
                     });
                   } else {
@@ -517,7 +638,29 @@ router.put("/addgroupPost/:id",
                         res.json({ success: false, message:'something went wrong'});
                       } else {
                         console.log(post);
-                        res.json({ success: true, message: 'post added'});
+                        // res.json({ success: true, message: 'post added'});
+                        group.groupmembers.forEach( function( element) {
+                          const notification = ({
+                            senderId: user._id,
+                            senderName: user.username,
+                            senderimage: user.imagePath,
+                            message: user.username.toString() + " posted in " + group.groupname,
+                          });
+
+                          User.findOne({_id: element.Guserid}, (err, user2) => {
+                            user2.notifications.push(notification);
+                            user2.save((err) => {
+                              if(err) {
+                                console.log("error");
+                                // res.json({ success: false, message:'something went wrong'});
+                              } else {
+                                console.log("success");
+
+                              }
+                            });
+                          });
+                        });
+                        res.json({ success: true, message: 'posted!'});
                       }
                     });
                   }

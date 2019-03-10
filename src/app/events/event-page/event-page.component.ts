@@ -8,6 +8,7 @@ import {mimeType} from '../../posts/post-create/mime-type.validator';
 import {Subscription} from 'rxjs';
 import {Group} from '../../groups/group.model';
 import {Events} from '../event.model';
+import io from 'socket.io-client';
 import {GroupsService} from '../../groups/groups.service';
 
 export interface EventMembers {
@@ -24,7 +25,7 @@ export class EventPageComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
-
+  socket: any;
   eventMembers: EventMembers[] = [];
   posts: Post[] = [];
   groups: Group[] = [];
@@ -38,7 +39,9 @@ export class EventPageComponent implements OnInit {
   private eventsSub: Subscription;
   private userId: string;
   constructor(public eventService: EventsService, public groupsService: GroupsService,
-              private authService: AuthService, public route: ActivatedRoute) { }
+              private authService: AuthService, public route: ActivatedRoute) {
+    this.socket = io('http://localhost:3000');
+  }
 
   ngOnInit() {
    this.form = new FormGroup({
@@ -97,6 +100,9 @@ export class EventPageComponent implements OnInit {
         this.events = eventData.events;
         console.log(this.events);
       });
+    this.socket.on('refreshpage', (data) => {
+      this.eventService.getPosts(this.eventid);
+    });
       }
 
       getPosts() {
@@ -126,6 +132,7 @@ export class EventPageComponent implements OnInit {
     this.isLoading = true;
     this.eventService.addPost(this.eventid, this.form.value.title,
     this.form.value.content, this.form.value.image).subscribe( () => {
+      // this.socket.emit('refresh', {});
       this.eventService.getPosts(this.eventid);
     });
     this.form.reset();
@@ -134,6 +141,7 @@ export class EventPageComponent implements OnInit {
   likePost(postid: string) {
     console.log(postid + ' ' + this.eventid);
     this.eventService.likePost(postid, this.eventid).subscribe( () => {
+      this.socket.emit('refresh', {});
       this.eventService.getPosts(this.eventid);
     });
   }
@@ -141,6 +149,7 @@ export class EventPageComponent implements OnInit {
   dislikePost(postid: string) {
     console.log(postid + ' ' + this.eventid);
     this.eventService.dislikePost(postid, this.eventid).subscribe( () => {
+      this.socket.emit('refresh', {});
       this.eventService.getPosts(this.eventid);
     });
   }
@@ -151,6 +160,7 @@ export class EventPageComponent implements OnInit {
       return;
     } else {
       this.eventService.addComment(postid, this.eventid, comment).subscribe(() => {
+        this.socket.emit('refresh', {});
         this.eventService.getPosts(this.eventid);
       });
     }

@@ -44,8 +44,11 @@
   <mat-action-row *ngIf=" userId == group.creator">
     <button mat-button color="warn" (click)="onDelete(group.id)">DELETE</button>
   </mat-action-row>
-  <mat-action-row *ngIf=" userId != group.creator && !group.groupmembersid.includes(userId)">
+  <mat-action-row *ngIf=" userId != group.creator && !group.groupmembersid.includes(userId) && !group.grouprequestsid.includes(userId)">
     <button mat-button color="warn" (click)="onJoin(group.id)">JOIN</button>
+  </mat-action-row>
+  <mat-action-row *ngIf=" userId != group.creator && !group.groupmembersid.includes(userId) && group.grouprequestsid.includes(userId)">
+    <label color="primary">Request sent!</label>
   </mat-action-row>
 <!--<a mat-button color="primary" [routerLink]="['/edit', groupt.id]">EDIT</a>-->
 <!--<button mat-button color="warn" (click)="onDelete(group.id)">DELETE</button>-->
