@@ -206,6 +206,10 @@ console.log("getiing event");
       postes = event.eventPosts.sort({ '_id': -1 });
       res.status(200).json({
         eventmembers: event.eventfollowers,
+        eventname: event.eventname,
+        eventdate: event.eventdate,
+        eventcreator: event.username,
+        description: event.description,
                posts: postes.reverse()
                    });
       console.log(event.eventPosts);

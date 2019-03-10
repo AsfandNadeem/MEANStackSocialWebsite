@@ -13,13 +13,14 @@ export class EventsService {
   private events: Events[] = [];
   private posts: Post[] = [];
   private eventsUpdated = new Subject<{events: Events[], eventCount: number}>();
-  private postsUpdated = new Subject<{posts: Post[], eventmembers: any}>();
+  private postsUpdated = new Subject<{posts: Post[], eventmembers: any, eventname: string,
+    eventdate: Date, description: string, eventcreator: string}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
   getPosts(id: string) {
     console.log('eventinservicee' + id);
-    this.http.get<{eventmembers: any, posts: any}>
+    this.http.get<{eventmembers: any, eventname: any, eventdate: Date, description: any, eventcreator: any, posts: any}>
     ('http://localhost:3000/api/events/' + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -39,13 +40,19 @@ export class EventsService {
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
-          }), eventmembers:  postData.eventmembers};
+          }), eventmembers:  postData.eventmembers, eventname: postData.eventname,
+          eventcreator: postData.eventcreator,
+        eventdescription: postData.description, eventdate: postData.eventdate};
       }))
       .subscribe( transformedEventPost => {
         this.posts = transformedEventPost.posts;
         this.postsUpdated.next( {
           posts: [...this.posts],
-          eventmembers: transformedEventPost.eventmembers
+          eventmembers: transformedEventPost.eventmembers,
+          eventname: transformedEventPost.eventname,
+          eventdate: transformedEventPost.eventdate,
+          description: transformedEventPost.eventdescription,
+          eventcreator: transformedEventPost.eventcreator
         });
       });
   }

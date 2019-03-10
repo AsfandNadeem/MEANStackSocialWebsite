@@ -35,6 +35,10 @@ export class EventPageComponent implements OnInit {
   private authStatusSub: Subscription;
   @Input() eventid: string;
   private username: string;
+   eventname: string;
+  eventdate: Date;
+   eventdescription: string;
+   eventcreator: string;
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private userId: string;
@@ -67,12 +71,18 @@ export class EventPageComponent implements OnInit {
         this.userId = this.authService.getUserId();
         // this.username = this.authService.getName();
         this.postsSub = this.eventService.getPostUpdateListener()
-           .subscribe((postData: {  eventmembers: any, posts: Post[]}) => {
+           .subscribe((postData: {  eventmembers: any, eventname: any, eventdate: Date,
+             description: string, eventcreator: string, posts: Post[]}) => {
             this.isLoading = false;
         //     this.totalGroups = eventData.eventCount;
             this.username = this.authService.getName();
             this.posts = postData.posts;
             this.eventMembers = postData.eventmembers;
+            this.eventname = postData.eventname,
+              this.eventdate = postData.eventdate,
+              this.eventdescription = postData.description,
+              this.eventcreator = postData.eventcreator,
+              console.log(this.eventname);
             console.log(this.posts);
             console.log(this.eventMembers);
           });

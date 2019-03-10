@@ -28,6 +28,26 @@
   </mat-drawer>
   <mat-drawer-content>
 
+    <mat-card class="example-card">
+
+      <mat-card-header >
+
+
+
+            <mat-card-title style="font-size: 30px;">    <strong style="margin:auto;">{{eventname}}</strong></mat-card-title>
+            <!--<mat-card-subtitle>-->
+              <!--{{ eventdate | date:'MMM dd, yyyy' }}-->
+            <!--</mat-card-subtitle>-->
+
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{eventdescription}}</p>
+        <strong>Date: </strong>{{ eventdate | date:'MMM dd, yyyy' }}
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <p style="padding-top: 8px;"> admin: {{eventcreator}}</p>
+    </mat-card>
+<br/>
 <mat-card class="example-card">
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <form [formGroup]="form" (submit)="onSavePost()" *ngIf="!isLoading">

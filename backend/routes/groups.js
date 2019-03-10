@@ -280,6 +280,9 @@ console.log("getiing group");
     if (group) {
       console.log("group found");
       res.status(200).json({
+        groupname: group.groupname,
+        description: group.description,
+        groupcreator: group.username,
         groupmembers: group.groupmembers,
         grouprequests: group.grouprequests,
                posts: group.groupPosts.reverse()

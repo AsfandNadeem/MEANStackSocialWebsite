@@ -36,6 +36,10 @@ export class GroupPageComponent implements OnInit {
   groups: Group[] = [];
   events: Events[] = [];
   @Input() groupid: string;
+  groupname: string;
+  // eventdate: Date;
+  groupdescription: string;
+  groupcreator: string;
   userIsAuthenticated = false;
   private postsSub: Subscription;
   private authStatusSub: Subscription;
@@ -73,13 +77,18 @@ export class GroupPageComponent implements OnInit {
     this.userId = this.authService.getUserId();
     // this.username = this.authService.getName();
     this.postsSub = this.groupsService.getPostUpdateListener()
-       .subscribe((postData: { groupmembers: any, grouprequests: any, posts: Post[]}) => {
+       .subscribe((postData: { groupmembers: any, groupname: any,
+         description: string, groupcreator: string, grouprequests: any, posts: Post[]}) => {
         this.isLoading = false;
     //     this.totalGroups = groupData.groupCount;
         this.username = this.authService.getName();
         this.posts = postData.posts;
          this.groupMembers = postData.groupmembers;
          this.groupRequests = postData.grouprequests;
+         this.groupname = postData.groupname,
+           // this.eventdate = postData.eventdate,
+           this.groupdescription = postData.description,
+           this.groupcreator = postData.groupcreator,
          console.log(this.posts);
          console.log(this.groupMembers);
          console.log(this.groupRequests);

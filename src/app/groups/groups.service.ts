@@ -13,14 +13,15 @@ export class GroupsService {
   private posts: Post[] = [];
   private groupsUpdated = new Subject<{groups: Group[], groupCount: number}>();
 
-  private postsUpdated = new Subject<{posts: Post[], groupmembers: any, grouprequests: any}>();
+  private postsUpdated = new Subject<{posts: Post[], groupmembers: any, groupname: string,
+    description: string, groupcreator: string, grouprequests: any}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
 
   getPosts(id: string) {
     console.log('inservicee' + id);
-    this.http.get<{groupmembers: any, grouprequests: any, posts: any}>
+    this.http.get<{groupmembers: any, groupname: any, description: any, groupcreator: any, grouprequests: any, posts: any}>
     ('http://localhost:3000/api/groups/' + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -40,14 +41,19 @@ export class GroupsService {
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
-          }), groupmembers:  postData.groupmembers, grouprequests: postData.grouprequests};
+          }), groupmembers:  postData.groupmembers, groupname: postData.groupname,
+          groupcreator: postData.groupcreator,
+          groupdescription: postData.description, grouprequests: postData.grouprequests};
       }))
       .subscribe( transformedGroupPost => {
         this.posts = transformedGroupPost.posts;
         this.postsUpdated.next( {
           posts: [...this.posts],
           groupmembers: transformedGroupPost.groupmembers,
-          grouprequests: transformedGroupPost.grouprequests
+          grouprequests: transformedGroupPost.grouprequests,
+          groupname: transformedGroupPost.groupname,
+          description: transformedGroupPost.groupdescription,
+          groupcreator: transformedGroupPost.groupcreator
         });
       });
   }

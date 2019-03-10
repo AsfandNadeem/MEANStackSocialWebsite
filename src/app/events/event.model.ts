@@ -5,4 +5,6 @@ export interface Events {
   username: string;
   eventdate: Date;
   category: string;
+  eventmembersid: Array<string>;
+  creator: string;
 }
