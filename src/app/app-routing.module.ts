@@ -18,6 +18,7 @@ import {AdminPageComponent} from './admin/admin-page/admin-page.component';
 import {AdminUsersComponent} from './admin/admin-users/admin-users.component';
 import {AdminGroupComponent} from './admin/admin-group/admin-group.component';
 import {AdminEventComponent} from './admin/admin-event/admin-event.component';
+import {UserspageComponent} from './posts/userspage/userspage/userspage.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'eventlist', component: EventListComponent, canActivate: [AuthGuard]},
   { path: 'groupcreate', component: GroupCreateComponent, canActivate: [AuthGuard]},
   { path: 'eventcreate', component: EventCreateComponent, canActivate: [AuthGuard]},
+  { path: 'user/:userId', component: UserspageComponent, canActivate: [AuthGuard]},
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   { path: 'archives', component: ArchivedpostsComponent, canActivate: [AuthGuard]},
   {path: 'grouppage/:groupId', component: GroupPageComponent, canActivate: [AuthGuard]},

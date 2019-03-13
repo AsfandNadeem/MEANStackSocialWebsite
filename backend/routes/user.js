@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
 var Regex = require("regex");
-
+var fs = require('fs')
 const jwt = require("jsonwebtoken");
 const Post = require("../models/post");
 const User = require('../models/user');
@@ -53,11 +53,24 @@ console.log(req.body.email);
     console.log(regex.test(req.body.email));
      if(regex.test(req.body.email)) {
        console.log("valid regex");
-const passwordgen = randomstring.generate(7);
-       console.log(passwordgen);
+// const passwordgen = randomstring.generate(7);
+//        console.log(passwordgen);
+       const passwordgen = "abcd";
        bcrypt.hash(passwordgen, 10)
          .then(hash => {
            if (req.file) {
+             // F:\Comsats_Social\backend\profileimgs\fa15-bcs-001@student.comsats.edu.pk-1552487106293.jpg
+             // var newImg = fs.readFileSync("backend/profileimgs/"+req.file.filename);
+             // // encode the file as a base64 string.
+             //
+             // var encImg = newImg.toString('base64');
+             // define your new document
+             // var newItem = {
+             //   description: req.body.description,
+             //   contentType: req.file.mimetype,
+             //   size: req.file.size,
+             //   img: Buffer(encImg, 'base64')
+             // };
              const user = new User({
                email: req.body.email,
                password: hash,
@@ -65,6 +78,8 @@ const passwordgen = randomstring.generate(7);
                department: req.body.department,
                registrationno: req.body.registration,
                imagePath: url + "/profileimgs/" + req.file.filename
+               // imagePath: {data:encImg, contentType: 'image/jpeg'}
+               // url + "/profileimgs/" + req.file.filename
              });
              console.log(passwordgen);
              user.save()

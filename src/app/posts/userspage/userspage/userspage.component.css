@@ -1,0 +1,95 @@
+.example-container {
+  width: 100%;
+}
+mat-drawer {
+  /*background-color: lightblue;*/
+  /*border: 1px solid #555;*/
+  padding: 10px;
+  padding-left: 20px;
+  width: 20%;
+}
+
+mat-drawer-content{
+  margin-left: 502px !important;
+  width: 50% !important;
+  height: 860px;
+}
+
+:host ::ng-deep.mat-paginator .mat-paginator-container{
+  justify-content: flex-start !important;
+}
+/*:host {*/
+/*display: block;*/
+/*margin-top: 1rem;*/
+/*}*/
+
+.info-text {
+  text-align: center;
+}
+
+mat-spinner{
+  margin:auto;
+}
+
+.commentspanel {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+}
+
+.commentspanel li {
+  float: left;
+}
+
+.example-card {
+  max-width: 100%;
+  margin: 4px;
+}
+
+.example-header-image {
+
+  background-size: cover;
+}
+
+mat-card-image{
+  width:20%;
+}
+
+.post-image{
+  margin: 7px;
+  width: 100%;
+}
+
+.post-image img{
+  width:50%;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+}
+mat-paginator{
+  margin-top:1rem;
+}
+
+mat-expansion-panel-header{
+  padding: 1%;
+}
+
+::ng-deep .mat-input-wrapper{
+  width:400px !important;
+}
+.example-header-image {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-size: cover;
+}
+.example-header-image-post {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-size: cover;
+}

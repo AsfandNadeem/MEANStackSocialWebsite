@@ -49,6 +49,7 @@ import { AdminGroupComponent } from './admin/admin-group/admin-group.component';
 import { AdminEventComponent } from './admin/admin-event/admin-event.component';
 import { AdminPostsComponent } from './admin/admin-posts/admin-posts.component';
 import { ReportPageComponent } from './admin/report-page/report-page.component';
+import { UserspageComponent } from './posts/userspage/userspage/userspage.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { ReportPageComponent } from './admin/report-page/report-page.component';
     AdminGroupComponent,
     AdminEventComponent,
     AdminPostsComponent,
-    ReportPageComponent
+    ReportPageComponent,
+    UserspageComponent
   ],
   imports: [
     BrowserModule,

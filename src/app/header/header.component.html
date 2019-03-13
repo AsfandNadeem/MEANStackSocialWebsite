@@ -24,7 +24,8 @@
         </div>
         <mat-menu #createsearch="matMenu">
           <button mat-menu-item *ngFor="let result of results" >
-            {{result.username}}
+            <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]">{{ result.username}}</a>
+            {{result.username}} {{result._id}}
           </button>
         </mat-menu>
         <!--<ul style="display: block !important;" >-->

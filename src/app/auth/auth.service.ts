@@ -60,7 +60,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
-    this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string, profileimg: string}>(
+    this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string, profileimg: any}>(
       'http://localhost:3000/api/user/login',
       {email, password})
       .subscribe( response => {
@@ -79,7 +79,8 @@ export class AuthService {
           const expirationDate = new Date(now.getTime() + (expiresInDuration * 1000));
           console.log(expirationDate);
           console.log(response.profileimg);
-          this.saveAuthData( token, expirationDate, this.userId, this.userN, response.department, response.profileimg);
+          this.saveAuthData( token, expirationDate,
+            this.userId, this.userN, response.department, response.profileimg);
           this.router.navigate(['/messages']).then();
         }
       } , error => {

@@ -39,6 +39,10 @@
 
           class="example-header-image"
              [src]="profileimg" >
+        <!--<img-->
+
+          <!--class="example-header-image"-->
+          <!--src="data:image/jpeg;base64,{{profileimg}}" >-->
       </li>
       <li>
         <mat-card-title>Hello {{username}}</mat-card-title>
@@ -58,7 +62,7 @@
              [src]="post.profileimg" style="margin-right: 30px;" >
       </li>
       <li>
-        <mat-card-title><strong>{{post.username}}</strong></mat-card-title>
+        <mat-card-title><a style="text-decoration: none; color: grey ;" [routerLink]="['/user', post.creator]"><strong>{{post.username}}</strong></a></mat-card-title>
 
 
         <mat-card-subtitle>

@@ -8,8 +8,11 @@ import { debounceTime, tap, finalize, distinctUntilChanged} from 'rxjs/operators
 // import 'rxjs/add/operator/distinctUntilChanged';
 import { switchMap } from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {User} from '../auth/user.model';
-
+// import {User} from '../auth/user.model';
+ export interface Users {
+   username: string;
+   userid: string;
+ }
 
 @Component({
   selector: 'app-header',
@@ -20,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   username = 'nothing';
   private authListenerSubs: Subscription;
-  results: User[] = [];
+  results: Users[] = [];
   queryField: FormControl = new FormControl();
   constructor(private _searchService: SearchService,
               private authService: AuthService) {
@@ -36,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         switchMap(query => (this._searchService.search(query)))
       )
-      .subscribe( (userData: {users: User[]}) => {
+      .subscribe( (userData: {users: Users[]}) => {
         this.results = userData.users;
         console.log(this.results);
         }, error => {

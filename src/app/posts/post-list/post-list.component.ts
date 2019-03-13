@@ -51,13 +51,15 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.isLoading = true;
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
      this.userId = this.authService.getUserId();
     // this.username = this.authService.getName();
-     console.log(localStorage.getItem('profileimg'));
-    this.profileimg = localStorage.getItem('profileimg');
+     console.log( 'profileimg' + localStorage.getItem('profileimg'));
+     this.profileimg = localStorage.getItem('profileimg');
+    // const profileimg1 = localStorage.getItem('profileimg');
+    // // @ts-ignore
+    // this.profileimg = profileimg1.toString('base64');
     this.username =  localStorage.getItem('username');
     this.postsSub = this.postsService.getPostUpdateListener()
       .subscribe((postData: { posts: Post[], postCount: number}) => {

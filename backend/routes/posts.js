@@ -213,6 +213,32 @@ router.put(
   }
 );
 
+
+router.get("/user/:id", (req, res, next) => {
+
+    const postQuery = Post.find({ creator: req.params.id }).sort({'_id': -1});
+    let fetchedPosts;
+    // if (pageSize && currentPage) {
+    //   postQuery
+    //     .skip(pageSize * (currentPage - 1))
+    //     .limit(pageSize);
+    // }
+
+    postQuery
+      .then(documents => {
+        fetchedPosts = documents;
+        return Post.count();
+      })
+      .then(count => {
+        res.status(200).json({
+          message: "Posts fetched successfully!",
+          posts: fetchedPosts,
+          maxPosts: count
+        });
+      });
+
+});
+
 router.get("", (req, res, next) => {
   if(req.query) {
     const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
