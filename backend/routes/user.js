@@ -322,7 +322,7 @@ router.get("/notifications",checkAuth, (req,res,next) => {
      console.log("_________________________________________________________\n"+fetchedUser.notifications);
      res.status(200).json({
        message: "notifactions fecthed",
-       notifications: fetchedUser.notifications.reverse(),
+       notifications: fetchedUser.notifications.slice(fetchedUser.notifications.length - 5,fetchedUser.notifications.length).reverse(),
        maxNotifications: count
      });
    });

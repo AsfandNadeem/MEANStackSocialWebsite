@@ -154,7 +154,7 @@ export class GroupPageComponent implements OnInit {
     this.isLoading = true;
       this.groupsService.addPost(this.groupid, this.form.value.title,
         this.form.value.content, this.form.value.image).subscribe( () => {
-        // this.socket.emit('refresh', {});
+        this.socket.emit('refresh', {});
         this.groupsService.getPosts(this.groupid);
       });
     this.form.reset();
