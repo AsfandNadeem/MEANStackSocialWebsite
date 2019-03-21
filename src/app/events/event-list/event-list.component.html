@@ -36,7 +36,7 @@
     <a mat-button color="primary" *ngIf="event.eventmembersid.includes(userId)" [routerLink]="['/eventpage', event.id]">Open</a>
 
     <mat-action-row *ngIf=" userId == event.creator">
-    <button mat-button color="warn" (click)="onDelete(event.id)">DELETE</button>
+    <!--<button mat-button color="warn" (click)="onDelete(event.id)">DELETE</button>-->
     </mat-action-row>
     <mat-action-row *ngIf=" userId != event.creator && !event.eventmembersid.includes(userId)">
       <button mat-button color="warn" (click)="onJoin(event.id)">JOIN</button>

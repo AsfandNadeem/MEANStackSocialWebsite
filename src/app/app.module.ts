@@ -50,6 +50,8 @@ import { AdminEventComponent } from './admin/admin-event/admin-event.component';
 import { AdminPostsComponent } from './admin/admin-posts/admin-posts.component';
 import { ReportPageComponent } from './admin/report-page/report-page.component';
 import { UserspageComponent } from './posts/userspage/userspage/userspage.component';
+import { ChatComponent } from './chat/chat.component';
+import { MessageComponent } from './message/message.component';
 
 
 @NgModule({
@@ -76,7 +78,9 @@ import { UserspageComponent } from './posts/userspage/userspage/userspage.compon
     AdminEventComponent,
     AdminPostsComponent,
     ReportPageComponent,
-    UserspageComponent
+    UserspageComponent,
+    ChatComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,

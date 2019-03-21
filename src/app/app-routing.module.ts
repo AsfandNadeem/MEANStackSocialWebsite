@@ -19,6 +19,7 @@ import {AdminUsersComponent} from './admin/admin-users/admin-users.component';
 import {AdminGroupComponent} from './admin/admin-group/admin-group.component';
 import {AdminEventComponent} from './admin/admin-event/admin-event.component';
 import {UserspageComponent} from './posts/userspage/userspage/userspage.component';
+import {ChatComponent} from './chat/chat.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'edit/:postId', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: SignupComponent},
+  { path: 'chat/:userId', component: ChatComponent, canActivate: [AuthGuard]},
   { path: 'grouplist', component: GroupListComponent, canActivate: [AuthGuard]},
   { path: 'eventlist', component: EventListComponent, canActivate: [AuthGuard]},
   { path: 'groupcreate', component: GroupCreateComponent, canActivate: [AuthGuard]},

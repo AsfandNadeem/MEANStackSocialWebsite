@@ -23,7 +23,14 @@ const userSchema = mongoose.Schema({
       message: {type: String},
       created: {type: Date, default: Date.now()}
     }
+  ],
+  chatList: [
+    {
+     receiverId:  {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+      msgId:  {type: mongoose.Schema.Types.ObjectId, ref: 'Message'}
+    }
   ]
+
 });
 
 userSchema.plugin(uniqueValidator);

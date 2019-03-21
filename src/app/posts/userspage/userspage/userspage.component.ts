@@ -37,7 +37,8 @@ export class UserspageComponent implements OnInit {
   private eventsSub: Subscription;
   private authStatusSub: Subscription;
   constructor(public postsService: PostsService, private authService: AuthService,
-              private groupsService: GroupsService, private eventsService: EventsService,  public route: ActivatedRoute) { }
+              private groupsService: GroupsService, private eventsService: EventsService,
+              public route: ActivatedRoute) { }
 
   ngOnInit() {
     this.isLoading = true;

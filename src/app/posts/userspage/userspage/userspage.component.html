@@ -30,9 +30,14 @@
 
   <mat-drawer-content>
 
-    <!--<mat-card class="example-card">-->
-      <!--<mat-card-header>-->
-        <!--<ul style="list-style: none; display: flex;">-->
+    <mat-card class="example-card">
+      <mat-card-header>
+        <ul style="list-style: none; display: flex;">
+          <a style="text-decoration: none; color: grey ;" [routerLink]="['/chat', userid]">
+            <strong>Chat</strong>
+          </a>
+
+
           <!--<li>-->
             <!--<img class="example-header-image"-->
                  <!--[src]="profileimg" >-->
@@ -41,9 +46,9 @@
             <!--<mat-card-title>Hello {{username}}</mat-card-title>-->
             <!--<mat-card-subtitle>Having a Good Day</mat-card-subtitle>-->
           <!--</li>-->
-        <!--</ul>-->
-      <!--</mat-card-header>-->
-    <!--</mat-card>-->
+        </ul>
+      </mat-card-header>
+    </mat-card>
     <mat-spinner *ngIf="isLoading"></mat-spinner>
 
     <mat-card class="example-card" *ngFor="let post of posts">
