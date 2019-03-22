@@ -33,11 +33,12 @@
     <mat-card class="example-card">
       <mat-card-header>
         <ul style="list-style: none; display: flex;">
+          <li *ngIf="userid != ownid">
           <a style="text-decoration: none; color: grey ;" [routerLink]="['/chat', userid]">
             <strong>Chat</strong>
           </a>
 
-
+          </li>
           <!--<li>-->
             <!--<img class="example-header-image"-->
                  <!--[src]="profileimg" >-->
@@ -79,8 +80,8 @@
       </mat-card-content>
 
       <button mat-icon-button  (click)="likePost(post.id,post)" >
-        <mat-icon *ngIf="post.likedBy.includes(userId)" color="primary" >thumb_up</mat-icon>
-        <mat-icon *ngIf="!post.likedBy.includes(userId)"  >thumb_up</mat-icon>
+        <mat-icon *ngIf="post.likedBy.includes(ownid)" color="primary" >thumb_up</mat-icon>
+        <mat-icon *ngIf="!post.likedBy.includes(ownid)"  >thumb_up</mat-icon>
         {{post.likes}}
       </button>
 
@@ -88,8 +89,8 @@
 
 
       <button mat-icon-button (click)="dislikePost(post.id)" >
-        <mat-icon *ngIf="post.dislikedBy.includes(userId)" color="primary" >thumb_down</mat-icon>
-        <mat-icon *ngIf="!post.dislikedBy.includes(userId)"  >thumb_down</mat-icon>
+        <mat-icon *ngIf="post.dislikedBy.includes(ownid)" color="primary" >thumb_down</mat-icon>
+        <mat-icon *ngIf="!post.dislikedBy.includes(ownid)"  >thumb_down</mat-icon>
         {{ post.dislikes }}
       </button>
 
@@ -155,15 +156,15 @@
       </mat-accordion>
 
 
-      <mat-card-actions *ngIf="userIsAuthenticated">
-        <button mat-button  color="warn" (click)="onDelete(post.id)">REMOVE</button>
-        <!--<a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>-->
+      <!--<mat-card-actions *ngIf="userIsAuthenticated">-->
+        <!--<button mat-button  color="warn" (click)="onDelete(post.id)">REMOVE</button>-->
+        <!--&lt;!&ndash;<a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>&ndash;&gt;-->
 
-      </mat-card-actions>
+      <!--</mat-card-actions>-->
     </mat-card>
 
-    <mat-paginator style="background-color: #FAFAFA;" [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
-                   *ngIf="posts.length > 0"></mat-paginator>
+    <!--<mat-paginator style="background-color: #FAFAFA;" [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"-->
+                   <!--*ngIf="posts.length > 0"></mat-paginator>-->
 
     <p class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts archived yet!</p>
   </mat-drawer-content>

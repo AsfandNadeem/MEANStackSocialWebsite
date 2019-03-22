@@ -3,18 +3,18 @@
     <div class="row">
       <mat-card style="width: 100%;">
         <div  style="background: #64b5f6 !important;">
-<div class="col s12 imgCol">
-  <img>
+<div class="col s12 imgCol" style="color: black !important; font-size: 20px;">
+  <span>{{receivername}}</span>
 </div>
           <div class="row">
-            <div class="col s10 nameCol">
-              <span>Username</span>
+            <div class="col s10 nameCol" style="color: black !important;">
+              <span>{{receivername}}</span>
               <!--<p class="isOnline">Online</p>-->
             </div>
           </div>
         </div>
         <mat-card-content >
-          <div class="col s12 rowDiv">
+          <div class="col s12 rowDiv" ngx-auto-scroll lock-y-offset="10" observe-attributes>
             <div class="row">
               <div class="col s12">
                 <div class="message-wrapper" *ngFor="let message of messagesArray">
@@ -23,6 +23,7 @@
                       <div class="message"> {{message.body}}</div>
 
                     </div>
+                    <div class="clearfloat"></div>
 
                   </div>
                   <div class="right" *ngIf="message.senderId == userId">
@@ -32,9 +33,18 @@
                     </div>
 
                   </div>
+                  <div class="clearfloat"></div>
                   <!--<div class="card-footer" style=""></div>-->
                   <br/>
                   <br/>
+                  <br/>
+                  <br/>
+                </div>
+                <div class="left" *ngIf="typing">
+                  <div class="chat-bubble left slide-left">
+                    <div class="message"> is typing...</div>
+
+                  </div>
 
                 </div>
               </div>
@@ -49,6 +59,7 @@
                     <div class="input-field inputField col s12" >
 <textarea name="message"
           [(ngModel)]="message"
+          (keypress)="IsTyping()"
           class="inputBox"
 style=" height: 30px !important;
     margin-bottom: 5px !important;

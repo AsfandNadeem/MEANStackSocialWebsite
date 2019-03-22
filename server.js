@@ -53,6 +53,7 @@ const server = http.createServer(app);
 const io = require('socket.io').listen(server);
 
 require('./backend/socket/stream')(io);
+require('./backend/socket/private')(io);
 server.on("error", onError);
 server.on("listening", onListening);
 server.listen(port);

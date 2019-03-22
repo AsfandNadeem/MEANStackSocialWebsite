@@ -27,6 +27,7 @@ export class UserspageComponent implements OnInit {
   currentPage = 1;
   username: string;
   userId: string;
+  ownid: string;
   @Input() userid: string;
   profileimg: string;
   newComment = [];
@@ -51,7 +52,7 @@ export class UserspageComponent implements OnInit {
       }
     });
     this.postsService.getuserPosts(this.userid);
-    this.userId = this.authService.getUserId();
+    this.ownid = this.authService.getUserId();
     // this.username = this.authService.getName();
     console.log(localStorage.getItem('profileimg'));
     this.profileimg = localStorage.getItem('profileimg');
@@ -69,7 +70,7 @@ export class UserspageComponent implements OnInit {
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
-        this.userId = this.authService.getUserId();
+        this.ownid = this.authService.getUserId();
       });
 
     console.log(this.groupsService.getJoinedGroups());

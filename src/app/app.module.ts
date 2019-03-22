@@ -52,6 +52,7 @@ import { ReportPageComponent } from './admin/report-page/report-page.component';
 import { UserspageComponent } from './posts/userspage/userspage/userspage.component';
 import { ChatComponent } from './chat/chat.component';
 import { MessageComponent } from './message/message.component';
+import {NgxAutoScrollModule} from 'ngx-auto-scroll';
 
 
 @NgModule({
@@ -109,6 +110,7 @@ import { MessageComponent } from './message/message.component';
     MatListModule,
     MatIconModule,
     MatTableModule,
+    NgxAutoScrollModule,
     HttpClientModule
   ],
   providers: [

@@ -230,6 +230,16 @@ router.post("/login", (req,res,next) => {
 });
 
 
+router.get("/username/:id",checkAuth,(req,res,next) => {
+  User.findOne({ _id: req.params.id })
+    .then( user => {
+      console.log(user.username);
+      res.status(200).json({
+        userchat: user.username
+      });
+    });
+});
+
 router.put("/edit",checkAuth,(req,res,next) => {
   let fetcheduser;
   console.log("editing user---------------------------"+req.body.username+req.body.password+"---------------------------");

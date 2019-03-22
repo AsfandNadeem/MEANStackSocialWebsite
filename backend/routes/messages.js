@@ -51,10 +51,22 @@ router.get("/chat-messages/:sender_Id/:receiver_Id",
          return Messages.count();
        })
        .then(count => {
-         res.status(200).json({
-           message: 'message returned',
-           messages: fetchedMessages
+         User.findById({ _id: req.params.receiver_Id}, (err,userchat)=>{
+           if(err) {
+             console.log("nochat user")
+           } else {
+             console.log(userchat.username)
+             res.status(200).json({
+               message: 'message returned',
+               messages: fetchedMessages,
+               usernamechat: userchat.username
+             });
+           }
          });
+         // res.status(200).json({
+         //   message: 'message returned',
+         //   messages: fetchedMessages
+         // });
        });
      // Messages.findOne({conversationId: conversation._id});
      //  res.status(201).json({
@@ -105,7 +117,7 @@ console.log(result);
                 const message123 = ({
                   message: [{
                     senderId:  req.userData.userId,
-                    receiverId:  req.params.receiver_id,
+                    receiverId:  req.params.receiver_Id,
                     sendername: userfirst.username,
                     receivername: usersecond.username,
                     body: req.body.message
@@ -119,7 +131,7 @@ console.log(result);
                   $push:{
                     message: {
                       senderId:  req.userData.userId,
-                      receiverId:  req.params.receiver_id,
+                      receiverId:  req.params.receiver_Id,
                       sendername: userfirst.username,
                       receivername:usersecond.username,
                       body: req.body.message
