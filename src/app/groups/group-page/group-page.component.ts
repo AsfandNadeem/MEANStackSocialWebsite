@@ -1,16 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Post} from '../../posts/post.model';
 import {GroupsService} from '../groups.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {AuthService} from '../../auth/auth.service';
 import {mimeType} from '../../posts/post-create/mime-type.validator';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {Group} from '../group.model';
 import {Events} from '../../events/event.model';
 import {EventsService} from '../../events/events.service';
 import io from 'socket.io-client';
 import {EventMembers} from '../../events/event-page/event-page.component';
+import {MatDrawer} from '@angular/material';
 
 export interface GroupMembers {
   Guser: string;
@@ -25,7 +26,8 @@ export interface GroupRequests {
   styleUrls: ['./group-page.component.css']
 })
 export class GroupPageComponent implements OnInit {
-
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
@@ -47,6 +49,11 @@ export class GroupPageComponent implements OnInit {
   private eventsSub: Subscription;
   private username: string;
   private userId: string;
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
 
   constructor(public groupsService: GroupsService, private eventsService: EventsService,
               private authService: AuthService, public route: ActivatedRoute) {
@@ -54,6 +61,9 @@ export class GroupPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.screenWidth$.subscribe(width => {
+      this.screenWidth = width;
+    });
    this.form = new FormGroup({
       title : new FormControl(null, {
         validators : [Validators.required, Validators.minLength(3)]

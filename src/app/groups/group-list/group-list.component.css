@@ -9,10 +9,15 @@ mat-drawer {
   width: 20%;
 }
 
+
 mat-drawer-content{
-  /*background-color: beige;*/
-  /*width:80%;*/
-  height: 850px;
+  margin: auto !important;
+  width: 50% !important;
+  height: 860px;
+}
+.example-card {
+  max-width: 100% !important;
+  margin: 4px;
 }
 
 /*:host {*/

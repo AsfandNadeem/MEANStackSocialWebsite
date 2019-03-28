@@ -1,5 +1,5 @@
 <mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
+  <mat-drawer mode="side"  [opened]="screenWidth> 1000">
     <mat-list style="padding-top: 0px">
       <ul style=" list-style:none; padding: 4px; font-family: Bahnschrift; margin-top: 3px; !important;">
         <li>
@@ -208,7 +208,7 @@
 
 <p class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts added yet!</p>
   </mat-drawer-content>
-  <mat-drawer mode="side" opened position="end">
+  <mat-drawer mode="side"  [opened]="screenWidth> 1000" position="end">
     <mat-list style="padding-top: 0px">
       <ul style=" list-style:none; padding: 4px; font-family: Bahnschrift; margin-top: 3px; !important;">
         <li>

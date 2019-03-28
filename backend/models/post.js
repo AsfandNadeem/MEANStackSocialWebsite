@@ -30,7 +30,7 @@ const postSchema = mongoose.Schema({
   content: { type: String, required: true},
   imagePath: { type: String},
   username: { type: String},
-  creator: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
+  creator: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
   createdAt: {type: Date, default: Date.now()},
   category: {type: String},
   likes: {type: Number, default: 0},

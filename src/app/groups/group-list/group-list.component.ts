@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageEvent} from '@angular/material';
-import { Subscription } from 'rxjs';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatDrawer, PageEvent} from '@angular/material';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import io from 'socket.io-client';
 import { Group } from '../group.model';
 import { GroupsService } from '../groups.service';
@@ -14,7 +14,8 @@ import {Events} from '../../events/event.model';
   styleUrls: ['./group-list.component.css']
 })
 export class GroupListComponent implements OnInit, OnDestroy {
-
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   groups: Group[] = [];
   // groupsjoined: Group[] = [];
   events: Events[] = [];
@@ -33,14 +34,20 @@ export class GroupListComponent implements OnInit, OnDestroy {
    private authStatusSub: Subscription;
   // private groupsjoinedSub: Subscription;
   private eventsSub: Subscription;
-
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
    constructor(public groupsService: GroupsService, private authService: AuthService,
                private eventsService: EventsService) {
      this.socket = io('http://localhost:3000');
    }
 
    ngOnInit() {
-
+     this.screenWidth$.subscribe(width => {
+       this.screenWidth = width;
+     });
 
 
 

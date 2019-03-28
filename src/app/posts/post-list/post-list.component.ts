@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, HostListener  } from '@angular/core';
 import {PageEvent} from '@angular/material';
-import { Subscription } from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
+// import {MatSidenav} from '@angular/material';
 
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
@@ -11,6 +12,7 @@ import {Events} from '../../events/event.model';
 import {EventsService} from '../../events/events.service';
 import io from 'socket.io-client';
 import * as moment from 'moment';
+import {MatDrawer} from '@angular/material';
 export interface Notification {
   created: Date;
   sendername: string;
@@ -23,6 +25,8 @@ export interface Notification {
   styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   socketHost: any;
   socket: any;
   notifications: Notification[] = [];
@@ -45,12 +49,21 @@ export class PostListComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
   private notificationSub: Subscription;
 
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
+
   constructor(public postsService: PostsService, private authService: AuthService,
               private groupsService: GroupsService, private eventsService: EventsService) {
     this.socket = io('http://localhost:3000');
   }
 
   ngOnInit() {
+    this.screenWidth$.subscribe(width => {
+      this.screenWidth = width;
+    });
     this.isLoading = true;
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
      this.userId = this.authService.getUserId();

@@ -20,6 +20,7 @@ import {AdminGroupComponent} from './admin/admin-group/admin-group.component';
 import {AdminEventComponent} from './admin/admin-event/admin-event.component';
 import {UserspageComponent} from './posts/userspage/userspage/userspage.component';
 import {ChatComponent} from './chat/chat.component';
+import {AdvertisepostComponent} from './posts/advertisepost/advertisepost/advertisepost.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
@@ -27,6 +28,7 @@ const routes: Routes = [
   {path: 'adminusers', component: AdminUsersComponent},
   {path: 'admingroups', component: AdminGroupComponent},
   {path: 'adminevents',  component: AdminEventComponent},
+  {path: 'advertise', component: AdvertisepostComponent},
   { path: '' , component: LoginComponent},
   { path: 'messages' , component: PostListComponent, canActivate: [AuthGuard] },
   {path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },

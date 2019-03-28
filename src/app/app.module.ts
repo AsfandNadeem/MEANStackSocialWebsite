@@ -53,6 +53,7 @@ import { UserspageComponent } from './posts/userspage/userspage/userspage.compon
 import { ChatComponent } from './chat/chat.component';
 import { MessageComponent } from './message/message.component';
 import {NgxAutoScrollModule} from 'ngx-auto-scroll';
+import { AdvertisepostComponent } from './posts/advertisepost/advertisepost/advertisepost.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import {NgxAutoScrollModule} from 'ngx-auto-scroll';
     ReportPageComponent,
     UserspageComponent,
     ChatComponent,
-    MessageComponent
+    MessageComponent,
+    AdvertisepostComponent
   ],
   imports: [
     BrowserModule,

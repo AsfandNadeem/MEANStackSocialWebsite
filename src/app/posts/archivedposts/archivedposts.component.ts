@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  ViewChild, HostListener  } from '@angular/core';
 import {Post} from '../post.model';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {PostsService} from '../posts.service';
 import {AuthService} from '../../auth/auth.service';
 import {PageEvent} from '@angular/material';
@@ -8,13 +8,15 @@ import {GroupsService} from '../../groups/groups.service';
 import {EventsService} from '../../events/events.service';
 import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
-
+import {MatDrawer} from '@angular/material';
 @Component({
   selector: 'app-archivedposts',
   templateUrl: './archivedposts.component.html',
   styleUrls: ['./archivedposts.component.css']
 })
 export class ArchivedpostsComponent implements OnInit {
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   friends = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
   posts: Post[] = [];
   groups: Group[] = [];
@@ -33,12 +35,19 @@ export class ArchivedpostsComponent implements OnInit {
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private authStatusSub: Subscription;
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
 
   constructor(public postsService: PostsService, private authService: AuthService,
               private groupsService: GroupsService, private eventsService: EventsService) { }
 
   ngOnInit() {
-
+    this.screenWidth$.subscribe(width => {
+      this.screenWidth = width;
+    });
     this.isLoading = true;
     this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
     this.userId = this.authService.getUserId();

@@ -1,5 +1,5 @@
 <mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
+  <mat-drawer mode="side" [opened]="screenWidth> 1000">
     <mat-list style="padding-top: 0px">
       <ul style="list-style:none; padding: 4px; font-family: Bahnschrift; margin-top: 19px; !important;">
         <li>
@@ -20,34 +20,75 @@
 
   <mat-drawer-content>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-accordion multi="true" *ngIf="events.length > 0 && !isLoading">
-  <mat-expansion-panel style="margin-left: 5px; margin-right: 60px;" *ngFor="let event of events">
-    <mat-expansion-panel-header>
-      <strong>{{event.eventname}}</strong>
+
+    <mat-card class="example-card" *ngFor="let event of events">
+      <mat-card-header>
+        <ul style="list-style: none; display: flex;">
+
+          <li>
+            <mat-card-title><strong>{{event.username}}</strong></mat-card-title>
+
+
+            <mat-card-subtitle>
+              {{ event.eventname }}
+
+            </mat-card-subtitle>
+          </li>
+        </ul>
+      </mat-card-header>
       <br/>
-      <br/>
-      {{ event.username }}
-    </mat-expansion-panel-header>
-    <p>{{ event.description }}</p>
-    <strong>Event Date: </strong>{{ event.eventdate | date:'MMM dd, yyyy' }}
+
+      <mat-card-content>
+        <p>{{ event.description }}</p>
+        <strong>Date: </strong>{{ event.eventdate | date:'MMM dd, yyyy' }}
+      </mat-card-content>
 
 
 
-    <a mat-button color="primary" *ngIf="event.eventmembersid.includes(userId)" [routerLink]="['/eventpage', event.id]">Open</a>
+      <a mat-button color="primary" *ngIf="event.eventmembersid.includes(userId)" [routerLink]="['/eventpage', event.id]">Open</a>
 
-    <mat-action-row *ngIf=" userId == event.creator">
-    <!--<button mat-button color="warn" (click)="onDelete(event.id)">DELETE</button>-->
-    </mat-action-row>
-    <mat-action-row *ngIf=" userId != event.creator && !event.eventmembersid.includes(userId)">
-      <button mat-button color="warn" (click)="onJoin(event.id)">JOIN</button>
-    </mat-action-row>
-    <!--<mat-action-row *ngIf="userIsAuthenticated && userId == group.groupcreator">-->
+      <mat-action-row *ngIf=" userId == event.creator">
+        <!--<button mat-button color="warn" (click)="onDelete(event.id)">DELETE</button>-->
+      </mat-action-row>
+      <mat-action-row *ngIf=" userId != event.creator && !event.eventmembersid.includes(userId)">
+        <button mat-button color="warn" (click)="onJoin(event.id)">JOIN</button>
+      </mat-action-row>
+      <!--<mat-action-row *ngIf="userIsAuthenticated && userId == group.groupcreator">-->
 
-    <!--<a mat-button color="primary" [routerLink]="['/edit', groupt.id]">EDIT</a>-->
-    <!--<button mat-button color="warn" (click)="onDelete(group.id)">DELETE</button>-->
+      <!--<a mat-button color="primary" [routerLink]="['/edit', groupt.id]">EDIT</a>-->
+      <!--<button mat-button color="warn" (click)="onDelete(group.id)">DELETE</button>-->
+      <!--</mat-action-row>-->
+
+
+    </mat-card>
+<!--<mat-accordion multi="true" *ngIf="events.length > 0 && !isLoading">-->
+  <!--<mat-expansion-panel style="margin-left: 5px; margin-right: 60px;" *ngFor="let event of events">-->
+    <!--<mat-expansion-panel-header>-->
+      <!--<strong>{{event.eventname}}</strong>-->
+      <!--<br/>-->
+      <!--<br/>-->
+      <!--{{ event.username }}-->
+    <!--</mat-expansion-panel-header>-->
+    <!--<p>{{ event.description }}</p>-->
+    <!--<strong>Event Date: </strong>{{ event.eventdate | date:'MMM dd, yyyy' }}-->
+
+
+
+    <!--<a mat-button color="primary" *ngIf="event.eventmembersid.includes(userId)" [routerLink]="['/eventpage', event.id]">Open</a>-->
+
+    <!--<mat-action-row *ngIf=" userId == event.creator">-->
+    <!--&lt;!&ndash;<button mat-button color="warn" (click)="onDelete(event.id)">DELETE</button>&ndash;&gt;-->
     <!--</mat-action-row>-->
-  </mat-expansion-panel>
-</mat-accordion>
+    <!--<mat-action-row *ngIf=" userId != event.creator && !event.eventmembersid.includes(userId)">-->
+      <!--<button mat-button color="warn" (click)="onJoin(event.id)">JOIN</button>-->
+    <!--</mat-action-row>-->
+    <!--&lt;!&ndash;<mat-action-row *ngIf="userIsAuthenticated && userId == group.groupcreator">&ndash;&gt;-->
+
+    <!--&lt;!&ndash;<a mat-button color="primary" [routerLink]="['/edit', groupt.id]">EDIT</a>&ndash;&gt;-->
+    <!--&lt;!&ndash;<button mat-button color="warn" (click)="onDelete(group.id)">DELETE</button>&ndash;&gt;-->
+    <!--&lt;!&ndash;</mat-action-row>&ndash;&gt;-->
+  <!--</mat-expansion-panel>-->
+<!--</mat-accordion>-->
 <mat-paginator style="background-color: #FAFAFA" [length]="totalEvents" [pageSize]="eventsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
                *ngIf="events.length > 0"></mat-paginator>
 

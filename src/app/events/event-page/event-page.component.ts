@@ -1,15 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, HostListener  } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Post} from '../../posts/post.model';
 import {EventsService} from '../events.service';
 import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {mimeType} from '../../posts/post-create/mime-type.validator';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {Group} from '../../groups/group.model';
 import {Events} from '../event.model';
 import io from 'socket.io-client';
 import {GroupsService} from '../../groups/groups.service';
+import {MatDrawer} from '@angular/material';
 
 export interface EventMembers {
   Euser: string;
@@ -21,7 +22,8 @@ export interface EventMembers {
   styleUrls: ['./event-page.component.css']
 })
 export class EventPageComponent implements OnInit {
-
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
@@ -42,12 +44,20 @@ export class EventPageComponent implements OnInit {
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private userId: string;
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
   constructor(public eventService: EventsService, public groupsService: GroupsService,
               private authService: AuthService, public route: ActivatedRoute) {
     this.socket = io('http://localhost:3000');
   }
 
   ngOnInit() {
+    this.screenWidth$.subscribe(width => {
+      this.screenWidth = width;
+    });
    this.form = new FormGroup({
       title : new FormControl(null, {
         validators : [Validators.required, Validators.minLength(3)]

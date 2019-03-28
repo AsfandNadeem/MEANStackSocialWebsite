@@ -10,7 +10,7 @@ mat-drawer {
 }
 
 mat-drawer-content{
-  margin-left: 502px !important;
+  margin: auto !important;
   width: 50% !important;
   height: 860px;
 }
@@ -190,6 +190,6 @@ mat-expansion-panel-header{
   background-size: cover;
 }
 .example-card {
-  max-width: 60%;
+  max-width: 100%;
   margin: 4px;
 }

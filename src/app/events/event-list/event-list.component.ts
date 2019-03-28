@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageEvent} from '@angular/material';
-import { Subscription } from 'rxjs';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatDrawer, PageEvent} from '@angular/material';
+import {BehaviorSubject, Subscription} from 'rxjs';
 
 import { Events } from '../event.model';
 import { EventsService } from '../events.service';
@@ -15,7 +15,8 @@ import {Group} from '../../groups/group.model';
   styleUrls: ['./event-list.component.css']
 })
 export class EventListComponent implements OnInit, OnDestroy {
-
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   events: Events[] = [];
   groupsjoined: Group[] = [];
    isLoading = false;
@@ -30,11 +31,18 @@ export class EventListComponent implements OnInit, OnDestroy {
    private eventsSub: Subscription;
   private groupsSub: Subscription;
    private authStatusSub: Subscription;
-
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
    constructor(public eventsService: EventsService, private authService: AuthService,
                private groupsService: GroupsService) {}
 
    ngOnInit() {
+     this.screenWidth$.subscribe(width => {
+       this.screenWidth = width;
+     });
      this.isLoading = true;
      this.eventsService.getEvents(this.eventsPerPage, this.currentPage );
      this.userId = this.authService.getUserId();

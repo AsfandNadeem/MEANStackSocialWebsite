@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, HostListener  } from '@angular/core';
 import {Post} from '../../post.model';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {AuthService} from '../../../auth/auth.service';
-import {PageEvent} from '@angular/material';
+import {MatDrawer, PageEvent} from '@angular/material';
 
 import {Group} from '../../../groups/group.model';
 import {PostsService} from '../../posts.service';
@@ -17,6 +17,8 @@ import {ActivatedRoute, ParamMap} from '@angular/router';
   styleUrls: ['./userspage.component.css']
 })
 export class UserspageComponent implements OnInit {
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   friends = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
   posts: Post[] = [];
   groups: Group[] = [];
@@ -37,11 +39,21 @@ export class UserspageComponent implements OnInit {
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private authStatusSub: Subscription;
+
+
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
   constructor(public postsService: PostsService, private authService: AuthService,
               private groupsService: GroupsService, private eventsService: EventsService,
               public route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.screenWidth$.subscribe(width => {
+      this.screenWidth = width;
+    });
     this.isLoading = true;
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {

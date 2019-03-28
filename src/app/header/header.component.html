@@ -17,17 +17,30 @@
 
 
     </li>
-    <li *ngIf="userIsAuthenticated">
-      <section >
+    <li *ngIf="userIsAuthenticated" >
+      <section style="color: black;" style="position: absolute !important;
+
+        /*top: -100px !important;*/
+         z-index: 10;" >
         <div >
-          <input matInput [formControl]="queryField" type="text" placeholder="search..."  [matMenuTriggerFor]="createsearch" autofocus/>
+          <input style=" color: black !important; background: white;" matInput [formControl]="queryField" type="text" placeholder="search..." />
         </div>
-        <mat-menu #createsearch="matMenu">
-          <button mat-menu-item *ngFor="let result of results" >
-            <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]">{{ result.username}}</a>
-            {{result.username}} {{result._id}}
-          </button>
-        </mat-menu>
+        <ul style=" display: block;
+background: white;">
+        <li *ngFor="let result of results" >
+          <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]">{{ result.username}}</a>
+        </li>
+        <!--<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>-->
+        </ul>
+        <!--<div >-->
+          <!--<input matInput [formControl]="queryField" type="text" placeholder="search..."  [matMenuTriggerFor]="createsearch" autofocus/>-->
+        <!--</div>-->
+        <!--<mat-menu #createsearch="matMenu">-->
+          <!--<button mat-menu-item *ngFor="let result of results" >-->
+            <!--<a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]">{{ result.username}}</a>-->
+            <!--{{result.username}} {{result._id}}-->
+          <!--</button>-->
+        <!--</mat-menu>-->
         <!--<ul style="display: block !important;" >-->
           <!--<li *ngFor="let result of results" >-->
                          <!--{{result.username}}-->

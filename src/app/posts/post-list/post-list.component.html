@@ -1,5 +1,5 @@
 <mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
+  <mat-drawer mode="side" [opened]="screenWidth> 1000">
     <mat-list style="
       margin-top: 11px !important;"
     >
@@ -57,7 +57,7 @@
     <ul style="list-style: none; display: flex;">
       <li>
         <img
-
+          [hidden]="!post.profileimg"
           class="example-header-image-post"
              [src]="post.profileimg" style="margin-right: 30px;" >
       </li>
@@ -226,7 +226,7 @@ Report
 
 <p  class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts added yet!</p>
   </mat-drawer-content>
-  <mat-drawer mode="side" opened position="end">
+  <mat-drawer mode="side" [opened]="screenWidth> 1000" position="end">
     <mat-list style="
       margin-top: 11px !important;"
     >

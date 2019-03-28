@@ -1,5 +1,5 @@
 <mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
+  <mat-drawer mode="side" [opened]="screenWidth> 1000">
     <mat-list style="
       margin-top: 11px !important;">
       <ul style="list-style:none; padding: 4px; font-family: Bahnschrift; margin-top: 0px; !important;">
@@ -162,7 +162,7 @@
 
 <p class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts archived yet!</p>
   </mat-drawer-content>
-  <mat-drawer mode="side" opened position="end">
+  <mat-drawer mode="side" [opened]="screenWidth> 1000" position="end">
     <mat-list style="
       margin-top: 0px !important;"
     >

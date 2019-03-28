@@ -1,23 +1,26 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild, HostListener  } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import { PostsService } from '../posts.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Post} from '../post.model';
 import {mimeType} from './mime-type.validator';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {GroupsService} from '../../groups/groups.service';
 import {EventsService} from '../../events/events.service';
 import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
 
 import io from 'socket.io-client';
+import {MatDrawer} from '@angular/material';
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css']
 })
 export class PostCreateComponent implements OnInit {
+  screenWidth: number;
+  private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   socketHost: any;
   socket: any;
   isLoading = false;
@@ -32,6 +35,11 @@ export class PostCreateComponent implements OnInit {
   private postId: string;
   post: Post;
   categories = ['General', localStorage.getItem('department')];
+  @ViewChild('mat-drawer') sidenav: MatDrawer;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenWidth$.next(event.target.innerWidth);
+  }
 
   constructor(public postsService: PostsService, public route: ActivatedRoute,
               private groupsService: GroupsService, private eventsService: EventsService) {
@@ -40,6 +48,9 @@ export class PostCreateComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.screenWidth$.subscribe(width => {
+      this.screenWidth = width;
+    });
     console.log(this.groupsService.getJoinedGroups());
     this.groupsSub = this.groupsService.getGroupUpdateListener()
       .subscribe((groupData: { groups: Group[]}) => {
