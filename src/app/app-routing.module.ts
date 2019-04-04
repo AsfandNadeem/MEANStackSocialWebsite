@@ -23,6 +23,7 @@ import {ChatComponent} from './chat/chat.component';
 import {AdvertisepostComponent} from './posts/advertisepost/advertisepost/advertisepost.component';
 import {AdvertiserloginComponent} from './auth/Advertiser/advertiserlogin/advertiserlogin/advertiserlogin.component';
 import {AdvertisersignupComponent} from './auth/Advertiser/advertisersignup/advertisersignup/advertisersignup.component';
+import {AdvertiserpageComponent} from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: 'advertise', component: AdvertiserloginComponent},
   {path: 'registeradvertiser', component: AdvertisersignupComponent},
   { path: '' , component: LoginComponent},
+  {path: 'advertiserpage', component: AdvertiserpageComponent},
   { path: 'messages' , component: PostListComponent, canActivate: [AuthGuard] },
   {path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'edit/:postId', component: PostCreateComponent, canActivate: [AuthGuard] },

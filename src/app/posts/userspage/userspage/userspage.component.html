@@ -166,7 +166,7 @@
     <!--<mat-paginator style="background-color: #FAFAFA;" [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"-->
                    <!--*ngIf="posts.length > 0"></mat-paginator>-->
 
-    <p class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts archived yet!</p>
+    <p class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts yet!</p>
   </mat-drawer-content>
   <mat-drawer mode="side" [opened]="screenWidth> 1000" position="end">
     <mat-list style="

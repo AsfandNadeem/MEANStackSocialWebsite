@@ -56,6 +56,7 @@ import {NgxAutoScrollModule} from 'ngx-auto-scroll';
 import { AdvertisepostComponent } from './posts/advertisepost/advertisepost/advertisepost.component';
 import { AdvertiserloginComponent } from './auth/Advertiser/advertiserlogin/advertiserlogin/advertiserlogin.component';
 import { AdvertisersignupComponent } from './auth/Advertiser/advertisersignup/advertisersignup/advertisersignup.component';
+import { AdvertiserpageComponent } from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { AdvertisersignupComponent } from './auth/Advertiser/advertisersignup/ad
     MessageComponent,
     AdvertisepostComponent,
     AdvertiserloginComponent,
-    AdvertisersignupComponent
+    AdvertisersignupComponent,
+    AdvertiserpageComponent
   ],
   imports: [
     BrowserModule,

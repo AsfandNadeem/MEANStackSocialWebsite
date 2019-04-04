@@ -14,7 +14,10 @@ import {User} from './user.model';
 export class AuthService {
 
   private isAuthenticated = false;
+  private isadvertiserAuthenticated = false;
   private token: string;
+  public advertiserid: string;
+  public advertisername: string;
   private tokenTimer: any;
   private userId: string;
   userN: string;
@@ -26,11 +29,20 @@ export class AuthService {
     return this .token;
   }
 
+  getadvertiserid() {
+    return localStorage.getItem('advertiserid');
+  }
+  getadvertisername() {
+    return localStorage.getItem('advertisername');
+  }
   getName() {
     return localStorage.getItem('username');
   }
   getIsAuth() {
     return this.isAuthenticated;
+  }
+  getIsAdvertiserAuth() {
+    return this.isadvertiserAuthenticated;
   }
 
   getAuthStatusListener() {
@@ -103,6 +115,37 @@ export class AuthService {
         this.router.navigate(['/login']).then();
     });
 
+  }
+
+
+ advertiserlogin(email: string, password: string) {
+    // const authData: AuthData = {email: email, password: password};
+    this.http.post<{userId: string, username: string}>(
+      'http://localhost:3000/api/advertise/login',
+      {email, password})
+      .subscribe( response => {
+         console.log(response);
+         this.advertiserid = response.userId;
+          this.advertisername = response.username;
+        this.isadvertiserAuthenticated = true;
+          localStorage.setItem('advertiserid', this.advertiserid);
+          localStorage.setItem('advertisername', this.advertisername);
+          console.log('here');
+         this.router.navigate(['/advertiserpage']).then();
+         } , error => {
+        console.log('error');
+        // this.router.navigate(['/']).then();
+      });
+
+  }
+
+  advertiserlogout() {
+   this.advertiserid = null;
+   this.advertisername = null;
+    this.isadvertiserAuthenticated = false;
+     localStorage.removeItem('advertiserid');
+    localStorage.removeItem('advertisername');
+    this.router.navigate(['/advertise']);
   }
 
   logout() {

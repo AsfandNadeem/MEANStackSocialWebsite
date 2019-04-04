@@ -12,16 +12,62 @@ export interface Notification {
   message: string;
   senderimage: string;
 }
+export interface Advertisement {
+  id: string;
+  title: string;
+  content: string;
+  imagePath: string;
+  username: string;
+  createdAt: Date;
+  adcreator: string;
+  approved: boolean;
+}
 @Injectable({providedIn: 'root'})
 export class PostsService {
   private notifications: Notification [] = [];
   private notificationUpdated = new Subject<{notifications: Notification[], notificationCount: number}>();
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
+  private advertisements: Advertisement[] = [];
+  private advertisementsUpdated = new Subject<{advertisements: Advertisement[], advertisementCount: number}>();
   private userposts: Post[] = [];
   private userpostsUpdated = new Subject<{posts: Post[], postCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  getadvertiserPosts(advertiserid: string) { // httpclientmodule
+    // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
+    this.http
+      .get<{message: string, posts: any,  username: string, maxPosts: number}>(
+        'http://localhost:3000/api/advertise/' + advertiserid
+      )
+      .pipe(map((postData) => {
+        return { advertisements: postData.posts.map(post => {
+            return {
+              title: post.title,
+              content: post.content,
+              id: post._id,
+              username : post.username,
+              adcreator: post.adcreator,
+              approved: post.approved,
+              createdAt: post.createdAt,
+              imagePath: post.imagePath
+            };
+          }), maxPosts: postData.maxPosts  };
+      }))// change rterieving data
+      .subscribe(transformedAdvertisementData => {
+        this.advertisements = transformedAdvertisementData.advertisements;
+        this.advertisementsUpdated.next({
+            advertisements: [...this.advertisements],
+            advertisementCount: transformedAdvertisementData.maxPosts
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getadvertisementPostUpdateListener() {
+    return this.advertisementsUpdated.asObservable();
+  }
 
   getuserPosts(userid: string) { // httpclientmodule
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
@@ -151,6 +197,24 @@ export class PostsService {
       .subscribe( responseData  => {
         this.router.navigate(['/messages']);
       });
+  }
+
+  addAdvertisement(advertiserid: string, advertisername: string, title: string, content: string , image: File) {
+    const postData =  new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image, title);
+    postData.append('username', advertisername);
+    // postData.append('username', localStorage.getItem('username'));
+    // postData.append('profileimg', profileimg);
+    console.log(postData);
+    return this.http
+      .post<{ message: string }>(
+        'http://localhost:3000/api/advertise/advertise/' + advertiserid,
+        postData);
+    // .subscribe( responseData  => {
+    //   this.router.navigate(['/grouplist']);
+    // });
   }
 
   addAdvertisementPost(title: string, content: string , image: File, category: string) {
