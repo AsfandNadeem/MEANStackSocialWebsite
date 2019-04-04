@@ -9,6 +9,7 @@ const groupRoutes=require("./routes/groups");
 const eventRoutes=require("./routes/events");
 const adminRoutes=require("./routes/admin");
 const messageRoutes = require("./routes/messages");
+const advertisementRoutes = require("./routes/advertisements");
 
 const app = express();
 mongoose.connect("mongodb://127.0.0.1/FYP_Social")
@@ -61,6 +62,7 @@ app.use("/api/groups",groupRoutes);
 app.use("/api/events",eventRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/chat",messageRoutes);
+app.use("/api/advertise",advertisementRoutes);
 
 
 module.exports = app;

@@ -58,6 +58,21 @@ export class AuthService {
       });
   }
 
+  createAdvertiser(email: string, password: string, username: string ) {
+    // const authData: AuthData = {email: email};
+    const userData =  new FormData();
+    userData.append('email', email);
+    userData.append('password', password);
+    userData.append('username', username);
+    console.log(userData);
+    this.http.post('http://localhost:3000/api/advertise/signup', {email, password, username})
+      .subscribe(response => {
+        console.log(response);
+        this.router.navigate(['/advertise']);
+      });
+  }
+
+
   login(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
     this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string, profileimg: any}>(

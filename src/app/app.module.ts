@@ -54,6 +54,8 @@ import { ChatComponent } from './chat/chat.component';
 import { MessageComponent } from './message/message.component';
 import {NgxAutoScrollModule} from 'ngx-auto-scroll';
 import { AdvertisepostComponent } from './posts/advertisepost/advertisepost/advertisepost.component';
+import { AdvertiserloginComponent } from './auth/Advertiser/advertiserlogin/advertiserlogin/advertiserlogin.component';
+import { AdvertisersignupComponent } from './auth/Advertiser/advertisersignup/advertisersignup/advertisersignup.component';
 
 
 @NgModule({
@@ -83,7 +85,9 @@ import { AdvertisepostComponent } from './posts/advertisepost/advertisepost/adve
     UserspageComponent,
     ChatComponent,
     MessageComponent,
-    AdvertisepostComponent
+    AdvertisepostComponent,
+    AdvertiserloginComponent,
+    AdvertisersignupComponent
   ],
   imports: [
     BrowserModule,

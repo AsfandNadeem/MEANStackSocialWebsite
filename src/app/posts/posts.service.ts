@@ -18,6 +18,8 @@ export class PostsService {
   private notificationUpdated = new Subject<{notifications: Notification[], notificationCount: number}>();
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
+  private userposts: Post[] = [];
+  private userpostsUpdated = new Subject<{posts: Post[], postCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -49,9 +51,9 @@ export class PostsService {
           }), maxPosts: postData.maxPosts  };
       }))// change rterieving data
       .subscribe(transformedPostData => {
-        this.posts = transformedPostData.posts;
-        this.postsUpdated.next({
-            posts: [...this.posts],
+        this.userposts = transformedPostData.posts;
+        this.userpostsUpdated.next({
+            posts: [...this.userposts],
             postCount: transformedPostData.maxPosts
           }
         );
@@ -59,7 +61,7 @@ export class PostsService {
   }
 
   getuserPostUpdateListener() {
-    return this.postsUpdated.asObservable();
+    return this.userpostsUpdated.asObservable();
   }
 
 
