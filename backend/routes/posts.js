@@ -3,6 +3,8 @@ const multer = require("multer");
 
 const Post = require("../models/post");
 const User = require('../models/user');
+const Advertiser = require("../models/advertiserModel");
+const Advertisement = require("../models/advertisementModel");
 const Report = require("../models/report");
 const checkAuth = require("../middleware/check-auth");
 
@@ -82,48 +84,121 @@ router.post(
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
 
-    if(req.file) {
-      const post = new Post({
-        title: req.body.title,
-        content: req.body.content,
-        username: "Advertisement",
-        createdAt: Date.now(),
-        category: req.body.category,
-        imagePath: url + "/images/" + req.file.filename
-      });
+    Advertisement.findById({ _id: req.body.adid}, (err, advert) => {
+      if(err){
+        console.log("no add");
+        res.json({ success: false, message: 'soemthing went worng'});
+      } else {
+        if(!advert){
+          console.log("no found advertismemtn");
+          res.json({success: false,message:'advetismemtn not Found'});
+        } else {
+          if(advert.imagePath) {
+            const post = new Post({
+              _id: advert._id,
+              title: advert.title,
+              content: advert.content,
+              username: advert.username,
+              createdAt: advert.createdAt,
+              category: "General",
+              imagePath: advert.imagePath
+            });
 
-
-      post.save().then(createdPost => {
-        res.status(201).json({
-          message: "Post added successfully",
-          post: {
-            ...createdPost,
-            id: createdPost._id
+            post.save().then(createdPost => {
+              advert.approved = true;
+              advert.save().then(createdAdvert => {
+                res.status(201).json({
+                  message: "Post added successfully",
+                  post: {
+                    ...createdPost,
+                    id: createdPost._id
+                  }
+                });
+              });
+              // res.status(201).json({
+              //   message: "Post added successfully",
+              //   post: {
+              //     ...createdPost,
+              //     id: createdPost._id
+              //   }
+              // });
+            });
           }
-        });
-      });
-    }
-    else {
-      const post = new Post({
-        title: req.body.title,
-        content: req.body.content,
-        username: "Advertisement",
-        createdAt: Date.now(),
-        category: req.body.category
-      });
+          else {
+            const post = new Post({
+              _id: advert._id,
+              title: advert.title,
+              content: advert.content,
+              username: advert.username,
+              createdAt: advert.createdAt,
+              category: "General"
+            });
 
-      post.save().then(createdPost => {
-        res.status(201).json({
-          message: "Post added successfully",
-          post: {
-            ...createdPost,
-            id: createdPost._id
+            post.save().then(createdPost => {
+              advert.approved = true;
+              advert.save().then(createdAdvert => {
+                res.status(201).json({
+                  message: "Post added successfully",
+                  post: {
+                    ...createdPost,
+                    id: createdPost._id
+                  }
+                });
+              });
+              // res.status(201).json({
+              //   message: "Post added successfully",
+              //   post: {
+              //     ...createdPost,
+              //     id: createdPost._id
+              //   }
+              // });
+            });
           }
-        });
-      });
-    }
-  }
-);
+        }
+      }
+    });
+
+    // if(req.file) {
+    //   const post = new Post({
+    //     title: req.body.title,
+    //     content: req.body.content,
+    //     username: "Advertisement",
+    //     createdAt: Date.now(),
+    //     category: req.body.category,
+    //     imagePath: url + "/images/" + req.file.filename
+    //   });
+    //
+    //
+    //   post.save().then(createdPost => {
+    //     res.status(201).json({
+    //       message: "Post added successfully",
+    //       post: {
+    //         ...createdPost,
+    //         id: createdPost._id
+    //       }
+    //     });
+    //   });
+    // }
+    // else {
+    //   const post = new Post({
+    //     title: req.body.title,
+    //     content: req.body.content,
+    //     username: "Advertisement",
+    //     createdAt: Date.now(),
+    //     category: req.body.category
+    //   });
+    //
+    //   post.save().then(createdPost => {
+    //     res.status(201).json({
+    //       message: "Post added successfully",
+    //       post: {
+    //         ...createdPost,
+    //         id: createdPost._id
+    //       }
+    //     });
+    //   });
+    // }
+  });
 
 router.post(
   "",

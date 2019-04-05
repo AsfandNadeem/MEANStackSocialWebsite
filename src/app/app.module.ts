@@ -57,6 +57,7 @@ import { AdvertisepostComponent } from './posts/advertisepost/advertisepost/adve
 import { AdvertiserloginComponent } from './auth/Advertiser/advertiserlogin/advertiserlogin/advertiserlogin.component';
 import { AdvertisersignupComponent } from './auth/Advertiser/advertisersignup/advertisersignup/advertisersignup.component';
 import { AdvertiserpageComponent } from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
+import { AdminadvertisementsComponent } from './admin/adminadvertisements/adminadvertisements.component';
 
 
 @NgModule({
@@ -89,7 +90,8 @@ import { AdvertiserpageComponent } from './auth/Advertiser/advertiserpage/advert
     AdvertisepostComponent,
     AdvertiserloginComponent,
     AdvertisersignupComponent,
-    AdvertiserpageComponent
+    AdvertiserpageComponent,
+    AdminadvertisementsComponent
   ],
   imports: [
     BrowserModule,

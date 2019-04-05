@@ -62,7 +62,8 @@
              [src]="post.profileimg" style="margin-right: 30px;" >
       </li>
       <li>
-        <mat-card-title><a style="text-decoration: none; color: grey ;" [routerLink]="['/user', post.creator]"><strong>{{post.username}}</strong></a></mat-card-title>
+        <mat-card-title *ngIf="!post.creator"><strong>Advertisement<br/><p style="color: grey;">{{post.username}}</p></strong></mat-card-title>
+        <mat-card-title *ngIf="post.creator"><a style="text-decoration: none; color: grey ;" [routerLink]="['/user', post.creator]"><strong>{{post.username}}</strong></a></mat-card-title>
 
 
         <mat-card-subtitle>

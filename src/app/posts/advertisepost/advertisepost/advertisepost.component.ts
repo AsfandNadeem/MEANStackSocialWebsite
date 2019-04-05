@@ -68,8 +68,8 @@ export class AdvertisepostComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-         this.postsService.addAdvertisementPost(this.form.value.title, this.form.value.content, this.form.value.image,
-        'General');
+        //  this.postsService.addAdvertisementPost(this.form.value.title, this.form.value.content, this.form.value.image,
+        // 'General');
     this.form.reset();
   }
 

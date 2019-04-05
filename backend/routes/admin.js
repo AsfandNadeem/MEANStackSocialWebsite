@@ -1,7 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
-
+const Advertiser = require("../models/advertiserModel");
+const Advertisement = require("../models/advertisementModel");
 const jwt = require("jsonwebtoken");
 const Post = require("../models/post");
 const User = require('../models/user');
@@ -93,6 +94,25 @@ router.get("/events", (req, res, next) => {
     });
 });
 
+
+router.get("/adverts", (req, res, next) => {
+
+  const postQuery = Advertisement.find().sort({ '_id': -1 });
+  let fetchedPosts;
+
+  postQuery
+    .then(documents => {
+      fetchedPosts = documents;
+      return Advertisement.count();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        posts: fetchedPosts,
+        maxPosts: count
+      });
+    });
+});
 
 router.get("/posts", (req, res, next) => {
 

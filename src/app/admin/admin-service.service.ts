@@ -7,6 +7,7 @@ import {User} from '../auth/user.model';
 import {Group} from '../groups/group.model';
 import {Events} from '../events/event.model';
 import {Post} from '../posts/post.model';
+import {PostsService} from '../posts/posts.service';
 
 export interface Report {
   id: string;
@@ -18,6 +19,16 @@ export interface Report {
   reportedby: string;
 }
 
+export interface Advertisement {
+  id: string;
+  title: string;
+  content: string;
+  imagePath: string;
+  username: string;
+  createdAt: Date;
+  adcreator: string;
+  approved: boolean;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -26,6 +37,8 @@ export interface Report {
 export class AdminServiceService {
 
   isadmin = false;
+  private advertisements: Advertisement[] = [];
+  private advertisementsUpdated = new Subject<{advertisements: Advertisement[], advertisementCount: number}>();
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
   private users: User[] = [];
@@ -37,7 +50,7 @@ export class AdminServiceService {
   private reports: Report[] = [];
   private reportsUpdated = new Subject<{reports: Report[], reportCount: number}>();
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private postService: PostsService) { }
 
   login(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
@@ -50,7 +63,7 @@ export class AdminServiceService {
           this.router.navigate(['/adminpage']).then();
           } , error => {
         this.isadmin = false;
-        console.log(error.message);
+        console.log('invalid admin');
         this.router.navigate(['/admin']).then();
       });
 
@@ -58,6 +71,62 @@ export class AdminServiceService {
 
   getisAdmin() {
     return this.isadmin;
+  }
+
+  getadvertiserPosts() { // httpclientmodule
+    // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
+    this.http
+      .get<{message: string, posts: any,  username: string, maxPosts: number}>(
+        'http://localhost:3000/api/admin/adverts'
+      )
+      .pipe(map((postData) => {
+        return { advertisements: postData.posts.map(post => {
+            return {
+              title: post.title,
+              content: post.content,
+              id: post._id,
+              username : post.username,
+              adcreator: post.adcreator,
+              approved: post.approved
+            };
+          }), maxPosts: postData.maxPosts  };
+      }))// change rterieving data
+      .subscribe(transformedAdvertisementData => {
+        this.advertisements = transformedAdvertisementData.advertisements;
+        this.advertisementsUpdated.next({
+            advertisements: [...this.advertisements],
+            advertisementCount: transformedAdvertisementData.maxPosts
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  addAdvertisementPost(id: string) {
+    const postData =  new FormData();
+    postData.append('adid', id);
+    // postData.append('content', content);
+    // postData.append('image', image, title);
+    // postData.append( 'category', category);
+    // postData.append('username', localStorage.getItem('username'));
+    // postData.append('profileimg', profileimg);
+    console.log(postData);
+    return this.http
+      .post<{ message: string, post: Post }>(
+        'http://localhost:3000/api/posts/advert',
+        postData);
+  }
+
+  getadvertisementPostUpdateListener() {
+    return this.advertisementsUpdated.asObservable();
+  }
+  logoutAdmin() {
+    this.isadmin = false;
+    this.posts = null;
+    this.advertisements = null;
+    this.groups = null;
+    this.events = null;
+    this.users = null;
+    this.router.navigate(['/']);
   }
 
   getPosts() { // httpclientmodule

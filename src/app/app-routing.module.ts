@@ -24,12 +24,14 @@ import {AdvertisepostComponent} from './posts/advertisepost/advertisepost/advert
 import {AdvertiserloginComponent} from './auth/Advertiser/advertiserlogin/advertiserlogin/advertiserlogin.component';
 import {AdvertisersignupComponent} from './auth/Advertiser/advertisersignup/advertisersignup/advertisersignup.component';
 import {AdvertiserpageComponent} from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
+import {AdminadvertisementsComponent} from './admin/adminadvertisements/adminadvertisements.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
   {path: 'adminpage', component: AdminPageComponent},
   {path: 'adminusers', component: AdminUsersComponent},
   {path: 'admingroups', component: AdminGroupComponent},
+  {path: 'adminadverts', component: AdminadvertisementsComponent},
   {path: 'adminevents',  component: AdminEventComponent},
   {path: 'advertise', component: AdvertiserloginComponent},
   {path: 'registeradvertiser', component: AdvertisersignupComponent},

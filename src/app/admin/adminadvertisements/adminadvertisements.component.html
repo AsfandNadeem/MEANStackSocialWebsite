@@ -1,0 +1,52 @@
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Position Column -->
+  <!--<ng-container matColumnDef="position">-->
+  <!--<th mat-header-cell *matHeaderCellDef> No. </th>-->
+  <!--<td mat-cell *matCellDef="let element"> {{element.id}} </td>-->
+  <!--</ng-container>-->
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef> Title </th>
+    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="content">
+    <th mat-header-cell *matHeaderCellDef> Content </th>
+    <td mat-cell *matCellDef="let element"> {{element.content}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> Id </th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="username">
+    <th mat-header-cell *matHeaderCellDef> Username </th>
+    <td mat-cell *matCellDef="let element"> {{element.username}} <br/> {{element.adcreator}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td *matCellDef="let element" style="    border-bottom-width: 1px;
+    border-bottom-style: solid;     border-bottom-color: rgba(0,0,0,.12);">
+      <button mat-button *ngIf="!element.approved" color="primary" (click)="approve(element)">Approve</button>
+      <button mat-button color="warn">Delete</button>
+    </td>
+  </ng-container>
+
+  <!--&lt;!&ndash; Symbol Column &ndash;&gt;-->
+  <!--<ng-container matColumnDef="symbol">-->
+  <!--<th mat-header-cell *matHeaderCellDef> Symbol </th>-->
+  <!--<td mat-cell *matCellDef="let element"> {{element.symbol}} </td>-->
+  <!--</ng-container>-->
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

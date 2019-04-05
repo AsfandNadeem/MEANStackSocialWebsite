@@ -15,6 +15,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
   showposts = false;
   showevents = false;
   showreports = false;
+  showads = false;
   constructor(private adminService: AdminServiceService, private router: Router) { }
 
   ngOnInit() {
@@ -24,6 +25,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
     this.showposts = false;
     this.showevents = false;
     this.showreports = false;
+    this.showads = false;
       this.isadminauthenticated = true;
     } else {
       this.isadminauthenticated = false;
@@ -34,6 +36,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
   onUser() {
     this.showgroups = false;
     this.showposts = false;
+    this.showads = false;
     this.showevents = false;
     this.showreports = false;
     this.showuser = true;
@@ -42,6 +45,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
   onGroups() {
    this.showposts = false;
     this.showevents = false;
+    this.showads = false;
     this.showuser = false;
     this.showreports = false;
     this.showgroups = true;
@@ -50,6 +54,7 @@ export class AdminPageComponent implements OnInit , OnDestroy {
   onPosts() {
    this.showevents = false;
     this.showuser = false;
+    this.showads = false;
     this.showreports = false;
     this.showgroups = false;
     this.showposts = true;
@@ -58,20 +63,30 @@ export class AdminPageComponent implements OnInit , OnDestroy {
   onEvents() {
     this.showposts = false;
     this.showuser = false;
+    this.showads = false;
     this.showreports = false;
     this.showgroups = false;
     this.showevents = true;
   }
   onReports() {
     this.showposts = false;
+    this.showads = false;
     this.showuser = false;
     this.showgroups = false;
     this.showevents = false;
     this.showreports = true;
   }
+  onAds() {
+    this.showposts = false;
+    this.showuser = false;
+    this.showgroups = false;
+    this.showevents = false;
+    this.showreports = false;
+    this.showads = true;
+  }
   onLogout() {
     this.isadminauthenticated = false;
-    this.router.navigate(['/admin']).then();
+   this.adminService.logoutAdmin();
   }
 
   ngOnDestroy() {
