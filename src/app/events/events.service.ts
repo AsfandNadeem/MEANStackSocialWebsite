@@ -13,14 +13,15 @@ export class EventsService {
   private events: Events[] = [];
   private posts: Post[] = [];
   private eventsUpdated = new Subject<{events: Events[], eventCount: number}>();
-  private postsUpdated = new Subject<{posts: Post[], eventmembers: any, eventname: string,
+  private postsUpdated = new Subject<{posts: Post[], eventcreatorid: any, eventmembers: any, eventname: string,
     eventdate: Date, description: string, eventcreator: string}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
   getPosts(id: string) {
     console.log('eventinservicee' + id);
-    this.http.get<{eventmembers: any, eventname: any, eventdate: Date, description: any, eventcreator: any, posts: any}>
+    this.http.get<{eventcreatorid: any,
+      eventmembers: any, eventname: any, eventdate: Date, description: any, eventcreator: any, posts: any}>
     ('http://localhost:3000/api/events/' + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -40,7 +41,7 @@ export class EventsService {
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
-          }), eventmembers:  postData.eventmembers, eventname: postData.eventname,
+          }), eventcreatorid: postData.eventcreatorid, eventmembers:  postData.eventmembers, eventname: postData.eventname,
           eventcreator: postData.eventcreator,
         eventdescription: postData.description, eventdate: postData.eventdate};
       }))
@@ -48,6 +49,7 @@ export class EventsService {
         this.posts = transformedEventPost.posts;
         this.postsUpdated.next( {
           posts: [...this.posts],
+          eventcreatorid: transformedEventPost.eventcreatorid,
           eventmembers: transformedEventPost.eventmembers,
           eventname: transformedEventPost.eventname,
           eventdate: transformedEventPost.eventdate,
@@ -124,6 +126,10 @@ export class EventsService {
     return this.eventsUpdated.asObservable();
   }
 
+  updateEvent(id: string , eventname: string, description: string, eventdate: Date) {
+    return this.http.put('http://localhost:3000/api/events/' + id, {eventname, description, eventdate});
+     }
+
   addEvent(eventname: string,  category: string, description: string, eventdate: Date, username: string) {
     return this.http
       .post(
@@ -167,7 +173,7 @@ export class EventsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/events/likeeventpost', eventData);
+    return this.http.put( 'http://localhost:3000/api/events/likeeventpost/' + eventid, eventData);
   }
   //
   dislikePost(postid: string, eventid: string) {
@@ -176,7 +182,7 @@ export class EventsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/events/dislikeeventpost', eventData);
+    return this.http.put( 'http://localhost:3000/api/events/dislikeeventpost/' + eventid, eventData);
   }
 
    addComment(postid: string, eventid: string, comment: string) {
@@ -186,6 +192,6 @@ export class EventsService {
       comment: comment
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/events/commenteventpost', eventData);
+    return this.http.put( 'http://localhost:3000/api/events/commenteventpost/' + eventid, eventData);
   }
 }

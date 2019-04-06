@@ -1,5 +1,5 @@
 import {Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Post} from '../../posts/post.model';
 import {GroupsService} from '../groups.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
@@ -26,6 +26,8 @@ export interface GroupRequests {
   styleUrls: ['./group-page.component.css']
 })
 export class GroupPageComponent implements OnInit {
+
+  panelOpenState: boolean;
   screenWidth: number;
   private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   isLoading = false;
@@ -42,13 +44,14 @@ export class GroupPageComponent implements OnInit {
   // eventdate: Date;
   groupdescription: string;
   groupcreator: string;
+  groupcreatorid: string;
   userIsAuthenticated = false;
   private postsSub: Subscription;
   private authStatusSub: Subscription;
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private username: string;
-  private userId: string;
+   userId: string;
   @ViewChild('mat-drawer') sidenav: MatDrawer;
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -61,6 +64,7 @@ export class GroupPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.panelOpenState = false;
     this.screenWidth$.subscribe(width => {
       this.screenWidth = width;
     });
@@ -87,7 +91,7 @@ export class GroupPageComponent implements OnInit {
     this.userId = this.authService.getUserId();
     // this.username = this.authService.getName();
     this.postsSub = this.groupsService.getPostUpdateListener()
-       .subscribe((postData: { groupmembers: any, groupname: any,
+       .subscribe((postData: { groupcreatorid: any, groupmembers: any, groupname: any,
          description: string, groupcreator: string, grouprequests: any, posts: Post[]}) => {
         this.isLoading = false;
     //     this.totalGroups = groupData.groupCount;
@@ -96,6 +100,7 @@ export class GroupPageComponent implements OnInit {
          this.groupMembers = postData.groupmembers;
          this.groupRequests = postData.grouprequests;
          this.groupname = postData.groupname,
+           this.groupcreatorid = postData.groupcreatorid,
            // this.eventdate = postData.eventdate,
            this.groupdescription = postData.description,
            this.groupcreator = postData.groupcreator,
@@ -186,12 +191,12 @@ export class GroupPageComponent implements OnInit {
     });
   }
 
-  addComment(postid: string, comment: string) {
-    console.log(postid + '\n' + comment + '\n' + this.groupid );
-    if (comment === '') {
+  addComment(postid: string, form: NgForm) {
+    console.log(postid + '\n' + form.value.comment + '\n' + this.groupid );
+    if (form.invalid) {
       return;
     } else {
-      this.groupsService.addComment(postid, this.groupid, comment).subscribe(() => {
+      this.groupsService.addComment(postid, this.groupid, form.value.comment).subscribe(() => {
         this.socket.emit('refresh', {});
         this.groupsService.getPosts(this.groupid);
       });
@@ -205,5 +210,23 @@ export class GroupPageComponent implements OnInit {
       this.groupsService.getPosts(this.groupid);
     });
   }
+   onEditGroup(form: NgForm) {
+     // name: string, description: string, eventdate: Date
+     if (form.invalid) {
+       return;
+     }
+     this.panelOpenState = false;
+    this.groupsService.updateGroup(this.groupid, form.value.groupname, form.value.description).
+      subscribe(() => {
+      this.groupsService.getPosts(this.groupid);
+    });
+    // this.groupsService.updateGroup(
+    //   this.groupid,
+    //   this.groupname,
+    //   this.gr,
+    //   this.form.value.image);
+  }
+
+
 
 }

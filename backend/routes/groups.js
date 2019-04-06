@@ -101,28 +101,61 @@ router.get("", (req, res, next) => {
   }
 });
 
+router.put(
+  "/:id",
+  checkAuth,
+  (req, res, next) => {
+    User.findById({ _id: req.userData.userId}, (err, user) => {
+      if(err){
+        res.json({ success: false, message: 'soemthing wrong'});
+      } else {
+        if(!user){
+          console.log("no found user");
+          res.json({success: false,message:'user not Found'});
+        }
+        else {
+          const group =({
+            groupname: req.body.groupname,
+            description: req.body.description
+          });
+          console.log(group);
+          Group.updateOne({ _id: req.params.id, groupcreator: req.userData.userId}, group).then(result => {
+            if (result.nModified > 0) {
+              console.log(result);
+              res.status(200).json({message: "Update successful!"});
+            } else {
+              res.status(401).json({message: "Not authorized to update!"});
+            }
+          });
+        }
+      }
+    });
+
+  }
+);
+
 router.get("/joinedgroups", checkAuth, (req, res, next) => {
   // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
   // const currentPage = +req.query.page;
 let joinedgroups = [];
 let count = 0;
-  const groupQuery = Group.find().sort({ '_id': -1 });
+  const groupQuery = Group.find({groupmembersid: req.userData.userId}).sort({ '_id': -1 });
   groupQuery
     .then(groups => {
-      groups.forEach( function( onegroup) {
-        // console.log(onegroup);
-        onegroup.groupmembers.forEach( function( onemember){
-          // console.log(onemember.Guserid);
-          if(onemember.Guserid == req.userData.userId) {
-            joinedgroups.push(onegroup);
-            count++;
-          }
-           });
-      });
+      // groups.forEach( function( onegroup) {
+      //   // // console.log(onegroup);
+      //   // onegroup.groupmembers.forEach( function( onemember){
+      //   //   // console.log(onemember.Guserid);
+      //   //   if(onemember.Guserid == req.userData.userId) {
+      //   //     joinedgroups.push(onegroup);
+      //   //     count++;
+      //   //   }
+      //   //    });
+      // });
       // console.log(joinedgroups);
       res.status(200).json({
         message: "Groups fetched successfully!",
-        groups: joinedgroups,
+        groups: groups,
         maxGroups: count
        });
     });
@@ -285,6 +318,7 @@ console.log("getiing group");
         groupcreator: group.username,
         groupmembers: group.groupmembers,
         grouprequests: group.grouprequests,
+        groupcreatorid: group.groupcreator,
                posts: group.groupPosts.reverse()
                    });
       console.log(group.groupPosts);
@@ -294,10 +328,10 @@ console.log("getiing group");
   });
 });
 
-router.put("/likegrouppost",checkAuth,(req,res,next) => {
+router.put("/likegrouppost/:id",checkAuth,(req,res,next) => {
 
   console.log("liking group post"+ req.body.groupid);
-  Group.findById({_id: req.body.groupid}, (err, group) => {
+  Group.findById({ _id: req.params.id}, (err, group) => {
     if(err){
       console.log("error1");
       res.json({success:false, message:'invalid group id'});
@@ -393,10 +427,10 @@ router.put("/likegrouppost",checkAuth,(req,res,next) => {
 
 });
 
-router.put("/dislikegrouppost",checkAuth,(req,res,next) => {
+router.put("/dislikegrouppost/:id",checkAuth,(req,res,next) => {
 
   console.log("disliking group post"+ req.body.groupid);
-  Group.findById({_id: req.body.groupid}, (err, group) => {
+  Group.findById({ _id: req.params.id}, (err, group) => {
     if(err){
       console.log("error1");
       res.json({success:false, message:'invalid group id'});
@@ -492,10 +526,10 @@ router.put("/dislikegrouppost",checkAuth,(req,res,next) => {
 
 });
 
-router.put("/commentgrouppost",checkAuth,(req,res,next) => {
+router.put("/commentgrouppost/:id",checkAuth,(req,res,next) => {
 
   console.log("commenting group post"+ req.body.groupid);
-  Group.findById({_id: req.body.groupid}, (err, group) => {
+  Group.findById({ _id: req.params.id}, (err, group) => {
     if(err){
       console.log("error1");
       res.json({success:false, message:'invalid group id'});

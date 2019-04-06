@@ -28,6 +28,8 @@ export class PostsService {
   private notificationUpdated = new Subject<{notifications: Notification[], notificationCount: number}>();
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
+  private archivedposts: Post[] = [];
+  private archivedpostsUpdated = new Subject<{posts: Post[], postCount: number}>();
   private advertisements: Advertisement[] = [];
   private advertisementsUpdated = new Subject<{advertisements: Advertisement[], advertisementCount: number}>();
   private userposts: Post[] = [];
@@ -375,13 +377,16 @@ export class PostsService {
           }), maxPosts: postData.maxPosts  };
       }))// change rterieving data
       .subscribe(transformedPostData => {
-        this.posts = transformedPostData.posts;
-        this.postsUpdated.next({
-            posts: [...this.posts],
+        this.archivedposts = transformedPostData.posts;
+        this.archivedpostsUpdated.next({
+            posts: [...this.archivedposts],
             postCount: transformedPostData.maxPosts
           }
         );
       }); // subscribe is to liosten
 
+  }
+  getarchivePostUpdateListener() {
+    return this.archivedpostsUpdated.asObservable();
   }
 }

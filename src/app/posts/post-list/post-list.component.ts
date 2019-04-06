@@ -13,6 +13,7 @@ import {EventsService} from '../../events/events.service';
 import io from 'socket.io-client';
 import * as moment from 'moment';
 import {MatDrawer} from '@angular/material';
+import {NgForm} from '@angular/forms';
 export interface Notification {
   created: Date;
   sendername: string;
@@ -150,12 +151,12 @@ this.notificationSub = this.postsService.getNotificationUpdateListener()
     }
 
 
-  addComment(id: string, comment: string) {
-    console.log(id + '\n' + comment);
-    if (comment === '') {
+  addComment(id: string, form: NgForm) {
+    console.log(id + '\n' + form.value.comment);
+    if (form.invalid) {
       return;
     } else {
-      this.postsService.addComment(id, comment).subscribe(() => {
+      this.postsService.addComment(id, form.value.comment).subscribe(() => {
         this.socket.emit('refresh', {});
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
@@ -163,15 +164,15 @@ this.notificationSub = this.postsService.getNotificationUpdateListener()
 
   }
 
-  addReport(title: string, content: string, username: string,
-            creatorid: string, postid: string, reason: string) {
+  addReport(form: NgForm, title: string, content: string, username: string,
+            creatorid: string, postid: string) {
     console.log(title + '\n' + content + '\n' + username + '\n' + creatorid
-      + '\n' + postid + '\n' + reason);
-    if (reason === '') {
+      + '\n' + postid + '\n' + form.value.reason);
+    if (form.invalid) {
       return;
     } else {
       this.postsService.reportPost(title, content,
-        username, creatorid, postid, reason).subscribe(() => {
+        username, creatorid, postid, form.value.reason).subscribe(() => {
         this.postsService.getPosts(this.postsPerPage, this.currentPage);
       });
     }

@@ -65,23 +65,23 @@ router.get("/joinedevents", checkAuth, (req, res, next) => {
   // const currentPage = +req.query.page;
   let joinedevents = [];
   let count = 0;
-  const eventQuery = Event.find().sort({ '_id': -1 });
+  const eventQuery = Event.find({eventmembersid: req.userData.userId}).sort({ '_id': -1 });
   eventQuery
     .then(events => {
-      events.forEach( function( oneevent) {
-        // console.log(oneevent);
-        oneevent.eventfollowers.forEach( function( onemember){
-          // console.log(onemember.Euserid);
-          if(onemember.Euserid == req.userData.userId) {
-            joinedevents.push(oneevent);
-            count++;
-          }
-        });
-      });
+      // events.forEach( function( oneevent) {
+      //   // console.log(oneevent);
+      //   oneevent.eventfollowers.forEach( function( onemember){
+      //     // console.log(onemember.Euserid);
+      //     if(onemember.Euserid == req.userData.userId) {
+      //       joinedevents.push(oneevent);
+      //       count++;
+      //     }
+      //   });
+      // });
       // console.log(joinedevents);
       res.status(200).json({
         message: "Events fetched successfully!",
-        events: joinedevents,
+        events: events,
         maxEvents: count
       });
     });
@@ -150,6 +150,40 @@ const storage = multer.diskStorage({
   }
 });
 
+router.put(
+  "/:id",
+  checkAuth,
+  (req, res, next) => {
+    User.findById({ _id: req.userData.userId}, (err, user) => {
+      if(err){
+        res.json({ success: false, message: 'soemthing wrong'});
+      } else {
+        if(!user){
+          console.log("no found user");
+          res.json({success: false,message:'user not Found'});
+        }
+        else {
+          const event =({
+            eventname: req.body.eventname,
+            description: req.body.description,
+            eventdate: req.body.eventdate,
+          });
+          console.log(event);
+          Event.updateOne({ _id: req.params.id, eventcreator: req.userData.userId}, event).then(result => {
+            if (result.nModified > 0) {
+              console.log(result);
+              res.status(200).json({message: "Update successful!"});
+            } else {
+              res.status(401).json({message: "Not authorized to update!"});
+            }
+          });
+        }
+      }
+    });
+
+  }
+);
+
 router.put("/adduser/:id",checkAuth,(req,res,next) => {
   console.log("getiing event");
   const eventQuery = Event.findById(req.params.id).then(event => {
@@ -207,6 +241,7 @@ console.log("getiing event");
       res.status(200).json({
         eventmembers: event.eventfollowers,
         eventname: event.eventname,
+        eventcreatorid: event.eventcreator,
         eventdate: event.eventdate,
         eventcreator: event.username,
         description: event.description,
@@ -220,11 +255,11 @@ console.log("getiing event");
   });
 });
 
-router.put("/likeeventpost",checkAuth,(req,res,next) => {
+router.put("/likeeventpost/:id",checkAuth,(req,res,next) => {
   // const groupid = +req.query.groupid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
   // const eventid = +req.query.eventid;
   console.log("liking event post"+ req.body.eventid);
-  Event.findById({_id: req.body.eventid}, (err, event) => {
+  Event.findById({ _id: req.params.id}, (err, event) => {
     if(err){
       console.log("error1");
       res.json({success:false, message:'invalid event id'});
@@ -320,11 +355,11 @@ router.put("/likeeventpost",checkAuth,(req,res,next) => {
 
 });
 
-router.put("/dislikeeventpost",checkAuth,(req,res,next) => {
+router.put("/dislikeeventpost/:id",checkAuth,(req,res,next) => {
   // const groupid = +req.query.groupid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
   // const eventid = +req.query.eventid;
   console.log("disliking event post"+ req.body.eventid);
-  Event.findById({_id: req.body.eventid}, (err, event) => {
+  Event.findById({ _id: req.params.id}, (err, event) => {
     if(err){
       console.log("error1");
       res.json({success:false, message:'invalid event id'});
@@ -420,10 +455,10 @@ router.put("/dislikeeventpost",checkAuth,(req,res,next) => {
 
 });
 
-router.put("/commenteventpost",checkAuth,(req,res,next) => {
+router.put("/commenteventpost/:id",checkAuth,(req,res,next) => {
 
   console.log("commenting event post"+ req.body.eventid);
-  Event.findById({_id: req.body.eventid}, (err, event) => {
+  Event.findById({ _id: req.params.id}, (err, event) => {
     if(err){
       console.log("error1");
       res.json({success:false, message:'invalid event id'});

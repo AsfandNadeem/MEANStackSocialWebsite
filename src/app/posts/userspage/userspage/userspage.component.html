@@ -109,23 +109,37 @@
           </mat-expansion-panel-header>
 
           <ul class="commentspanel">
-            <li >
-              <mat-form-field style="width:700px; !important; " >
-                <input  matInput
-                        placeholder="Add a Comment"
-                        ngModel
-                        #commentInput="ngModel"
-                        required
-                        comment>
-                <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
+            <form (submit)="addComment(post.id, commentForm)" #commentForm="ngForm" >
+              <li >
+                <mat-form-field style="width:700px; !important; " >
+                  <input  matInput
+                          type="text"
+                          placeholder="Add a Comment"
+                          ngModel
+                          #commentInput="ngModel"
+                          required
+                          name="comment"
+                          comment>
+                  <!--matInput-->
+                  <!--type="text"-->
+                  <!--placeholder="new name"-->
+                  <!--ngModel-->
+                  <!--#groupnameInput="ngModel"-->
+                  <!--required-->
+                  <!--name="groupname"-->
+                  <!--groupname-->
+                  <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
 
-              </mat-form-field>
-            </li>
-            <li>
-              <button (click)="addComment(post.id,commentInput.value)">
-                <mat-icon >send</mat-icon>
-              </button>
-            </li>
+                </mat-form-field>
+              </li>
+              <li>
+                <button mat-raised-button color="primary"
+                        mat-raised-button
+                        type="submit">
+                  <mat-icon >send</mat-icon>
+                </button>
+              </li>
+            </form>
           </ul>
 
           <mat-list style="list-style: none;">

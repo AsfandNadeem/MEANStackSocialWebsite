@@ -13,7 +13,7 @@ export class GroupsService {
   private posts: Post[] = [];
   private groupsUpdated = new Subject<{groups: Group[], groupCount: number}>();
 
-  private postsUpdated = new Subject<{posts: Post[], groupmembers: any, groupname: string,
+  private postsUpdated = new Subject<{posts: Post[], groupcreatorid: any, groupmembers: any, groupname: string,
     description: string, groupcreator: string, grouprequests: any}>();
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -21,7 +21,8 @@ export class GroupsService {
 
   getPosts(id: string) {
     console.log('inservicee' + id);
-    this.http.get<{groupmembers: any, groupname: any, description: any, groupcreator: any, grouprequests: any, posts: any}>
+    this.http.get<{groupcreatorid: any,
+      groupmembers: any, groupname: any, description: any, groupcreator: any, grouprequests: any, posts: any}>
     ('http://localhost:3000/api/groups/' + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -41,7 +42,7 @@ export class GroupsService {
             createdAt: post.createdAt,
             imagePath: post.imagePath
           };
-          }), groupmembers:  postData.groupmembers, groupname: postData.groupname,
+          }), groupcreatorid: postData.groupcreatorid, groupmembers:  postData.groupmembers, groupname: postData.groupname,
           groupcreator: postData.groupcreator,
           groupdescription: postData.description, grouprequests: postData.grouprequests};
       }))
@@ -49,6 +50,7 @@ export class GroupsService {
         this.posts = transformedGroupPost.posts;
         this.postsUpdated.next( {
           posts: [...this.posts],
+          groupcreatorid: transformedGroupPost.groupcreatorid,
           groupmembers: transformedGroupPost.groupmembers,
           grouprequests: transformedGroupPost.grouprequests,
           groupname: transformedGroupPost.groupname,
@@ -143,6 +145,11 @@ export class GroupsService {
       });
   }
 
+  updateGroup(id: string , groupname: string, description: string) {
+
+   return this.http.put('http://localhost:3000/api/groups/' + id, {groupname, description});
+  }
+
   addPost(id: string, title: string, content: string , image: File) {
     const postData =  new FormData();
     postData.append('title', title);
@@ -185,7 +192,7 @@ export class GroupsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/groups/likegrouppost', groupData);
+    return this.http.put( 'http://localhost:3000/api/groups/likegrouppost/' + groupid, groupData);
   }
   //
   dislikePost(postid: string, groupid: string) {
@@ -194,7 +201,7 @@ export class GroupsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/groups/dislikegrouppost', groupData);
+    return this.http.put( 'http://localhost:3000/api/groups/dislikegrouppost/' + groupid, groupData);
   }
 
   addComment(postid: string, groupid: string, comment: string) {
@@ -204,6 +211,6 @@ export class GroupsService {
       comment: comment
     };
     // @ts-ignore
-     return this.http.put( 'http://localhost:3000/api/groups/commentgrouppost', groupData);
+     return this.http.put( 'http://localhost:3000/api/groups/commentgrouppost/' + groupid, groupData);
   }
 }

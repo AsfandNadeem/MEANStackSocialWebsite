@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, ViewChild, HostListener  } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Post} from '../../posts/post.model';
 import {EventsService} from '../events.service';
 import {AuthService} from '../../auth/auth.service';
@@ -33,6 +33,7 @@ export class EventPageComponent implements OnInit {
   groups: Group[] = [];
   events: Events[] = [];
   userIsAuthenticated = false;
+ eventcreatorid: string;
   private postsSub: Subscription;
   private authStatusSub: Subscription;
   @Input() eventid: string;
@@ -43,7 +44,7 @@ export class EventPageComponent implements OnInit {
    eventcreator: string;
   private groupsSub: Subscription;
   private eventsSub: Subscription;
-  private userId: string;
+  userId: string;
   @ViewChild('mat-drawer') sidenav: MatDrawer;
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -81,7 +82,7 @@ export class EventPageComponent implements OnInit {
         this.userId = this.authService.getUserId();
         // this.username = this.authService.getName();
         this.postsSub = this.eventService.getPostUpdateListener()
-           .subscribe((postData: {  eventmembers: any, eventname: any, eventdate: Date,
+           .subscribe((postData: { eventcreatorid: any, eventmembers: any, eventname: any, eventdate: Date,
              description: string, eventcreator: string, posts: Post[]}) => {
             this.isLoading = false;
         //     this.totalGroups = eventData.eventCount;
@@ -92,6 +93,7 @@ export class EventPageComponent implements OnInit {
               this.eventdate = postData.eventdate,
               this.eventdescription = postData.description,
               this.eventcreator = postData.eventcreator,
+              this.eventcreatorid = postData.eventcreatorid,
               console.log(this.eventname);
             console.log(this.posts);
             console.log(this.eventMembers);
@@ -174,16 +176,32 @@ export class EventPageComponent implements OnInit {
     });
   }
 
-  addComment(postid: string, comment: string) {
-    console.log(postid + '\n' + comment + '\n' + this.eventid );
-    if (comment === '') {
+  addComment(postid: string, form: NgForm) {
+    console.log(postid + '\n' + form.value.comment + '\n' + this.eventid );
+    if (form.invalid) {
       return;
     } else {
-      this.eventService.addComment(postid, this.eventid, comment).subscribe(() => {
+      this.eventService.addComment(postid, this.eventid, form.value.comment).subscribe(() => {
         this.socket.emit('refresh', {});
         this.eventService.getPosts(this.eventid);
       });
     }
+  }
+
+  onEditEvent(form: NgForm) {
+    // name: string, description: string, eventdate: Date
+    if (form.invalid) {
+      return;
+    }
+    this.eventService.updateEvent(this.eventid, form.value.eventname, form.value.description, form.value.eventdate).
+    subscribe(() => {
+      this.eventService.getPosts(this.eventid);
+    });
+    // this.groupsService.updateGroup(
+    //   this.groupid,
+    //   this.groupname,
+    //   this.gr,
+    //   this.form.value.image);
   }
 
 }

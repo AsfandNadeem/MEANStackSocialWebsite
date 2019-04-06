@@ -9,6 +9,7 @@ import {EventsService} from '../../events/events.service';
 import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
 import {MatDrawer} from '@angular/material';
+import {NgForm} from '@angular/forms';
 @Component({
   selector: 'app-archivedposts',
   templateUrl: './archivedposts.component.html',
@@ -55,7 +56,7 @@ export class ArchivedpostsComponent implements OnInit {
     console.log(localStorage.getItem('profileimg'));
     this.profileimg = localStorage.getItem('profileimg');
     this.username =  localStorage.getItem('username');
-    this.postsSub = this.postsService.getPostUpdateListener()
+    this.postsSub = this.postsService.getarchivePostUpdateListener()
       .subscribe((postData: { posts: Post[], postCount: number}) => {
         this.isLoading = false;
         this.totalPosts = postData.postCount;
@@ -92,12 +93,12 @@ export class ArchivedpostsComponent implements OnInit {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.postsPerPage = pageData.pageSize;
-    this.postsService.getPosts(this.postsPerPage, this.currentPage );
+    this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
   }
 
   likePost(id: string) {
     this.postsService.likePost(id).subscribe( () => {
-      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
     });
   }
 
@@ -109,13 +110,13 @@ export class ArchivedpostsComponent implements OnInit {
   //   this.posts[this.posts.indexOf(post)].dislikes--;
   // }
   // });
-  addComment(id: string, comment: string) {
-    console.log(id + '\n' + comment);
-    if (comment === '') {
+  addComment(id: string, form: NgForm) {
+    console.log(id + '\n' + form.value.comment);
+    if (form.invalid) {
       return;
     } else {
-      this.postsService.addComment(id, comment).subscribe(() => {
-        this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      this.postsService.addComment(id, form.value.comment).subscribe(() => {
+        this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
       });
     }
 
@@ -124,7 +125,7 @@ export class ArchivedpostsComponent implements OnInit {
 
   dislikePost(id: string) {
     this.postsService.dislikePost(id).subscribe( () => {
-      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
     });
 
   }

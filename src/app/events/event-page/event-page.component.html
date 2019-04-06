@@ -46,6 +46,67 @@
       </mat-card-content>
       <mat-divider></mat-divider>
       <p style="padding-top: 8px;"> admin: {{eventcreator}}</p>
+      <mat-card-actions *ngIf="userId == eventcreatorid">
+        <mat-accordion class="example-headers-align" >
+          <mat-expansion-panel  [class.mat-expansion-panel]="false" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Edit
+              </mat-panel-title>
+
+            </mat-expansion-panel-header>
+            <form (submit)="onEditEvent(eventeditForm)" #eventeditForm="ngForm" >
+
+                <mat-form-field style="width:700px; !important; " >
+                  <input
+                    matInput
+                    type="text"
+                          placeholder="new name"
+                          ngModel
+                          #eventnameInput="ngModel"
+                          required
+                          name="eventname"
+                          eventname>
+                  <mat-error *ngIf="eventnameInput.invalid">Please enter a name.</mat-error>
+
+                </mat-form-field>
+                <mat-form-field style="width:700px; !important; " >
+                  <input  matInput
+                          type="text"
+                          placeholder="new description"
+                          ngModel
+                          #descriptionInput="ngModel"
+                          required
+                          name="description"
+                          description>
+                  <mat-error *ngIf="descriptionInput.invalid">Please enter a description.</mat-error>
+
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput
+                         [matDatepicker]="picker"
+                         placeholder="new date"
+                         ngModel
+                         #eventdateInput="ngModel"
+                         required
+                         name="eventdate"
+                         eventdate>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error *ngIf="eventdateInput.invalid">Please enter an event date.</mat-error>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary"
+                  mat-raised-button
+                  type="submit">
+                  Change
+                </button>
+
+            </form>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-actions>
     </mat-card>
 <br/>
 <mat-card class="example-card">
@@ -148,23 +209,37 @@
       </mat-expansion-panel-header>
 
       <ul class="commentspanel">
-        <li >
-          <mat-form-field style="width:700px; !important; " >
-            <input  matInput
-                    placeholder="Add a Comment"
-                    ngModel
-                    #commentInput="ngModel"
-                    required
-                    comment>
-            <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
+        <form (submit)="addComment(post.id, commentForm)" #commentForm="ngForm" >
+          <li >
+            <mat-form-field style="width:700px; !important; " >
+              <input  matInput
+                      type="text"
+                      placeholder="Add a Comment"
+                      ngModel
+                      #commentInput="ngModel"
+                      required
+                      name="comment"
+                      comment>
+              <!--matInput-->
+              <!--type="text"-->
+              <!--placeholder="new name"-->
+              <!--ngModel-->
+              <!--#groupnameInput="ngModel"-->
+              <!--required-->
+              <!--name="groupname"-->
+              <!--groupname-->
+              <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
 
-          </mat-form-field>
-        </li>
-        <li>
-          <button (click)="addComment(post.id,commentInput.value)">
-            <mat-icon >send</mat-icon>
-          </button>
-        </li>
+            </mat-form-field>
+          </li>
+          <li>
+            <button mat-raised-button color="primary"
+                    mat-raised-button
+                    type="submit">
+              <mat-icon >send</mat-icon>
+            </button>
+          </li>
+        </form>
       </ul>
 
       <mat-list style="list-style: none;">

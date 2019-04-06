@@ -113,23 +113,37 @@
       </mat-expansion-panel-header>
 
       <ul class="commentspanel">
+        <form (submit)="addComment(post.id, commentForm)" #commentForm="ngForm" >
         <li >
           <mat-form-field style="width:700px; !important; " >
             <input  matInput
+                    type="text"
                     placeholder="Add a Comment"
                     ngModel
                     #commentInput="ngModel"
                     required
+                    name="comment"
                     comment>
+            <!--matInput-->
+            <!--type="text"-->
+            <!--placeholder="new name"-->
+            <!--ngModel-->
+            <!--#groupnameInput="ngModel"-->
+            <!--required-->
+            <!--name="groupname"-->
+            <!--groupname-->
             <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
 
           </mat-form-field>
         </li>
         <li>
-          <button (click)="addComment(post.id,commentInput.value)">
+          <button mat-raised-button color="primary"
+                  mat-raised-button
+                  type="submit">
             <mat-icon >send</mat-icon>
           </button>
         </li>
+        </form>
       </ul>
 
       <mat-list style="list-style: none;">
@@ -185,24 +199,42 @@ Report
         </mat-expansion-panel-header>
 
         <ul class="commentspanel">
+
+          <form (submit)="addReport(reportForm, post.title, post.content, post.username, post.creator, post.id)" #reportForm="ngForm" >
           <li >
             <mat-form-field style="width:700px; !important; " >
               <input  matInput
+                      type="text"
                       placeholder="Add Reason"
                       ngModel
                       #reasonInput="ngModel"
                       required
+                      name="reason"
                       reason>
+              <!--matInput-->
+              <!--type="text"-->
+              <!--placeholder="new name"-->
+              <!--ngModel-->
+              <!--#groupnameInput="ngModel"-->
+              <!--required-->
+              <!--name="groupname"-->
+              <!--groupname-->
               <mat-error *ngIf="reasonInput.invalid">Please enter a reason.</mat-error>
 
             </mat-form-field>
           </li>
           <li>
-            <button (click)="addReport(post.title, post.content, post.username,
-            post.creator, post.id, reasonInput.value)">
+            <button mat-raised-button color="primary"
+                    mat-raised-button
+                    type="submit">
               <mat-icon >send</mat-icon>
             </button>
+            <!--<button (click)="addReport(post.title, post.content, post.username,-->
+            <!--post.creator, post.id, reasonInput.value)">-->
+              <!--<mat-icon >send</mat-icon>-->
+            <!--</button>-->
           </li>
+          </form>
         </ul>
 
 

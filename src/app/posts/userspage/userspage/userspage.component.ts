@@ -10,6 +10,7 @@ import {GroupsService} from '../../../groups/groups.service';
 import {Events} from '../../../events/event.model';
 import {EventsService} from '../../../events/events.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-userspage',
@@ -126,12 +127,12 @@ export class UserspageComponent implements OnInit {
   //   this.posts[this.posts.indexOf(post)].dislikes--;
   // }
   // });
-  addComment(id: string, comment: string) {
-    console.log(id + '\n' + comment);
-    if (comment === '') {
+  addComment(id: string, form: NgForm) {
+    console.log(id + '\n' + form.value.comment);
+    if (form.invalid) {
       return;
     } else {
-      this.postsService.addComment(id, comment).subscribe(() => {
+      this.postsService.addComment(id, form.value.comment).subscribe(() => {
         this.postsService.getuserPosts(this.userid);
       });
     }

@@ -280,6 +280,7 @@ router.post("/report", checkAuth, (req, res, next) => {
         });
           report.save()
             .then(result => {
+              console.log("________________________________________reported");
               res.status(201).json({
                       message: 'Report Created',
                       result: result,
@@ -425,12 +426,12 @@ router.get("/archives", checkAuth, (req, res, next) => {
   postQuery
     .then(documents => {
       fetchedPosts = documents;
-      return Post.count();
+      return fetchedPosts.length;
     })
     .then(count => {
       res.status(200).json({
         message: "Posts fetched successfully!",
-        posts: fetchedPosts,
+        posts: fetchedPosts.reverse(),
         maxPosts: count
       });
     });
@@ -581,23 +582,28 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                               } else {
                                 console.log(user);
 
-                                const notification = ({
-                                  senderId: user._id,
-                                  senderName: user.username,
-                                  senderimage: user.imagePath,
-                                  message: user.username.toString() + " likes your post",
-                                });
+                                if(post.creator == null) {
+                                  res.json({ success: true, message: 'post liked!'});
+                                } else {
 
-                                User.findOne({_id: post.creator}, (err, user2) => {
-                                  user2.notifications.push(notification);
-                                  user2.save((err) => {
-                                    if(err) {
-                                      res.json({ success: false, message:'something went wrong'});
-                                    } else {
-                                      res.json({ success: true, message: 'post liked!'});
-                                    }
+                                  const notification = ({
+                                    senderId: user._id,
+                                    senderName: user.username,
+                                    senderimage: user.imagePath,
+                                    message: user.username.toString() + " likes your post",
                                   });
-                                });
+
+                                  User.findOne({_id: post.creator}, (err, user2) => {
+                                    user2.notifications.push(notification);
+                                    user2.save((err) => {
+                                      if (err) {
+                                        res.json({success: false, message: 'something went wrong'});
+                                      } else {
+                                        res.json({success: true, message: 'post liked!'});
+                                      }
+                                    });
+                                  });
+                                }
                               }
                             });
                           }
@@ -618,26 +624,30 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                               } else {
                                 console.log(user);
 
-                                // res.json({ success: true, message: 'post liked!'});
-                                const notification = ({
-                                  senderId: user._id,
-                                  senderName: user.username,
-                                  senderimage: user.imagePath,
-                                  message: user.username.toString() + " likes your post",
-                                });
+                                if(post.creator == null) {
+                                  res.json({ success: true, message: 'post liked!'});
+                                } else {
 
-                                User.findOne({_id: post.creator}, (err, user2) => {
-                                  user2.notifications.push(notification);
-                                  user2.save((err) => {
-                                    if(err) {
-                                      res.json({ success: false, message:'something went wrong'});
-                                    } else {
-                                      res.json({ success: true, message: 'post liked!'});
-                                    }
+                                  // res.json({ success: true, message: 'post liked!'});
+                                  const notification = ({
+                                    senderId: user._id,
+                                    senderName: user.username,
+                                    senderimage: user.imagePath,
+                                    message: user.username.toString() + " likes your post",
                                   });
-                                });
 
+                                  User.findOne({_id: post.creator}, (err, user2) => {
+                                    user2.notifications.push(notification);
+                                    user2.save((err) => {
+                                      if (err) {
+                                        res.json({success: false, message: 'something went wrong'});
+                                      } else {
+                                        res.json({success: true, message: 'post liked!'});
+                                      }
+                                    });
+                                  });
 
+                                }
 
 
 
@@ -715,23 +725,28 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                               res.json({ success: false, message:'something went wrong'});
                             } else {
                               console.log(user);
-                              const notification = ({
-                                senderId: user._id,
-                                senderName: user.username,
-                                senderimage: user.imagePath,
-                                message: user.username.toString() + " dislikes your post",
-                              });
 
-                              User.findOne({_id: post.creator}, (err, user2) => {
-                                user2.notifications.push(notification);
-                                user2.save((err) => {
-                                  if(err) {
-                                    res.json({ success: false, message:'something went wrong'});
-                                  } else {
-                                    res.json({ success: true, message: 'post disliked!'});
-                                  }
+                              if(post.creator == null) {
+                                res.json({ success: true, message: 'post liked!'});
+                              } else {
+                                const notification = ({
+                                  senderId: user._id,
+                                  senderName: user.username,
+                                  senderimage: user.imagePath,
+                                  message: user.username.toString() + " dislikes your post",
                                 });
-                              });
+
+                                User.findOne({_id: post.creator}, (err, user2) => {
+                                  user2.notifications.push(notification);
+                                  user2.save((err) => {
+                                    if (err) {
+                                      res.json({success: false, message: 'something went wrong'});
+                                    } else {
+                                      res.json({success: true, message: 'post disliked!'});
+                                    }
+                                  });
+                                });
+                              }
                             }
                           });
                         }
@@ -751,23 +766,27 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                               res.json({ success: false, message:'something went wrong'});
                             } else {
                               console.log(user);
-                              const notification = ({
-                                senderId: user._id,
-                                senderName: user.username,
-                                senderimage: user.imagePath,
-                                message: user.username.toString() + " dislikes your post",
-                              });
-
-                              User.findOne({_id: post.creator}, (err, user2) => {
-                                user2.notifications.push(notification);
-                                user2.save((err) => {
-                                  if(err) {
-                                    res.json({ success: false, message:'something went wrong'});
-                                  } else {
-                                    res.json({ success: true, message: 'post disliked!'});
-                                  }
+                              if(post.creator == null) {
+                                res.json({ success: true, message: 'post liked!'});
+                              } else {
+                                const notification = ({
+                                  senderId: user._id,
+                                  senderName: user.username,
+                                  senderimage: user.imagePath,
+                                  message: user.username.toString() + " dislikes your post",
                                 });
-                              });
+
+                                User.findOne({_id: post.creator}, (err, user2) => {
+                                  user2.notifications.push(notification);
+                                  user2.save((err) => {
+                                    if (err) {
+                                      res.json({success: false, message: 'something went wrong'});
+                                    } else {
+                                      res.json({success: true, message: 'post disliked!'});
+                                    }
+                                  });
+                                });
+                              }
                             }
                           });
                         }
@@ -837,6 +856,9 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                           res.json({ success: false, message:'something went wrong'});
                         } else {
                           console.log(user);
+                          if(post.creator == null) {
+                            res.json({ success: true, message: 'post liked!'});
+                          } else {
                           const notification = ({
                             senderId: user._id,
                             senderName: user.username,
@@ -846,13 +868,14 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                           User.findOne({_id: post.creator}, (err, user2) => {
                             user2.notifications.push(notification);
                             user2.save((err) => {
-                              if(err) {
-                                res.json({ success: false, message:'something went wrong'});
+                              if (err) {
+                                res.json({success: false, message: 'something went wrong'});
                               } else {
-                                res.json({ success: true, message: 'comment added'});
+                                res.json({success: true, message: 'comment added'});
                               }
                             });
                           });
+                        }
                         }
                       });
                     }
