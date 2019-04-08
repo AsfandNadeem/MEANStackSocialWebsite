@@ -355,6 +355,36 @@ router.put("/likeeventpost/:id",checkAuth,(req,res,next) => {
 
 });
 
+router.get("/comments/:id/:postid", (req, res, next) => {
+  // const groupid = req.query.groupid;
+  // const postid = req.query.postid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  //  console.log(groupid);
+  // console.log(postid);
+  // console.log("getting comments in group");
+  Event.findById({_id: req.params.id}, (err,event) => {
+      if(err){
+        res.json({ success: false, message: 'soemthing wrong'});
+      } else {
+        if(!event) {
+          res.json({ success: false, message: 'post not found'});
+        }
+        else {
+         event.eventPosts.forEach( function( element) {
+            // console.log("inloop");
+            if (element._id == req.params.postid) {
+              console.log(element.comments);
+              res.status(200).json({
+                message: "Posts fetched successfully!",
+                comments: element.comments
+              });            }
+          });
+
+        }
+      }
+    }
+  );
+});
+
 router.put("/dislikeeventpost/:id",checkAuth,(req,res,next) => {
   // const groupid = +req.query.groupid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
   // const eventid = +req.query.eventid;
