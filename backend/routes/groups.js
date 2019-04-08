@@ -526,6 +526,36 @@ router.put("/dislikegrouppost/:id",checkAuth,(req,res,next) => {
 
 });
 
+router.get("/comments/:id/:postid", (req, res, next) => {
+  // const groupid = req.query.groupid;
+  // const postid = req.query.postid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  //  console.log(groupid);
+  // console.log(postid);
+  // console.log("getting comments in group");
+ Group.findById({_id: req.params.id}, (err,group) => {
+      if(err){
+        res.json({ success: false, message: 'soemthing wrong'});
+      } else {
+        if(!group) {
+          res.json({ success: false, message: 'post not found'});
+        }
+        else {
+          group.groupPosts.forEach( function( element) {
+            // console.log("inloop");
+            if (element._id == req.params.postid) {
+              console.log(element.comments);
+              res.status(200).json({
+                message: "Posts fetched successfully!",
+                comments: element.comments
+              });            }
+          });
+
+        }
+      }
+    }
+  );
+});
+
 router.put("/commentgrouppost/:id",checkAuth,(req,res,next) => {
 
   console.log("commenting group post"+ req.body.groupid);

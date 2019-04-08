@@ -338,6 +338,50 @@ router.put(
 );
 
 
+router.get("/comments/:id", (req, res, next) => {
+  console.log("getting comments" + req.params.id);
+  Post.findById({_id: req.params.id}, (err,post) => {
+    if(err){
+      res.json({ success: false, message: 'soemthing wrong'});
+    } else {
+      if(!post) {
+        res.json({ success: false, message: 'post not found'});
+      }
+      else {
+        console.log(post.comments);
+        res.status(200).json({
+        message: "Posts fetched successfully!",
+        comments: post.comments
+      });
+      }
+    }
+    }
+
+  );
+
+});
+//   const postQuery = Post.findById({ _id: req.params.id } , (err, post) =>
+// }
+//   );
+//   // let fetchedComments = [];
+//   // if (pageSize && currentPage) {
+//   //   postQuery
+//   //     .skip(pageSize * (currentPage - 1))
+//   //     .limit(pageSize);
+//   // }
+//
+//   // postQuery
+//   //   .then(documents=> {
+//   //     // fetchedComments = documents.comments;
+//   //     // console.log(fetchedComments);
+//   //     res.status(200).json({
+//   //       message: "Posts fetched successfully!",
+//   //       comments: fetchedComments
+//   //     });
+//   //   });
+//
+// });
+
 router.get("/user/:id", (req, res, next) => {
 
     const postQuery = Post.find({ creator: req.params.id }).sort({'_id': -1});
@@ -351,7 +395,7 @@ router.get("/user/:id", (req, res, next) => {
     postQuery
       .then(documents => {
         fetchedPosts = documents;
-        return Post.count();
+        return fetchedPosts.length;
       })
       .then(count => {
         res.status(200).json({
