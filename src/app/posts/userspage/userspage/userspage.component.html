@@ -32,7 +32,10 @@
 
     <mat-card class="example-card">
       <mat-card-header>
-        <ul style="list-style: none; display: flex;">
+        <ul style="list-style: none; display: block;">
+          <li>
+            <strong>{{usern}}</strong>
+          </li>
           <li *ngIf="userid != ownid">
           <a style="text-decoration: none; color: grey ;" [routerLink]="['/chat', userid]">
             <strong>Chat</strong>

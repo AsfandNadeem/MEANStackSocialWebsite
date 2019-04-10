@@ -386,6 +386,7 @@ router.get("/user/:id", (req, res, next) => {
 
     const postQuery = Post.find({ creator: req.params.id }).sort({'_id': -1});
     let fetchedPosts;
+    let user;
     // if (pageSize && currentPage) {
     //   postQuery
     //     .skip(pageSize * (currentPage - 1))
@@ -395,12 +396,15 @@ router.get("/user/:id", (req, res, next) => {
     postQuery
       .then(documents => {
         fetchedPosts = documents;
+        user = documents[0].username;
+        console.log(user);
         return fetchedPosts.length;
       })
       .then(count => {
         res.status(200).json({
           message: "Posts fetched successfully!",
           posts: fetchedPosts,
+          usern: user,
           maxPosts: count
         });
       });
@@ -455,30 +459,49 @@ router.get("", (req, res, next) => {
 });
 
 router.get("/archives", checkAuth, (req, res, next) => {
-  const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  const currentPage = +req.query.page;
+  if(req.query) {
+    const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+    const currentPage = +req.query.page;
 
-  const postQuery = Post.find({ archivedBy: req.userData.userId }).sort({'id':-1});
+    const postQuery = Post.find({archivedBy: req.userData.userId}).sort({'id': -1});
 
-  let fetchedPosts;
-  if (pageSize && currentPage) {
+    let fetchedPosts;
+    if (pageSize && currentPage) {
+      postQuery
+        .skip(pageSize * (currentPage - 1))
+        .limit(pageSize);
+    }
+
     postQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
-  }
-
-  postQuery
-    .then(documents => {
-      fetchedPosts = documents;
-      return fetchedPosts.length;
-    })
-    .then(count => {
-      res.status(200).json({
-        message: "Posts fetched successfully!",
-        posts: fetchedPosts.reverse(),
-        maxPosts: count
+      .then(documents => {
+        fetchedPosts = documents;
+        return fetchedPosts.length;
+      })
+      .then(count => {
+        res.status(200).json({
+          message: "Posts fetched successfully!",
+          posts: fetchedPosts.reverse(),
+          maxPosts: count
+        });
       });
-    });
+  } else {
+    const postQuery = Post.find({archivedBy: req.userData.userId}).sort({'id': -1});
+
+    let fetchedPosts;
+
+    postQuery
+      .then(documents => {
+        fetchedPosts = documents;
+        return fetchedPosts.length;
+      })
+      .then(count => {
+        res.status(200).json({
+          message: "Posts fetched successfully!",
+          posts: fetchedPosts.reverse(),
+          maxPosts: count
+        });
+      });
+  }
 });
 
 router.delete("/archives/:id",checkAuth, (req,res) => {

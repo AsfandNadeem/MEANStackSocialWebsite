@@ -26,6 +26,7 @@ export class UserspageComponent implements OnInit {
   events: Events[] = [];
   isLoading = false;
   totalPosts = 0;
+  usern: string;
   postsPerPage = 5;
   currentPage = 1;
   username: string;
@@ -71,10 +72,11 @@ export class UserspageComponent implements OnInit {
     this.profileimg = localStorage.getItem('profileimg');
     this.username =  localStorage.getItem('username');
     this.postsSub = this.postsService.getuserPostUpdateListener()
-      .subscribe((postData: { posts: Post[], postCount: number}) => {
+      .subscribe((postData: { posts: Post[], usern: string, postCount: number}) => {
         this.isLoading = false;
         this.totalPosts = postData.postCount;
         // this.username = this.authService.getName();
+        this.usern = postData.usern,
         this.posts = postData.posts;
         console.log(this.posts);
       });
