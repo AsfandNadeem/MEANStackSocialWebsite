@@ -229,6 +229,26 @@ router.post("/login", (req,res,next) => {
     });
 });
 
+router.get("/profile", checkAuth, (req, res, next) => {
+  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
+  // const currentPage = +req.query.page;
+  console.log("getiing user");
+  const userQuery = User.findById(req.userData.userId).then(user => {
+    if (user) {
+      console.log("user found");
+      res.status(200).json({
+        email: user.email,
+        username: user.username,
+        department: user.department,
+        registrationo: user.registrationno
+
+      });
+      // console.log(group.groupPosts);
+    } else {
+      res.status(404).json({ message: "User not found!" });
+    }
+  });
+});
 
 router.get("/username/:id",checkAuth,(req,res,next) => {
   User.findOne({ _id: req.params.id })

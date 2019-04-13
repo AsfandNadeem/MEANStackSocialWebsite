@@ -360,27 +360,7 @@ router.get("/comments/:id", (req, res, next) => {
   );
 
 });
-//   const postQuery = Post.findById({ _id: req.params.id } , (err, post) =>
-// }
-//   );
-//   // let fetchedComments = [];
-//   // if (pageSize && currentPage) {
-//   //   postQuery
-//   //     .skip(pageSize * (currentPage - 1))
-//   //     .limit(pageSize);
-//   // }
-//
-//   // postQuery
-//   //   .then(documents=> {
-//   //     // fetchedComments = documents.comments;
-//   //     // console.log(fetchedComments);
-//   //     res.status(200).json({
-//   //       message: "Posts fetched successfully!",
-//   //       comments: fetchedComments
-//   //     });
-//   //   });
-//
-// });
+
 
 router.get("/user/:id", (req, res, next) => {
 

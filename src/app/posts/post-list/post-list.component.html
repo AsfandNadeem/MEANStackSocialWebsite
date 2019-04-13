@@ -28,10 +28,10 @@
 
     </mat-list>
   </mat-drawer>
-  <mat-drawer-content >
+  <mat-drawer-content  >
 
 
-<mat-card class="example-card">
+<mat-card class="example-card" id="container">
   <mat-card-header >
     <ul style="list-style: none; display: flex;">
       <li>
@@ -150,7 +150,7 @@
         <mat-list-item *ngFor="let comment of post.comments" style="margin:0;">
           <strong>{{comment.commentator}}: &nbsp; </strong>
 
-          <p>
+          <p style="margin-bottom: 0px !important;">
           {{comment.comment}}
           </p>
           <mat-divider></mat-divider>
@@ -254,7 +254,7 @@ Report
   </mat-card-actions>
 </mat-card>
 
-<mat-paginator style="background-color: #FAFAFA;" [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
+<mat-paginator style="background-color: #FAFAFA;" [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions"  (page)="onChangedPage($event)"
                *ngIf="posts.length > 0"></mat-paginator>
 
 <p  class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts added yet!</p>

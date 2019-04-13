@@ -141,6 +141,7 @@ this.notificationSub = this.postsService.getNotificationUpdateListener()
     this.currentPage = pageData.pageIndex + 1;
     this.postsPerPage = pageData.pageSize;
     this.postsService.getPosts(this.postsPerPage, this.currentPage );
+    document.querySelector('#container').scrollIntoView();
   }
 
   likePost(id: string) {

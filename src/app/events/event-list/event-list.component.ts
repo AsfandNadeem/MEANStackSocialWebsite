@@ -90,6 +90,7 @@ export class EventListComponent implements OnInit, OnDestroy {
      this.currentPage = pageData.pageIndex + 1;
      this.eventsPerPage = pageData.pageSize;
      this.eventsService.getEvents(this.eventsPerPage, this.currentPage );
+
    }
 
    onJoin(id: string) {

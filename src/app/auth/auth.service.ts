@@ -148,6 +148,50 @@ export class AuthService {
     this.router.navigate(['/advertise']);
   }
 
+  // getProfile(id: string) {
+  //   this.http.get<{email: any,
+  //     username: any, department: any, registrationo: any}>
+  //   ('http://localhost:3000/api/profile')
+  //     .pipe(map((postData) => {
+  //       return { posts: postData.posts.map(post => {
+  //           return {
+  //             title: post.title,
+  //             content: post.content,
+  //             username : post.username,
+  //             creator: post.creator,
+  //             likes: post.likes,
+  //             likedBy: post.likedBy,
+  //             dislikedBy: post.dislikedBy,
+  //             commentsNo: post.commentsNo,
+  //             comments: post.comments,
+  //             dislikes: post.dislikes,
+  //             profileimg: post.profileimg,
+  //             id: post._id,
+  //             createdAt: post.createdAt,
+  //             imagePath: post.imagePath
+  //           };
+  //         }), groupcreatorid: postData.groupcreatorid, groupmembers:  postData.groupmembers, groupname: postData.groupname,
+  //         groupcreator: postData.groupcreator,
+  //         groupdescription: postData.description, grouprequests: postData.grouprequests};
+  //     }))
+  //     .subscribe( transformedGroupPost => {
+  //       this.posts = transformedGroupPost.posts;
+  //       this.postsUpdated.next( {
+  //         posts: [...this.posts],
+  //         groupcreatorid: transformedGroupPost.groupcreatorid,
+  //         groupmembers: transformedGroupPost.groupmembers,
+  //         grouprequests: transformedGroupPost.grouprequests,
+  //         groupname: transformedGroupPost.groupname,
+  //         description: transformedGroupPost.groupdescription,
+  //         groupcreator: transformedGroupPost.groupcreator
+  //       });
+  //     });
+  // }
+  //
+  // getPostUpdateListener() {
+  //   return this.postsUpdated.asObservable();
+  // }
+
   logout() {
     this.token = null;
     this.isAuthenticated = false;

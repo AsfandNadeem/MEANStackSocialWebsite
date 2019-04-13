@@ -4,12 +4,15 @@
 mat-drawer {
   /*background-color: lightblue;*/
   /*border: 1px solid #555;*/
+  padding: 10px;
+  padding-left: 20px;
   width: 20%;
+  position: absolute;
 }
 
 mat-drawer-content{
-  /*background-color: beige;*/
-  /*width:80%;*/
+ margin: auto !important;
+  width: 50%;
   height: 850px;
 }
 
@@ -20,4 +23,19 @@ textarea {
 
 mat-spinner{
   margin:auto;
+}
+.example-header-image {
+  background-size: cover;
+}
+.example-card {
+  max-width: 100% !important;
+  margin: 4px;
+}
+.example-header-image {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-size: cover;
 }

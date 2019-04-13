@@ -84,7 +84,7 @@ background: white;">
       <button mat-button [matMenuTriggerFor]="appMenu">Options</button>
       <mat-menu #appMenu="matMenu" yPosition="below">
         <button mat-menu-item [matMenuTriggerFor]="createmenu">Create</button>
-        <button mat-menu-item [routerLink]="['/profile']">Settings</button>
+        <button mat-menu-item [routerLink]="['/profile']">Profile</button>
 
         <button mat-menu-item>Help</button>
         <button mat-menu-item (click)="onLogout()" >Logout</button>
