@@ -36,9 +36,9 @@
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td *matCellDef="let element" style="    border-bottom-width: 1px;
     border-bottom-style: solid;     border-bottom-color: rgba(0,0,0,.12);">
-      <button mat-button *ngIf="!element.approved" color="primary" (click)="approve(element)">Approve</button>
-      <button mat-button color="warn">Delete</button>
-    </td>
+      <button mat-button *ngIf="!element.approved" color="primary" (click)="approve(element)">Approve</button> <br/>
+      <button mat-button  color="warn" (click)="onDelete(element.id)">DELETE POST</button>
+     </td>
   </ng-container>
 
   <!--&lt;!&ndash; Symbol Column &ndash;&gt;-->

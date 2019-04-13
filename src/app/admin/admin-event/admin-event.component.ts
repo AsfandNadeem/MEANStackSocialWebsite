@@ -35,4 +35,11 @@ export class AdminEventComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
+  onDelete(eventId: string) {
+    console.log(eventId);
+    this.adminService.deleteEvent(eventId).subscribe(() => {
+      this.adminService.getEvents();
+    });
+  }
+
 }

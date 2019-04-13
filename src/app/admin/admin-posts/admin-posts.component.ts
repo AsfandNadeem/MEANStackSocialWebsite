@@ -38,4 +38,10 @@ export class AdminPostsComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  onDelete(postId: string) {
+    this.adminService.deletePost(postId).subscribe(() => {
+      this.adminService.getPosts();
+    });
+  }
 }

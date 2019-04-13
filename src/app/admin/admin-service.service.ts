@@ -182,7 +182,8 @@ export class AdminServiceService {
               // profleimg: post.profileimg,
               reporttitle: report.title,
               reportcontent: report.content,
-              reportid: report.postid,
+              postid: report.postid,
+              reportid: report._id,
               reportusername : report.username,
               reportcreator: report.creator,
               reportreason: report.reason,
@@ -320,5 +321,34 @@ export class AdminServiceService {
 
   getGroupUpdateListener() {
     return this.groupsUpdated.asObservable();
+  }
+
+  deletePost(postId: string) {
+    return this.http
+      .delete('http://localhost:3000/api/admin/posts/' + postId);
+  }
+
+  deleteReport(postId: string) {
+    return this.http
+      .delete('http://localhost:3000/api/admin/reports/' + postId);
+  }
+
+  deleteAdvertisement(postId: string) {
+    return this.http
+      .delete('http://localhost:3000/api/admin/advertisements/' + postId);
+  }
+  removeReport(postId: string) {
+    return this.http
+      .delete('http://localhost:3000/api/admin/removereports/' + postId);
+  }
+
+  deleteGroup(postId: string) {
+    return this.http
+      .delete('http://localhost:3000/api/admin/groups/' + postId);
+  }
+
+  deleteEvent(postId: string) {
+    return this.http
+      .delete('http://localhost:3000/api/admin/events/' + postId);
   }
 }

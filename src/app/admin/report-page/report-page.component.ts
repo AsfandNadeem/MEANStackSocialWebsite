@@ -42,4 +42,16 @@ export class ReportPageComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  onDelete(postId: string) {
+    this.adminService.deleteReport(postId).subscribe(() => {
+      this.adminService.getReports();
+    });
+  }
+
+  onRemove(reportId: string) {
+    this.adminService.removeReport(reportId).subscribe(() => {
+      this.adminService.getReports();
+    });
+  }
 }

@@ -151,4 +151,86 @@ router.get("/reports", (req, res, next) => {
       });
     });
 });
+
+router.delete("/events/:id",  (req, res, next) => {
+  Event.deleteOne({ _id: req.params.id }).then(result => {
+    console.log(result);
+    if (result.n> 0) {
+      res.status(200).json({message: "Deleted successful!"});
+    } else {
+      res.status(401).json({message: "Not authorized to delete!"});
+    }
+  });
+});
+
+router.delete("/groups/:id",  (req, res, next) => {
+  Group.deleteOne({ _id: req.params.id }).then(result => {
+    console.log(result);
+    if (result.n> 0) {
+      res.status(200).json({message: "Deleted successful!"});
+    } else {
+      res.status(401).json({message: "Not authorized to delete!"});
+    }
+  });
+});
+
+router.delete("/posts/:id",  (req, res, next) => {
+  Post.deleteOne({ _id: req.params.id }).then(result => {
+    console.log(result);
+    if (result.n> 0) {
+      res.status(200).json({message: "Deleted successful!"});
+    } else {
+      res.status(401).json({message: "Not authorized to delete!"});
+    }
+  });
+});
+
+router.delete("/advertisements/:id",  (req, res, next) => {
+  Advertisement.deleteOne({ _id: req.params.id }).then(result => {
+    console.log(result);
+    if (result.n> 0) {
+      Post.deleteOne({ _id: req.params.id }).then(result => {
+        console.log(result);
+        if (result.n> 0) {
+          res.status(200).json({message: "Deleted successful!"});
+        } else {
+          res.status(401).json({message: "Not authorized to delete!"});
+        }
+      });
+    } else {
+      res.status(401).json({message: "Not authorized to delete!"});
+    }
+  });
+});
+
+router.delete("/reports/:id",  (req, res, next) => {
+  Report.deleteMany({ postid: req.params.id }).then(result => {
+              console.log(result);
+              if (result.n> 0) {
+                      Post.deleteOne({ _id: req.params.id }).then(result => {
+                          console.log(result);
+                          if (result.n> 0) {
+                            res.status(200).json({message: "Deleted successful!"});
+                          } else {
+                            res.status(401).json({message: "Not authorized to delete!"});
+                          }
+                        });
+              } else {
+                res.status(401).json({message: "Not authorized to delete!"});
+              }
+            });
+});
+
+
+router.delete("/removereports/:id",  (req, res, next) => {
+  Report.deleteMany({ _id: req.params.id }).then(result => {
+    console.log(result);
+    if (result.n> 0) {
+          res.status(200).json({message: "Deleted successful!"});
+           } else {
+      res.status(401).json({message: "Not authorized to delete!"});
+    }
+  });
+});
+
 module.exports = router;

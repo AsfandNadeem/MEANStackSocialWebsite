@@ -35,4 +35,10 @@ export class AdminGroupComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  onDelete(groupId: string) {
+    this.adminService.deleteGroup(groupId).subscribe(() => {
+      this.adminService.getGroups();
+    });
+  }
+
 }

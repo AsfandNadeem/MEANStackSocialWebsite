@@ -44,13 +44,13 @@ export class AdminadvertisementsComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   approve(advertisement: Advertisement) {
-    // console.log(advertisement.id);
-    // this.postsService.likePost(id).subscribe( () => {
-      //   this.socket.emit('refresh', {});
-      //   this.postsService.getPosts(this.postsPerPage, this.currentPage);
-      // });
-        this.adminService.addAdvertisementPost(advertisement.id).subscribe( () => {
+           this.adminService.addAdvertisementPost(advertisement.id).subscribe( () => {
           this.adminService.getadvertiserPosts();
         });
+  }
+  onDelete(postId: string) {
+    this.adminService.deleteAdvertisement(postId).subscribe(() => {
+      this.adminService.getadvertiserPosts();
+    });
   }
 }
