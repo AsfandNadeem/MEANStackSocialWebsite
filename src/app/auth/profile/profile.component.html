@@ -50,13 +50,14 @@
     </mat-card>
     <mat-card class="example-card">
       <mat-list style="list-style: none;">
-        <mat-list-item *ngFor="let profile of profiles">
-          <strong>{{profile.main}}: &nbsp; </strong>
+        <mat-list-item *ngFor="let profile of profiles; index as i">
+          <strong style="white-space: pre;">{{profile.main}}</strong>
 
           <p style="margin-bottom: 0px !important;">
             {{profile.value}}
           </p>
-          <mat-divider></mat-divider>
+          <!--<mat-divider *ngIf="profile.main != 'REG NO:                      '"></mat-divider>-->
+          <mat-divider *ngIf="i < 3"></mat-divider>
         </mat-list-item>
 
       </mat-list>
@@ -76,6 +77,16 @@
       >
       <mat-error *ngIf="form.get('username').invalid">Please enter a username.</mat-error>
     </mat-form-field>
+
+    <!--<mat-form-field>-->
+      <!--<input-->
+        <!--matInput-->
+        <!--type="password"-->
+        <!--formControlName="currentpassword"-->
+        <!--placeholder="Current password"-->
+      <!--&gt;-->
+      <!--<mat-error *ngIf="form.get('currentpassword').invalid">Please enter current password.</mat-error>-->
+    <!--</mat-form-field>-->
 
     <mat-form-field>
       <input

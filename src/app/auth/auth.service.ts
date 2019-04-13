@@ -5,7 +5,6 @@ import {Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {User} from './user.model';
 
 
 @Injectable({
@@ -22,6 +21,8 @@ export class AuthService {
   private userId: string;
   userN: string;
   private authStatusListener = new Subject<boolean>();
+  // private userfetched: User;
+  private userfetchedUpdated = new Subject<{email: any, usernamefetched: any, departmentfetched: any, registrationofetched: any }>();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -148,49 +149,28 @@ export class AuthService {
     this.router.navigate(['/advertise']);
   }
 
-  // getProfile(id: string) {
-  //   this.http.get<{email: any,
-  //     username: any, department: any, registrationo: any}>
-  //   ('http://localhost:3000/api/profile')
-  //     .pipe(map((postData) => {
-  //       return { posts: postData.posts.map(post => {
-  //           return {
-  //             title: post.title,
-  //             content: post.content,
-  //             username : post.username,
-  //             creator: post.creator,
-  //             likes: post.likes,
-  //             likedBy: post.likedBy,
-  //             dislikedBy: post.dislikedBy,
-  //             commentsNo: post.commentsNo,
-  //             comments: post.comments,
-  //             dislikes: post.dislikes,
-  //             profileimg: post.profileimg,
-  //             id: post._id,
-  //             createdAt: post.createdAt,
-  //             imagePath: post.imagePath
-  //           };
-  //         }), groupcreatorid: postData.groupcreatorid, groupmembers:  postData.groupmembers, groupname: postData.groupname,
-  //         groupcreator: postData.groupcreator,
-  //         groupdescription: postData.description, grouprequests: postData.grouprequests};
-  //     }))
-  //     .subscribe( transformedGroupPost => {
-  //       this.posts = transformedGroupPost.posts;
-  //       this.postsUpdated.next( {
-  //         posts: [...this.posts],
-  //         groupcreatorid: transformedGroupPost.groupcreatorid,
-  //         groupmembers: transformedGroupPost.groupmembers,
-  //         grouprequests: transformedGroupPost.grouprequests,
-  //         groupname: transformedGroupPost.groupname,
-  //         description: transformedGroupPost.groupdescription,
-  //         groupcreator: transformedGroupPost.groupcreator
-  //       });
-  //     });
-  // }
-  //
-  // getPostUpdateListener() {
-  //   return this.postsUpdated.asObservable();
-  // }
+
+  getProfile() {
+    this.http.get<{email: any,
+      username: any, department: any, registrationo: any}>
+    ('http://localhost:3000/api/user/profile')
+      .pipe(map((postData) => {
+        return { email: postData.email, usernamefetched: postData.username,
+          departmentfetched: postData.department, registrationofetched: postData.registrationo};
+      }))
+      .subscribe( transformedGroupPost => {
+        this.userfetchedUpdated.next( {
+          email: transformedGroupPost.email,
+          usernamefetched: transformedGroupPost.usernamefetched,
+          departmentfetched: transformedGroupPost.departmentfetched,
+          registrationofetched: transformedGroupPost.registrationofetched
+        });
+      });
+  }
+
+  getProfileUpdateListener() {
+    return this.userfetchedUpdated.asObservable();
+  }
 
   logout() {
     this.token = null;

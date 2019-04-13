@@ -10,6 +10,8 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {GroupsService} from '../../groups/groups.service';
 import {EventsService} from '../../events/events.service';
 import {MatDrawer} from '@angular/material';
+import {Post} from '../../posts/post.model';
+import {post} from 'selenium-webdriver/http';
 
 
 @Component({
@@ -30,18 +32,19 @@ export class ProfileComponent implements OnInit {
   profileimg: string;
   private groupsSub: Subscription;
   private eventsSub: Subscription;
+  private profilesSub: Subscription;
   userIsAuthenticated = false;
   private authStatusSub: Subscription;
   user: User;
   profiles = [
-    {main: 'usernmae',
-    value: 'Asfand'},
-    {main: 'Email',
-      value: 'asfand@gmail.com'},
-    {main: 'department',
-      value: 'CS'},
-    {main: 'REG NO',
-      value: 'FA15-BCS-034'}
+    // {main: 'usernmae',
+    // value: 'Asfand'},
+    // {main: 'Email',
+    //   value: 'asfand@gmail.com'},
+    // {main: 'department',
+    //   value: 'CS'},
+    // {main: 'REG NO',
+    //   value: 'FA15-BCS-034'}
   ];
   @ViewChild('mat-drawer') sidenav: MatDrawer;
   @HostListener('window:resize', ['$event'])
@@ -69,6 +72,20 @@ export class ProfileComponent implements OnInit {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
+      });
+this.authService.getProfile();
+    this.profilesSub = this.authService.getProfileUpdateListener()
+      .subscribe((postData: { email:  any, usernamefetched:  any,  departmentfetched:  any,  registrationofetched:  any}) => {
+        this.profiles = [
+          {main: 'Username:                  ',
+            value: postData.usernamefetched},
+          {main: 'Email:                          ',
+            value: postData.email},
+          {main: 'Department:               ',
+            value: postData.departmentfetched},
+          {main: 'REG NO:                      ',
+            value: postData.registrationofetched}
+        ];
       });
     console.log(this.groupsService.getJoinedGroups());
     this.groupsSub = this.groupsService.getGroupUpdateListener()

@@ -260,6 +260,144 @@ router.get("/username/:id",checkAuth,(req,res,next) => {
     });
 });
 
+
+// router.put("/edit",checkAuth,(req,res,next) => {
+//   let fetcheduser;
+//   console.log("editing user---------------------------"+req.body.username+req.body.password+"---------------------------");
+//   bcrypt.hash(req.body.password,10)
+//     .then(hash => {
+//       const user = ({
+//         username: req.body.username,
+//         password: hash
+//       });
+//       console.log(user);
+//       console.log(req.body.currentpassword);
+//       bcrypt.hash(req.body.currentpassword,10).then(hashold => {
+//         let fetchedUser;
+//         User.findOneAndUpdate({_id: req.userData.userId, password: hashold },user,{new:true}, (err,doc) => {
+//
+//           if (err){
+//
+//             res.status(401).json({message: "1Not authorized to update!"});
+//             console.log("Error"+err);
+//           } else {
+//             if (!doc) {
+//               res.status(401).json({message: "1Not authorized to update!"});
+//               console.log("Erroe2"+err);
+//             } else {
+//               fetchedUser = doc;
+//
+//               const post = ({
+//                 username: fetchedUser.username,
+//               });
+//
+//               const event = ({
+//                 username: fetchedUser.username,
+//               });
+//               const group = ({
+//                 username: fetchedUser.username,
+//               });
+//               Post.updateMany({creator: req.userData.userId}, post).then(result => {
+//
+//                 if (result.nModified > 0) {
+//                   console.log(result);
+//
+//                 } else {
+//                   console.log("2Not authorized to update!");
+//                 }
+//               });
+//               Group.updateMany({groupcreator: req.userData.userId}, group).then(result => {
+//
+//                 if (result.nModified > 0) {
+//                   console.log(result);
+//
+//                 } else {
+//                   console.log("2Not authorized to update!");
+//                 }
+//               });
+//               Event.updateMany({eventcreator: req.userData.userId}, event).then(result => {
+//
+//                 if (result.nModified > 0) {
+//                   console.log(result);
+//
+//                 } else {
+//                   console.log("2Not authorized to update!");
+//                 }
+//               });
+//               res.status(200).json({
+//                 message: "user updated",
+//                 // token: token,
+//                 // expiresIn: 3600,
+//                 userId: fetchedUser._id,
+//                 username: fetchedUser.username,
+//               });
+//               console.log(doc);
+//             }
+//           }
+//         });
+//       });
+//       // let fetchedUser;
+//       // User.findOneAndUpdate({_id: req.userData.userId, password: req.body.currentpassword },user,{new:true}, (err,doc) => {
+//       //   if (err){
+//       //     res.status(401).json({message: "1Not authorized to update!"});
+//       //     console.log(err);
+//       //   } else {
+//       //     fetchedUser = doc;
+//       //
+//       //     const post = ({
+//       //       username: fetchedUser.username,
+//       //     });
+//       //     const event = ({
+//       //       username: fetchedUser.username,
+//       //     });
+//       //     const group = ({
+//       //       username: fetchedUser.username,
+//       //     });
+//       //     Post.updateMany({ creator: req.userData.userId}, post).then(result => {
+//       //
+//       //       if (result.nModified > 0) {
+//       //         console.log(result);
+//       //
+//       //       } else {
+//       //         console.log("2Not authorized to update!");
+//       //       }
+//       //     });
+//       //     Group.updateMany({ groupcreator: req.userData.userId}, group).then(result => {
+//       //
+//       //       if (result.nModified > 0) {
+//       //         console.log(result);
+//       //
+//       //       } else {
+//       //         console.log("2Not authorized to update!");
+//       //       }
+//       //     });
+//       //     Event.updateMany({ eventcreator: req.userData.userId}, event).then(result => {
+//       //
+//       //       if (result.nModified > 0) {
+//       //         console.log(result);
+//       //
+//       //       } else {
+//       //         console.log("2Not authorized to update!");
+//       //       }
+//       //     });
+//       //     res.status(200).json({
+//       //               message:"user updated",
+//       //               // token: token,
+//       //               // expiresIn: 3600,
+//       //               userId: fetchedUser._id,
+//       //               username: fetchedUser.username,
+//       //             });
+//       //     console.log(doc);
+//       //   }
+//       // });
+//
+//
+//     });
+//
+//
+//
+// });
+
 router.put("/edit",checkAuth,(req,res,next) => {
   let fetcheduser;
   console.log("editing user---------------------------"+req.body.username+req.body.password+"---------------------------");
