@@ -135,24 +135,11 @@ router.put(
 );
 
 router.get("/joinedgroups", checkAuth, (req, res, next) => {
-  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  // const currentPage = +req.query.page;
-let joinedgroups = [];
+
 let count = 0;
   const groupQuery = Group.find({groupmembersid: req.userData.userId}).sort({ '_id': -1 });
   groupQuery
     .then(groups => {
-      // groups.forEach( function( onegroup) {
-      //   // // console.log(onegroup);
-      //   // onegroup.groupmembers.forEach( function( onemember){
-      //   //   // console.log(onemember.Guserid);
-      //   //   if(onemember.Guserid == req.userData.userId) {
-      //   //     joinedgroups.push(onegroup);
-      //   //     count++;
-      //   //   }
-      //   //    });
-      // });
-      // console.log(joinedgroups);
       res.status(200).json({
         message: "Groups fetched successfully!",
         groups: groups,
@@ -240,6 +227,58 @@ router.put("/requestuser/:id",checkAuth,(req,res,next) => {
   });
 });
 
+router.put("/leavegroup",checkAuth,(req,res,next) =>{
+  const groupQuery = Group.findById(req.body.groupid).then(group => {
+    if (group) {
+      console.log("group found");
+      User.findById({ _id: req.body.userid}, (err,user)=> {
+        if(err){
+          res.json({success: false, message:'something went wrong'});
+        }
+        if(!user){
+          res.json({success: false, message:'user not found'});
+        } else {
+          const usera =({
+            Guserid: user._id,
+            Guser: user.username
+          });
+          // group.groupmembers.push( usera);
+          // group.groupmembersid.push(user._id.toString());
+          // group.membersNo++;
+          const arrayIndex = group.groupmembersid.indexOf(user._id);
+          group.groupmembersid.splice(arrayIndex,1);
+          group.membersNo--;
+          const arrayIndex2 = user.groupsjoined.indexOf(user._id);
+          user.groupsjoined.slice(arrayIndex2,1);
+          let a = 0;
+          group.groupmembers.forEach(function (onemember) {
+            if(onemember.Guserid == user._id) {
+              group.groupmembers.splice(a,1);
+            }
+            a++;
+          });
+
+          group.save((err) => {
+            if(err) {
+              res.json({ success: false, message:'something went wrong'});
+            } else {
+              user.save((err) => {
+                if(err){
+                  res.json({ success: false, message:'something went wrong'});
+                } else {
+                  res.json({ success: true, message: 'group left!'});
+                }
+              });
+
+            }
+          });
+        }
+      });
+    } else {
+      res.json({success: false, message:'group not found'});
+    }
+  });
+});
 
 router.put("/adduser",checkAuth,(req,res,next) => {
   console.log("getiing group");
@@ -742,31 +781,7 @@ router.put("/addgroupPost/:id",
         }
       );
 
-// router.delete("/delete", checkAuth, (req, res, next) => {
-//   const groupid= +req.query.groupid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-//   const postid = +req.query.postid;
-//
-//   Group.findById({_id: req.params.id},(err,group) => {
-//
-//     if(err){
-//       res.json({success:false, message:'invalid group id'});
-//     } else {
-//       if(!group){
-//         res.json({success: false, message:'group not found'});
-//       } else {
-//       group.groupPosts
-//       }
-//
-//
-// //   Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
-// //     console.log(result);
-// //     if (result.n> 0) {
-// //       res.status(200).json({message: "Deleted successful!"});
-// //     } else {
-// //       res.status(401).json({message: "Not authorized to delete!"});
-// //     }
-// //   });
-//  });
+
 
 
 

@@ -387,7 +387,7 @@ router.get("/user/:id", (req, res, next) => {
             res.status(200).json({
               message: "Posts fetched successfully!",
               posts: fetchedPosts,
-              usern: user,
+              usern: userget.username,
               friends: userget.friends,
               requests: userget.requests,
               maxPosts: count

@@ -35,12 +35,7 @@
         <ul style="list-style: none; display: block;">
           <li>
             <strong>{{usern}}</strong>
-          </li>
-          <li *ngIf="userid != ownid && friends.includes(ownid)">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/chat', userid]">
-            <strong>Chat</strong>
-          </a>
-
+            <br/>
           </li>
           <li *ngIf="userid != ownid && !friends.includes(ownid) && !requests.includes(ownid)">
             <button mat-raised-button color="primary" (click)="addFriend(userid)"> Add Friend</button>
@@ -49,7 +44,13 @@
             <label>Request sent !</label>
           </li>
           <li *ngIf="userid != ownid && friends.includes(ownid) && !requests.includes(ownid) ">
-            <label>Friends</label>
+                       <label style="color: green; font-weight: bold;">Friends</label>
+          </li>
+          <li *ngIf="userid != ownid && friends.includes(ownid)">
+            <a mat-raised-button style="text-decoration: none; " [routerLink]="['/chat', userid]">
+              <strong>Chat</strong>
+            </a>
+
           </li>
           <!--<li>-->
             <!--<img class="example-header-image"-->
