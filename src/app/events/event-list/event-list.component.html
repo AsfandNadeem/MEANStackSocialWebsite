@@ -6,7 +6,7 @@
         <strong> Joined Groups </strong>
         </li>
         <li *ngFor="let groupj of groupsjoined" style="padding: 5px;">
-        <a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', groupj.id]">{{ groupj.groupname}}</a>
+        <a style="text-decoration: none;" [routerLink]="['/grouppage', groupj.id]">{{ groupj.groupname}}</a>
         </li>
         <li *ngIf="groupsjoined.length < 1" style="padding: 5px; color: gray;">
         Following No Groups

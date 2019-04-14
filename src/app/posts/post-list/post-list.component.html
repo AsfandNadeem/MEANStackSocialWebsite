@@ -8,7 +8,7 @@
           <strong> Joined Groups </strong>
         </li>
         <li *ngFor="let group of groups" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', group.id]">{{ group.groupname}}</a>
+          <a style="text-decoration: none;" [routerLink]="['/grouppage', group.id]">{{ group.groupname}}</a>
         </li>
         <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
           Following No Groups
@@ -18,7 +18,7 @@
           <strong> Joined Events </strong>
         </li>
         <li *ngFor="let event of events" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
+          <a style="text-decoration: none; " [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
         </li>
         <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
           No events joined

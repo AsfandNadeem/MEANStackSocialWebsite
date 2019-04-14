@@ -6,7 +6,7 @@
           <strong> Joined Groups </strong>
         </li>
         <li *ngFor="let groupj of groups" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', groupj.id]">{{ groupj.groupname}}</a>
+          <a style="text-decoration: none;" [routerLink]="['/grouppage', groupj.id]">{{ groupj.groupname}}</a>
         </li>
         <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
           Following No Groups
@@ -16,7 +16,7 @@
           <strong> Joined Events </strong>
         </li>
         <li *ngFor="let event of events" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
+          <a style="text-decoration: none;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
         </li>
         <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
           No events joined
@@ -41,7 +41,7 @@
 
       </mat-card-header>
       <mat-card-content>
-        <p>{{eventdescription}}</p>
+        <p><strong>{{eventdescription}}</strong></p>
         <strong>Date: </strong>{{ eventdate | date:'MMM dd, yyyy' }}
       </mat-card-content>
       <mat-divider></mat-divider>

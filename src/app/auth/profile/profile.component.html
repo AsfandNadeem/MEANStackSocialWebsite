@@ -16,10 +16,10 @@
         </li>
         <br/>
         <li>
-          <strong> Joined Events </strong>
+          <strong> Friends </strong>
         </li>
         <li *ngFor="let friend of friends" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', friend.usersrid]">{{ friend.username}}</a>
+          <a style="text-decoration: none; " [routerLink]="['/user', friend.usersrid]">{{ friend.username}}</a>
         </li>
         <li *ngIf="friends.length<1" style="padding: 5px; color: gray;">
           No friends
@@ -141,24 +141,7 @@
 
               </li>
             </ul>
-            <!--<ul style="list-style: none;">-->
-            <!--<li>-->
-            <!--<ul style="list-style: none; display: flex;">-->
-            <!--<li>-->
-            <!--<img *ngIf="notification.senderimage"-->
-            <!--class="example-header-image-post"-->
-            <!--[src]="notification.senderimage">-->
-            <!--</li>-->
-            <!--<li>-->
-            <!--{{notification.message}}-->
-            <!--</li>-->
-            <!--</ul>-->
-            <!--</li>-->
-            <!--<li>-->
 
-            <!--<mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>-->
-            <!--</li>-->
-            <!--</ul>-->
           </mat-card-header>
         </mat-card>
 

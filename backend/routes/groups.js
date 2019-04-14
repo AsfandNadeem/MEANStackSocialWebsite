@@ -227,7 +227,7 @@ router.put("/requestuser/:id",checkAuth,(req,res,next) => {
   });
 });
 
-router.put("/leavegroup",checkAuth,(req,res,next) =>{
+router.put("/leavegroup/:id",checkAuth,(req,res,next) =>{
   const groupQuery = Group.findById(req.body.groupid).then(group => {
     if (group) {
       console.log("group found");
@@ -280,7 +280,7 @@ router.put("/leavegroup",checkAuth,(req,res,next) =>{
   });
 });
 
-router.put("/adduser",checkAuth,(req,res,next) => {
+router.put("/adduser/:id",checkAuth,(req,res,next) => {
   console.log("getiing group");
   const groupQuery = Group.findById(req.body.groupid).then(group => {
     if (group) {
@@ -344,23 +344,28 @@ router.put("/adduser",checkAuth,(req,res,next) => {
   });
 });
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id",checkAuth, (req, res, next) => {
   // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
   // const currentPage = +req.query.page;
 console.log("getiing group");
   const groupQuery = Group.findById(req.params.id).then(group => {
     if (group) {
-      console.log("group found");
-      res.status(200).json({
-        groupname: group.groupname,
-        description: group.description,
-        groupcreator: group.username,
-        groupmembers: group.groupmembers,
-        grouprequests: group.grouprequests,
-        groupcreatorid: group.groupcreator,
-               posts: group.groupPosts.reverse()
-                   });
-      console.log(group.groupPosts);
+      if(group.groupmembersid.includes(req.userData.userId)) {
+        console.log("group found");
+        res.status(200).json({
+          groupname: group.groupname,
+          description: group.description,
+          groupcreator: group.username,
+          groupmembers: group.groupmembers,
+          grouprequests: group.grouprequests,
+          groupcreatorid: group.groupcreator,
+          posts: group.groupPosts.reverse()
+        });
+        console.log(group.groupPosts);
+      }
+      else {
+        res.status(404).json({ message: "Group not followed!" });
+      }
     } else {
       res.status(404).json({ message: "Group not found!" });
     }

@@ -2,21 +2,12 @@
   <mat-drawer mode="side" [opened]="screenWidth> 1000">
     <mat-list style="padding-top: 0px">
       <ul style="list-style:none; padding: 4px; font-family: Bahnschrift; margin-top: 0px; !important;">
-        <!--<li>-->
-          <!--<strong> Joined Groups </strong>-->
-        <!--</li>-->
-        <!--<li *ngFor="let groupj of groupsjoined" style="padding: 5px;">-->
-          <!--<a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', groupj.id]">{{ groupj.groupname}}</a>-->
-        <!--</li>-->
-        <!--<li *ngIf="groupsjoined.length < 1" style="padding: 5px; color: gray;">-->
-          <!--Following No Groups-->
-        <!--</li>-->
         <br/>
         <li>
           <strong> Joined Events </strong>
         </li>
         <li *ngFor="let event of events" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
+          <a style="text-decoration: none;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
         </li>
         <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
           No events joined

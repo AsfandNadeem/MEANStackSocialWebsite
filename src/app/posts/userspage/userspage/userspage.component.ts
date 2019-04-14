@@ -11,6 +11,14 @@ import {Events} from '../../../events/event.model';
 import {EventsService} from '../../../events/events.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {NgForm} from '@angular/forms';
+import * as moment from 'moment';
+
+export interface Notification {
+  created: Date;
+  sendername: string;
+  message: string;
+  senderimage: string;
+}
 
 @Component({
   selector: 'app-userspage',
@@ -43,6 +51,8 @@ export class UserspageComponent implements OnInit {
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private authStatusSub: Subscription;
+  notifications: Notification[] = [];
+  private notificationSub: Subscription;
 
 
   @ViewChild('mat-drawer') sidenav: MatDrawer;
@@ -91,7 +101,12 @@ export class UserspageComponent implements OnInit {
         this.userIsAuthenticated = isAuthenticated;
         this.ownid = this.authService.getUserId();
       });
-
+    this.postsService.getNotifications();
+    this.notificationSub = this.postsService.getNotificationUpdateListener()
+      .subscribe((notificationData: { notifications: Notification[]}) => {
+        this.notifications = notificationData.notifications;
+        console.log(this.notifications);
+      });
     console.log(this.groupsService.getJoinedGroups());
     this.groupsSub = this.groupsService.getGroupUpdateListener()
       .subscribe((groupData: { groups: Group[]}) => {
@@ -148,7 +163,9 @@ export class UserspageComponent implements OnInit {
     }
 
   }
-
+  TimeFromNow(time) {
+    return moment(time).fromNow();
+  }
 
   dislikePost(id: string) {
     this.postsService.dislikePost(id).subscribe( () => {

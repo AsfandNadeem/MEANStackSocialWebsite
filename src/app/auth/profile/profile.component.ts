@@ -39,7 +39,6 @@ export class ProfileComponent implements OnInit {
   events: Events[] = [];
   friends: Friend[] = [];
   username: string;
-  notifications: Notification[] = [];
   userId: string;
   profileimg: string;
   private friendsSub: Subscription;
@@ -48,6 +47,8 @@ export class ProfileComponent implements OnInit {
   private profilesSub: Subscription;
   userIsAuthenticated = false;
   private authStatusSub: Subscription;
+
+  notifications: Notification[] = [];
   private notificationSub: Subscription;
   user: User;
   profiles = [

@@ -57,6 +57,9 @@ export class GroupsService {
           description: transformedGroupPost.groupdescription,
           groupcreator: transformedGroupPost.groupcreator
         });
+      } , error => {
+        console.log('error');
+        this.router.navigate(['/grouplist']).then();
       });
   }
 
@@ -175,7 +178,7 @@ export class GroupsService {
     // @ts-ignore
    return this.http
       .put<{ message: string }>(
-        'http://localhost:3000/api/groups/adduser', groupData);
+        'http://localhost:3000/api/groups/adduser/' + groupid, groupData);
   }
 
   requestGroup( id: string) {
@@ -212,5 +215,19 @@ export class GroupsService {
     };
     // @ts-ignore
      return this.http.put( 'http://localhost:3000/api/groups/commentgrouppost/' + groupid, groupData);
+  }
+
+  leaveGroup( userid: string, groupid: string) {
+    const groupData =  {
+      groupid: groupid,
+      userid: userid
+    };
+    // @ts-ignore
+    return this.http
+      .put<{ message: string }>(
+        'http://localhost:3000/api/groups/leavegroup/' + groupid, groupData)
+      .subscribe( responseData  => {
+        this.router.navigate(['/grouplist']);
+      });
   }
 }

@@ -228,14 +228,11 @@ export class GroupPageComponent implements OnInit {
     });
   }
 
-  // leaveGroup(id: string) {
-  //   console.log(id);
-  //   this.groupsService.leaveGroup(id, this.groupid).subscribe( () => {
-  //     this.socket.emit('refresh', {});
-  //     this.groupsService.getPosts(this.groupid);
-  //   });
-  // }
-   onEditGroup(form: NgForm) {
+  leaveGroup(id: string) {
+    console.log(id);
+    this.groupsService.leaveGroup(id, this.groupid);
+  }
+  onEditGroup(form: NgForm) {
      // name: string, description: string, eventdate: Date
      if (form.invalid) {
        return;

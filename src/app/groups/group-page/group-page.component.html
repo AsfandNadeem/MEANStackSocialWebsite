@@ -11,17 +11,6 @@
         <li *ngIf="groupRequests.length < 1" style="padding: 5px; color: gray;">
         No Requests
         </li>
-        <!--<br/>-->
-        <!--<li>-->
-          <!--<strong> Joined Events </strong>-->
-        <!--</li>-->
-        <!--<li *ngFor="let event of events" style="padding: 5px;">-->
-          <!--<a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>-->
-        <!--</li>-->
-        <!--<li *ngIf="events.length<1" style="padding: 5px; color: gray;">-->
-          <!--No events joined-->
-        <!--</li>-->
-
       </ul>
 
     </mat-list>
@@ -40,9 +29,12 @@
 
       </mat-card-header>
       <mat-card-content>
-        <p>{{groupdescription}}</p>
+        <p><strong>{{groupdescription}}</strong></p>
         <!--<strong>Date: </strong>{{ eventdate | date:'MMM dd, yyyy' }}-->
       </mat-card-content>
+
+      <button mat-raised-button *ngIf="userId != groupcreatorid" color="primary" (click)="leaveGroup(userId)"> Leave Group</button>
+      <br/>
       <mat-divider></mat-divider>
       <p style="padding-top: 8px;"> admin: {{groupcreator}}</p>
       <mat-card-actions *ngIf="userId == groupcreatorid">

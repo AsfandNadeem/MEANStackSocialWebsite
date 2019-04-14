@@ -10,6 +10,14 @@ import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
 import {MatDrawer} from '@angular/material';
 import {NgForm} from '@angular/forms';
+import * as moment from 'moment';
+
+export interface Notification {
+  created: Date;
+  sendername: string;
+  message: string;
+  senderimage: string;
+}
 @Component({
   selector: 'app-archivedposts',
   templateUrl: './archivedposts.component.html',
@@ -36,6 +44,8 @@ export class ArchivedpostsComponent implements OnInit {
   private groupsSub: Subscription;
   private eventsSub: Subscription;
   private authStatusSub: Subscription;
+  notifications: Notification[] = [];
+  private notificationSub: Subscription;
   @ViewChild('mat-drawer') sidenav: MatDrawer;
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -70,6 +80,13 @@ export class ArchivedpostsComponent implements OnInit {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
+      });
+
+    this.postsService.getNotifications();
+    this.notificationSub = this.postsService.getNotificationUpdateListener()
+      .subscribe((notificationData: { notifications: Notification[]}) => {
+        this.notifications = notificationData.notifications;
+        console.log(this.notifications);
       });
 
     console.log(this.groupsService.getJoinedGroups());
@@ -133,6 +150,9 @@ export class ArchivedpostsComponent implements OnInit {
       this.postsService.getarchivePosts(this.postsPerPage, this.currentPage );
     });
 
+  }
+  TimeFromNow(time) {
+    return moment(time).fromNow();
   }
 
   onDelete(postId: string) {

@@ -61,24 +61,10 @@ router.post(
   });
 
 router.get("/joinedevents", checkAuth, (req, res, next) => {
-  // const pageSize = +req.query.pagesize;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  // const currentPage = +req.query.page;
-  let joinedevents = [];
   let count = 0;
   const eventQuery = Event.find({eventmembersid: req.userData.userId}).sort({ '_id': -1 });
   eventQuery
     .then(events => {
-      // events.forEach( function( oneevent) {
-      //   // console.log(oneevent);
-      //   oneevent.eventfollowers.forEach( function( onemember){
-      //     // console.log(onemember.Euserid);
-      //     if(onemember.Euserid == req.userData.userId) {
-      //       joinedevents.push(oneevent);
-      //       count++;
-      //     }
-      //   });
-      // });
-      // console.log(joinedevents);
       res.status(200).json({
         message: "Events fetched successfully!",
         events: events,
@@ -356,12 +342,7 @@ router.put("/likeeventpost/:id",checkAuth,(req,res,next) => {
 });
 
 router.get("/comments/:id/:postid", (req, res, next) => {
-  // const groupid = req.query.groupid;
-  // const postid = req.query.postid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  //  console.log(groupid);
-  // console.log(postid);
-  // console.log("getting comments in group");
-  Event.findById({_id: req.params.id}, (err,event) => {
+    Event.findById({_id: req.params.id}, (err,event) => {
       if(err){
         res.json({ success: false, message: 'soemthing wrong'});
       } else {
@@ -386,8 +367,6 @@ router.get("/comments/:id/:postid", (req, res, next) => {
 });
 
 router.put("/dislikeeventpost/:id",checkAuth,(req,res,next) => {
-  // const groupid = +req.query.groupid;// like query parmaetres /?abc=1$xyz=2 , + is for converting to numbers
-  // const eventid = +req.query.eventid;
   console.log("disliking event post"+ req.body.eventid);
   Event.findById({ _id: req.params.id}, (err, event) => {
     if(err){

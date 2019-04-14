@@ -1,16 +1,26 @@
 .example-container {
   width: 100%;
 }
+
+/*@media only screen and (max-width: 1000px) {*/
+
+/*mat-drawer-content{*/
+/*margin-left: 0px !important;*/
+/*width: 50% !important;*/
+/*height: 860px;*/
+/*}*/
+/*}*/
 mat-drawer {
   /*background-color: lightblue;*/
   /*border: 1px solid #555;*/
   padding: 10px;
   padding-left: 20px;
   width: 20%;
+  position: absolute;
 }
 
 mat-drawer-content{
- margin: auto !important;
+  margin: auto !important;
   width: 50% !important;
   height: 860px;
 }
@@ -19,8 +29,8 @@ mat-drawer-content{
   justify-content: flex-start !important;
 }
 /*:host {*/
-  /*display: block;*/
-  /*margin-top: 1rem;*/
+/*display: block;*/
+/*margin-top: 1rem;*/
 /*}*/
 
 .info-text {
@@ -38,13 +48,18 @@ mat-spinner{
   overflow: hidden;
 
 }
+ul{
+  list-style:none ;
+  padding: 0;
+  margin:0;
+}
 
 .commentspanel li {
   float: left;
 }
 
 .example-card {
-  max-width: 100%;
+  max-width: 100% !important;
   margin: 4px;
 }
 
@@ -65,9 +80,6 @@ mat-card-image{
 .post-image img{
   width:50%;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
-}
-mat-paginator{
-  margin-top:1rem;
 }
 
 mat-expansion-panel-header{
@@ -92,4 +104,10 @@ mat-expansion-panel-header{
   border-radius: 50%;
   object-fit: cover;
   background-size: cover;
+}
+.positive {
+  color : blue;
+}
+.negative {
+  color: black;
 }
