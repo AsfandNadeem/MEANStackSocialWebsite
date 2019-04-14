@@ -27,8 +27,8 @@
         </div>
         <ul style=" display: block;
 background: white;">
-        <li *ngFor="let result of results" >
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]">{{ result.username}}</a>
+        <li *ngFor="let result of results"  (click)="queryField.setValue('')">
+          <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]" >{{ result.username}}</a>
         </li>
         <!--<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>-->
         </ul>

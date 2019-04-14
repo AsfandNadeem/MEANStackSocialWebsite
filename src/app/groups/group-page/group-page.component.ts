@@ -191,17 +191,34 @@ export class GroupPageComponent implements OnInit {
     });
   }
 
-  addComment(postid: string, form: NgForm) {
-    console.log(postid + '\n' + form.value.comment + '\n' + this.groupid );
+  addComment(post: Post, form: NgForm) {
+    console.log(post.id + '\n' + form.value.comment + '\n' + this.groupid );
     if (form.invalid) {
       return;
     } else {
-      this.groupsService.addComment(postid, this.groupid, form.value.comment).subscribe(() => {
-        this.socket.emit('refresh', {});
-        this.groupsService.getPosts(this.groupid);
+      this.groupsService.addComment(post.id, this.groupid, form.value.comment).subscribe(() => {
+        const a = this.posts.indexOf(post);
+              this.posts[a].commentsNo++;
+              this.posts[a].comments.push({comment: form.value.comment, commentator: this.username});
       });
     }
 }
+
+  // addComment(post: Post, form: NgForm) {
+  //   console.log(post.id + '\n' + form.value.comment);
+  //   if (form.invalid) {
+  //     return;
+  //   } else {
+  //     this.postsService.addComment(post.id, form.value.comment).subscribe(() => {
+  //       const a = this.posts.indexOf(post);
+  //       this.posts[a].commentsNo++;
+  //       this.posts[a].comments.push({comment: form.value.comment, commentator: this.username});
+  //       //   this.socket.emit('refresh', {});
+  //       // this.postsService.getPosts(this.postsPerPage, this.currentPage);
+  //     });
+  //   }
+  //
+  // }
 
   acceptRequest(id: string) {
     console.log(id);

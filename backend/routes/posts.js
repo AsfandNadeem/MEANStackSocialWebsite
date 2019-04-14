@@ -367,6 +367,7 @@ router.get("/user/:id", (req, res, next) => {
     const postQuery = Post.find({ creator: req.params.id }).sort({'_id': -1});
     let fetchedPosts;
     let user;
+    let userid;
     // if (pageSize && currentPage) {
     //   postQuery
     //     .skip(pageSize * (currentPage - 1))
@@ -381,12 +382,26 @@ router.get("/user/:id", (req, res, next) => {
         return fetchedPosts.length;
       })
       .then(count => {
-        res.status(200).json({
-          message: "Posts fetched successfully!",
-          posts: fetchedPosts,
-          usern: user,
-          maxPosts: count
+        User.findById(req.params.id).then(userget => {
+          if(userget) {
+            res.status(200).json({
+              message: "Posts fetched successfully!",
+              posts: fetchedPosts,
+              usern: user,
+              friends: userget.friends,
+              requests: userget.requests,
+              maxPosts: count
+            });
+          } else {
+            res.json({ success: false, message: 'Invalid user id'});
+          }
         });
+        // res.status(200).json({
+        //   message: "Posts fetched successfully!",
+        //   posts: fetchedPosts,
+        //   usern: user,
+        //   maxPosts: count
+        // });
       });
 
 });

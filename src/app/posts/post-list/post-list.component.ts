@@ -152,14 +152,17 @@ this.notificationSub = this.postsService.getNotificationUpdateListener()
     }
 
 
-  addComment(id: string, form: NgForm) {
-    console.log(id + '\n' + form.value.comment);
+  addComment(post: Post, form: NgForm) {
+    console.log(post.id + '\n' + form.value.comment);
     if (form.invalid) {
       return;
     } else {
-      this.postsService.addComment(id, form.value.comment).subscribe(() => {
-        this.socket.emit('refresh', {});
-      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+      this.postsService.addComment(post.id, form.value.comment).subscribe(() => {
+        const a = this.posts.indexOf(post);
+        this.posts[a].commentsNo++;
+        this.posts[a].comments.push({comment: form.value.comment, commentator: this.username});
+      //   this.socket.emit('refresh', {});
+      // this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
   }
 

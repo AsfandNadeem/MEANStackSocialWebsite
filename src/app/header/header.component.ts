@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 // import {User} from '../auth/user.model';
  export interface Users {
    username: string;
-   userid: string;
+   _id: string;
  }
 
 @Component({

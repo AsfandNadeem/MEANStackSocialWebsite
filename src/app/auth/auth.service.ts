@@ -5,8 +5,16 @@ import {Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
+import {Group} from '../groups/group.model';
 
-
+export interface Request {
+  username: string;
+  usersrid: string;
+}
+export interface Friend{
+  username: string;
+  usersrid: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +28,10 @@ export class AuthService {
   private tokenTimer: any;
   private userId: string;
   userN: string;
+  private requests: Request[] = [];
+  private requetsUpdated = new Subject<{requests: Request[], groupCount: number}>();
+  private friends: Friend[] = [];
+  private friendsUpdated = new Subject<{friends: Friend[], groupCount: number}>();
   private authStatusListener = new Subject<boolean>();
   // private userfetched: User;
   private userfetchedUpdated = new Subject<{email: any, usernamefetched: any, departmentfetched: any, registrationofetched: any }>();
@@ -263,4 +275,79 @@ export class AuthService {
       });
   }
 
+  requestFriend( id: string) {
+    // return this.http.put( 'http://localhost:3000/api/posts/dislikePost/' + id);
+    // @ts-ignore
+    return this.http
+      .put(
+        'http://localhost:3000/api/user/requestfriend/' + id);
+  }
+
+  getRequestedFriends() { // httpclientmodule
+    this.http
+      .get<{message: string, requesteds: any,  maxGroups: number}>(
+        'http://localhost:3000/api/user/requestedfriends')
+      .pipe(map((groupData) => {
+        return { groups: groupData.requesteds.map(group => {
+            return {
+              username: group.username,
+              // description: group.description,
+              usersrid: group._id,
+              // username : group.username,
+              // creator: group.groupcreator,
+              // category: group.category,
+              // // imagePath: post.imagePath
+            };
+          }), maxGroups: groupData.maxGroups };
+      }))// change rterieving data
+      .subscribe(transformedGroupData => {
+        this.requests = transformedGroupData.groups;
+        this.requetsUpdated.next({
+            requests: [...this.requests],
+            groupCount: transformedGroupData.maxGroups
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getReqeuestUpdatedListener() {
+    return this.requetsUpdated.asObservable();
+  }
+
+  getFriends() { // httpclientmodule
+    this.http
+      .get<{message: string, friends: any,  maxGroups: number}>(
+        'http://localhost:3000/api/user/joinedfriends')
+      .pipe(map((groupData) => {
+        return { groups: groupData.friends.map(group => {
+            return {
+              username: group.username,
+              // description: group.description,
+              usersrid: group._id,
+              // username : group.username,
+              // creator: group.groupcreator,
+              // category: group.category,
+              // // imagePath: post.imagePath
+            };
+          }), maxGroups: groupData.maxGroups };
+      }))// change rterieving data
+      .subscribe(transformedGroupData => {
+        this.friends = transformedGroupData.groups;
+        this.friendsUpdated.next({
+            friends: [...this.friends],
+            groupCount: transformedGroupData.maxGroups
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getFriendUpdatedListener() {
+    return this.friendsUpdated.asObservable();
+  }
+
+  acceptrequestFriend( id: string) {
+    // @ts-ignore
+    return this.http
+      .put('http://localhost:3000/api/user/joinfriend/' + id);
+  }
 }

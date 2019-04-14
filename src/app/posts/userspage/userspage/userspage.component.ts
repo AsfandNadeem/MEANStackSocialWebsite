@@ -20,11 +20,13 @@ import {NgForm} from '@angular/forms';
 export class UserspageComponent implements OnInit {
   screenWidth: number;
   private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
-  friends = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
+  friendsList = ['Shahid Mehmood', 'Moiz Khalid', 'Zara Khan', 'Ehtesham', 'Mahad Amir'];
   posts: Post[] = [];
   groups: Group[] = [];
   events: Events[] = [];
   isLoading = false;
+  friends = [];
+  requests = [];
   totalPosts = 0;
   usern: string;
   postsPerPage = 5;
@@ -72,12 +74,14 @@ export class UserspageComponent implements OnInit {
     this.profileimg = localStorage.getItem('profileimg');
     this.username =  localStorage.getItem('username');
     this.postsSub = this.postsService.getuserPostUpdateListener()
-      .subscribe((postData: { posts: Post[], usern: string, postCount: number}) => {
+      .subscribe((postData: { posts: Post[], usern: string, friends: any, requests: any, postCount: number}) => {
         this.isLoading = false;
         this.totalPosts = postData.postCount;
         // this.username = this.authService.getName();
         this.usern = postData.usern,
         this.posts = postData.posts;
+        this.friends = postData.friends;
+        this.requests = postData.requests;
         console.log(this.posts);
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -129,13 +133,17 @@ export class UserspageComponent implements OnInit {
   //   this.posts[this.posts.indexOf(post)].dislikes--;
   // }
   // });
-  addComment(id: string, form: NgForm) {
-    console.log(id + '\n' + form.value.comment);
+  addComment(post: Post, form: NgForm) {
+    console.log(post.id + '\n' + form.value.comment);
     if (form.invalid) {
       return;
     } else {
-      this.postsService.addComment(id, form.value.comment).subscribe(() => {
-        this.postsService.getuserPosts(this.userid);
+      this.postsService.addComment(post.id, form.value.comment).subscribe(() => {
+        const a = this.posts.indexOf(post);
+        this.posts[a].commentsNo++;
+        this.posts[a].comments.push({comment: form.value.comment, commentator: this.username});
+        //   this.socket.emit('refresh', {});
+        // this.postsService.getPosts(this.postsPerPage, this.currentPage);
       });
     }
 
@@ -147,6 +155,11 @@ export class UserspageComponent implements OnInit {
       this.postsService.getuserPosts(this.userid);
     });
 
+  }
+  addFriend(userID: string) {
+    this.authService.requestFriend(userID).subscribe(() => {
+      this.postsService.getuserPosts(this.userid);
+    });
   }
 
 

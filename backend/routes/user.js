@@ -385,6 +385,91 @@ router.get("/username/:id",checkAuth,(req,res,next) => {
 //
 // });
 
+router.put("/requestfriend/:id",checkAuth,(req,res,next) => {
+  console.log("getiing user");
+  User.findById(req.params.id).then(user => {
+    if (user) {
+      console.log("user found");
+      user.requests.push(req.userData.userId);
+      user.save((err) => {
+        if(err){
+          res.json({ success: false, message:'something went wrong'});
+        } else {
+          User.findById(req.userData.userId).then(user2 => {
+            console.log("user found");
+            user2.requested.push(req.params.id);
+            user2.save((err) => {
+              if(err){
+                res.json({ success: false, message:'something went wrong'});
+              } else {
+                res.json({ success: true, message:'requets sent'});
+              }
+            });
+          })
+        }
+      });
+    }
+  });
+});
+
+router.put("/joinfriend/:id",checkAuth,(req,res,next) => {
+  console.log("getiing user");
+  User.findById(req.params.id).then(user => {
+    if (user) {
+      console.log("user found");
+      const arrayIndex = user.requested.indexOf(req.userData.userId.toString());
+      user.requested.splice(arrayIndex,1);
+      user.friended.push(req.userData.userId);
+      user.friends.push(req.userData.userId);
+      user.save((err) => {
+        if(err){
+          res.json({ success: false, message:'something went wrong'});
+        } else {
+          User.findById(req.userData.userId).then(user2 => {
+            console.log("user found");
+            const arrayIndex2 = user2.requests.indexOf(req.params.id.toString());
+            user2.requests.splice(arrayIndex2,1);
+            user2.friends.push(req.params.id);
+            user2.save((err) => {
+              if(err){
+                res.json({ success: false, message:'something went wrong'});
+              } else {
+                res.json({ success: true, message:'accepted'});
+              }
+            });
+          })
+        }
+      });
+    }
+  });
+});
+
+router.get("/requestedfriends", checkAuth, (req,res,next) => {
+   const userQuery = User.find({requested: req.userData.userId}).sort({ '_id': -1 });
+  userQuery
+    .then(users => {
+      // console.log(joinedgroups);
+      res.status(200).json({
+        message: "Groups fetched successfully!",
+        requesteds: users
+      });
+    });
+});
+
+router.get("/joinedfriends", checkAuth, (req, res, next) => {
+  const userQuery = User.find({friends: req.userData.userId}).sort({ '_id': -1 });
+  userQuery
+    .then(users => {
+      // console.log(joinedgroups);
+      res.status(200).json({
+        message: "Groups fetched successfully!",
+        friends: users
+      });
+    });
+});
+
+
+
 router.put("/edit",checkAuth,(req,res,next) => {
   let fetcheduser;
   console.log("editing user---------------------------"+req.body.username+req.body.password+"---------------------------");

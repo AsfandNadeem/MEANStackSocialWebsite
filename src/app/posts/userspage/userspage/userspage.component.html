@@ -36,11 +36,20 @@
           <li>
             <strong>{{usern}}</strong>
           </li>
-          <li *ngIf="userid != ownid">
+          <li *ngIf="userid != ownid && friends.includes(ownid)">
           <a style="text-decoration: none; color: grey ;" [routerLink]="['/chat', userid]">
             <strong>Chat</strong>
           </a>
 
+          </li>
+          <li *ngIf="userid != ownid && !friends.includes(ownid) && !requests.includes(ownid)">
+            <button mat-raised-button color="primary" (click)="addFriend(userid)"> Add Friend</button>
+          </li>
+          <li *ngIf="userid != ownid && requests.includes(ownid) && !friends.includes(ownid)">
+            <label>Request sent !</label>
+          </li>
+          <li *ngIf="userid != ownid && friends.includes(ownid) && !requests.includes(ownid) ">
+            <label>Friends</label>
           </li>
           <!--<li>-->
             <!--<img class="example-header-image"-->
@@ -112,7 +121,7 @@
           </mat-expansion-panel-header>
 
           <ul class="commentspanel">
-            <form (submit)="addComment(post.id, commentForm)" #commentForm="ngForm" >
+            <form (submit)="addComment(post, commentForm)" #commentForm="ngForm" >
               <li >
                 <mat-form-field style="width:700px; !important; " >
                   <input  matInput
@@ -193,7 +202,7 @@
         <li>
           <strong> Friends </strong>
         </li>
-        <li *ngFor="let friend of friends" style="padding: 5px;">
+        <li *ngFor="let friend of friendsList" style="padding: 5px;">
           <strong>  {{friend}} </strong>
         </li>
 

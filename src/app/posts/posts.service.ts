@@ -33,7 +33,7 @@ export class PostsService {
   private advertisements: Advertisement[] = [];
   private advertisementsUpdated = new Subject<{advertisements: Advertisement[], advertisementCount: number}>();
   private userposts: Post[] = [];
-  private userpostsUpdated = new Subject<{posts: Post[], usern: string, postCount: number}>();
+  private userpostsUpdated = new Subject<{posts: Post[], usern: string, friends: any, requests: any, postCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -74,7 +74,7 @@ export class PostsService {
   getuserPosts(userid: string) { // httpclientmodule
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
-      .get<{message: string, posts: any,  usern: string, maxPosts: number}>(
+      .get<{message: string, posts: any,  usern: string, friends: any, requests: any, maxPosts: number}>(
         'http://localhost:3000/api/posts/user/' + userid
       )
       .pipe(map((postData) => {
@@ -96,13 +96,15 @@ export class PostsService {
               createdAt: post.createdAt,
               imagePath: post.imagePath
             };
-          }), usern: postData.usern, maxPosts: postData.maxPosts  };
+          }), usern: postData.usern, friends: postData.friends, requests: postData.requests, maxPosts: postData.maxPosts  };
       }))// change rterieving data
       .subscribe(transformedPostData => {
         this.userposts = transformedPostData.posts;
         this.userpostsUpdated.next({
             posts: [...this.userposts],
           usern: transformedPostData.usern,
+          friends: transformedPostData.friends,
+          requests: transformedPostData.requests,
             postCount: transformedPostData.maxPosts
           }
         );

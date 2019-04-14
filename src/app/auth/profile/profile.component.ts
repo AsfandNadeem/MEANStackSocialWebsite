@@ -1,19 +1,29 @@
 import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
-import {mimeType} from '../../posts/post-create/mime-type.validator';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {User} from '../../auth/user.model';
-import {Group} from '../../groups/group.model';
 import {Events} from '../../events/event.model';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {GroupsService} from '../../groups/groups.service';
 import {EventsService} from '../../events/events.service';
 import {MatDrawer} from '@angular/material';
-import {Post} from '../../posts/post.model';
-import {post} from 'selenium-webdriver/http';
-
-
+import {PostsService} from '../../posts/posts.service';
+import * as moment from 'moment';
+export interface Request {
+  username: string;
+  usersrid: string;
+}
+export interface Friend {
+  username: string;
+  usersrid: string;
+}
+export interface Notification {
+  created: Date;
+  sendername: string;
+  message: string;
+  senderimage: string;
+}
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -25,16 +35,20 @@ export class ProfileComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   private mode = 'create';
-  groups: Group[] = [];
+  requests: Request[] = [];
   events: Events[] = [];
+  friends: Friend[] = [];
   username: string;
+  notifications: Notification[] = [];
   userId: string;
   profileimg: string;
-  private groupsSub: Subscription;
+  private friendsSub: Subscription;
+  private requestsSub: Subscription;
   private eventsSub: Subscription;
   private profilesSub: Subscription;
   userIsAuthenticated = false;
   private authStatusSub: Subscription;
+  private notificationSub: Subscription;
   user: User;
   profiles = [
     // {main: 'usernmae',
@@ -52,7 +66,7 @@ export class ProfileComponent implements OnInit {
     this.screenWidth$.next(event.target.innerWidth);
   }
 
-  constructor(public authService: AuthService, public route: ActivatedRoute,
+  constructor(public authService: AuthService, public postsService: PostsService, public route: ActivatedRoute,
               private groupsService: GroupsService, private eventsService: EventsService) { }
 
   ngOnInit() {
@@ -87,20 +101,27 @@ this.authService.getProfile();
             value: postData.registrationofetched}
         ];
       });
-    console.log(this.groupsService.getJoinedGroups());
-    this.groupsSub = this.groupsService.getGroupUpdateListener()
-      .subscribe((groupData: { groups: Group[]}) => {
+    console.log(this.authService.getRequestedFriends());
+    this.requestsSub = this.authService.getReqeuestUpdatedListener()
+      .subscribe((groupData: { requests: Request[]}) => {
         this.isLoading = false;
-        this.groups = groupData.groups;
-        console.log(this.groups);
+        this.requests = groupData.requests;
+        console.log(this.requests);
       });
 
-    console.log(this.eventsService.getJoinedEvents());
-    this.eventsSub = this.eventsService.getEventUpdateListener()
-      .subscribe((eventData: { events: Events[]}) => {
+    console.log(this.authService.getFriends());
+    this.friendsSub = this.authService.getFriendUpdatedListener()
+      .subscribe((groupData: { friends: Friend[]}) => {
         this.isLoading = false;
-        this.events = eventData.events;
-        console.log(this.events);
+        this.friends = groupData.friends;
+        console.log(this.friends);
+      });
+
+    this.postsService.getNotifications();
+    this.notificationSub = this.postsService.getNotificationUpdateListener()
+      .subscribe((notificationData: { notifications: Notification[]}) => {
+        this.notifications = notificationData.notifications;
+        console.log(this.notifications);
       });
     this.form = new FormGroup({
       username : new FormControl(null, {
@@ -124,6 +145,21 @@ this.authService.getProfile();
         this.form.value.password);
     this.form.reset();
   }
+  TimeFromNow(time) {
+    return moment(time).fromNow();
+  }
 
+  // addFriend(userID: string) {
+  //   this.authService.requestFriend(userID).subscribe(() => {
+  //     this.postsService.getuserPosts(this.userid);
+  //   });
+  // }
+  acceptRequest(id: string) {
+    console.log(id);
+    this.authService.acceptrequestFriend(id).subscribe( () => {
+      this.authService.getFriends();
+      this.authService.getRequestedFriends();
+    });
+  }
 
 }

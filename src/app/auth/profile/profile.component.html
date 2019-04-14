@@ -5,23 +5,24 @@
     >
       <ul style="padding: 4px; font-family: Bahnschrift; margin-top:0px !important; list-style: none;">
         <li>
-          <strong> Joined Groups </strong>
+          <strong> Requests </strong>
         </li>
-        <li *ngFor="let group of groups" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/grouppage', group.id]">{{ group.groupname}}</a>
+        <li *ngFor="let request of requests" style="padding: 5px;">
+          <label>{{request.username}}</label>
+          <br/> <button type="button" mat-stroked-button (click)="acceptRequest(request.usersrid)">Accept</button>
         </li>
-        <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
-          Following No Groups
+        <li *ngIf="requests.length < 1" style="padding: 5px; color: gray;">
+          No Requests
         </li>
         <br/>
         <li>
           <strong> Joined Events </strong>
         </li>
-        <li *ngFor="let event of events" style="padding: 5px;">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
+        <li *ngFor="let friend of friends" style="padding: 5px;">
+          <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', friend.usersrid]">{{ friend.username}}</a>
         </li>
-        <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
-          No events joined
+        <li *ngIf="friends.length<1" style="padding: 5px; color: gray;">
+          No friends
         </li>
 
       </ul>
@@ -112,4 +113,58 @@
 
 </mat-card>
   </mat-drawer-content>
+  <mat-drawer mode="side" [opened]="screenWidth> 1000" position="end">
+    <mat-list style="
+      margin-top: 11px !important;"
+    >
+      <ul style="padding: 4px; font-family: Bahnschrift;">
+        <mat-card class="example-card">
+          <strong> <mat-icon>alarm</mat-icon> Notifcations</strong>
+        </mat-card>
+        <mat-card class="example-card"*ngFor="let notification of notifications">
+          <mat-card-header >
+            <ul style="list-style: none; display: flex;">
+              <li>
+                <img *ngIf="notification.senderimage"
+                     class="example-header-image-post"
+                     [src]="notification.senderimage" style="margin-right: 10px;" >
+              </li>
+              <li>
+                <ul  style="list-style: none;">
+                  <li>
+                    {{notification.message}}
+                  </li>
+                  <li>
+                    <mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>
+                  </li>
+                </ul>
+
+              </li>
+            </ul>
+            <!--<ul style="list-style: none;">-->
+            <!--<li>-->
+            <!--<ul style="list-style: none; display: flex;">-->
+            <!--<li>-->
+            <!--<img *ngIf="notification.senderimage"-->
+            <!--class="example-header-image-post"-->
+            <!--[src]="notification.senderimage">-->
+            <!--</li>-->
+            <!--<li>-->
+            <!--{{notification.message}}-->
+            <!--</li>-->
+            <!--</ul>-->
+            <!--</li>-->
+            <!--<li>-->
+
+            <!--<mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>-->
+            <!--</li>-->
+            <!--</ul>-->
+          </mat-card-header>
+        </mat-card>
+
+
+      </ul>
+
+    </mat-list>
+  </mat-drawer>
 </mat-drawer-container>

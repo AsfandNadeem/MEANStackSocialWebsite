@@ -176,14 +176,15 @@ export class EventPageComponent implements OnInit {
     });
   }
 
-  addComment(postid: string, form: NgForm) {
-    console.log(postid + '\n' + form.value.comment + '\n' + this.eventid );
+  addComment(post: Post, form: NgForm) {
+    console.log(post.id + '\n' + form.value.comment + '\n' + this.eventid );
     if (form.invalid) {
       return;
     } else {
-      this.eventService.addComment(postid, this.eventid, form.value.comment).subscribe(() => {
-        this.socket.emit('refresh', {});
-        this.eventService.getPosts(this.eventid);
+      this.eventService.addComment(post.id, this.eventid, form.value.comment).subscribe(() => {
+        const a = this.posts.indexOf(post);
+        this.posts[a].commentsNo++;
+        this.posts[a].comments.push({comment: form.value.comment, commentator: this.username});
       });
     }
   }
