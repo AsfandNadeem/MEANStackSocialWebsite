@@ -58,6 +58,7 @@ import { AdvertiserloginComponent } from './auth/Advertiser/advertiserlogin/adve
 import { AdvertisersignupComponent } from './auth/Advertiser/advertisersignup/advertisersignup/advertisersignup.component';
 import { AdvertiserpageComponent } from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
 import { AdminadvertisementsComponent } from './admin/adminadvertisements/adminadvertisements.component';
+import { VideochatComponent } from './videochat/videochat.component';
 
 
 @NgModule({
@@ -91,7 +92,8 @@ import { AdminadvertisementsComponent } from './admin/adminadvertisements/admina
     AdvertiserloginComponent,
     AdvertisersignupComponent,
     AdvertiserpageComponent,
-    AdminadvertisementsComponent
+    AdminadvertisementsComponent,
+    VideochatComponent
   ],
   imports: [
     BrowserModule,

@@ -25,6 +25,7 @@ import {AdvertiserloginComponent} from './auth/Advertiser/advertiserlogin/advert
 import {AdvertisersignupComponent} from './auth/Advertiser/advertisersignup/advertisersignup/advertisersignup.component';
 import {AdvertiserpageComponent} from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
 import {AdminadvertisementsComponent} from './admin/adminadvertisements/adminadvertisements.component';
+import {VideochatComponent} from './videochat/videochat.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
@@ -52,6 +53,8 @@ const routes: Routes = [
   { path: 'archives', component: ArchivedpostsComponent, canActivate: [AuthGuard]},
   {path: 'grouppage/:groupId', component: GroupPageComponent, canActivate: [AuthGuard]},
   {path: 'eventpage/:eventId', component: EventPageComponent, canActivate: [AuthGuard]},
+  // {path: 'videochat/#init', component: VideochatComponent},
+  {path: 'videochat', component: VideochatComponent}
 ];
 
 @NgModule({

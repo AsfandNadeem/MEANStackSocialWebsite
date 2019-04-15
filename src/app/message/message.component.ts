@@ -21,12 +21,13 @@ export class MessageComponent implements OnInit, AfterViewInit {
   userIsAuthenticated = false;
   socket: any;
   typingMessage;
+  // abc = '#init';
   typing = false;
   constructor(private authService: AuthService,
               private messageService: MessageService,
               public route: ActivatedRoute) {
     this.socket = io('http://localhost:3000');
-  }
+    }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -36,7 +37,8 @@ export class MessageComponent implements OnInit, AfterViewInit {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
       });
-
+   // this.abc = decodeURIComponent(this.abc);
+   //  this.abc = encodeURIComponent(this.abc);
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('userId')) {
         this.receiverId = paramMap.get('userId');
