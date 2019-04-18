@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-
+const BASEUURL = 'http://localhost:3000';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class SearchService {
     // const _URL = ;
     // + queryString;
     const queryParams = `?user=${queryString}`;
-    return this._http.get('http://localhost:3000/api/user/' + queryParams);
+    return this._http.get(`${BASEUURL}/api/user/` + queryParams);
 
   }
 }

@@ -9,6 +9,8 @@ import {Events} from '../events/event.model';
 import {Post} from '../posts/post.model';
 import {PostsService} from '../posts/posts.service';
 
+
+const BASEUURL = 'http://localhost:3000';
 export interface Report {
   id: string;
   title: string;
@@ -55,7 +57,7 @@ export class AdminServiceService {
   login(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
     this.http.post<{message: string}>(
-      'http://localhost:3000/api/admin/login',
+      `${BASEUURL}/api/admin/login`,
       {email, password})
       .subscribe( response => {
        this.isadmin = true;
@@ -77,7 +79,7 @@ export class AdminServiceService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, posts: any,  username: string, maxPosts: number}>(
-        'http://localhost:3000/api/admin/adverts'
+        `${BASEUURL}/api/admin/adverts`
       )
       .pipe(map((postData) => {
         return { advertisements: postData.posts.map(post => {
@@ -112,7 +114,7 @@ export class AdminServiceService {
     console.log(postData);
     return this.http
       .post<{ message: string, post: Post }>(
-        'http://localhost:3000/api/posts/advert',
+        `${BASEUURL}/api/posts/advert`,
         postData);
   }
 
@@ -133,7 +135,7 @@ export class AdminServiceService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, posts: any, maxPosts: number}>(
-        'http://localhost:3000/api/admin/posts'
+        `${BASEUURL}/api/admin/posts`
       )
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -174,7 +176,7 @@ export class AdminServiceService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, reports: any, maxReports: number}>(
-        'http://localhost:3000/api/admin/reports'
+        `${BASEUURL}/api/admin/reports`
       )
       .pipe(map((reportData) => {
         return { reports: reportData.reports.map(report => {
@@ -218,7 +220,7 @@ export class AdminServiceService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, users: any, maxUsers: number}>(
-        'http://localhost:3000/api/admin/users' )
+        `${BASEUURL}/api/admin/users` )
       .pipe(map((userData) => {
         return { users: userData.users.map(user => {
             return {
@@ -255,7 +257,7 @@ export class AdminServiceService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, events: any, maxEvents: number}>(
-        'http://localhost:3000/api/admin/events' )
+        `${BASEUURL}/api/admin/events` )
       .pipe(map((eventData) => {
         return { events: eventData.events.map(event => {
             return {
@@ -291,7 +293,7 @@ export class AdminServiceService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, groups: any, maxGroups: number}>(
-        'http://localhost:3000/api/admin/groups' )
+        `${BASEUURL}/api/admin/groups` )
       .pipe(map((groupData) => {
         return { groups: groupData.groups.map(group => {
             return {
@@ -325,30 +327,30 @@ export class AdminServiceService {
 
   deletePost(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/admin/posts/' + postId);
+      .delete(`${BASEUURL}/api/admin/posts/` + postId);
   }
 
   deleteReport(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/admin/reports/' + postId);
+      .delete(`${BASEUURL}/api/admin/reports/` + postId);
   }
 
   deleteAdvertisement(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/admin/advertisements/' + postId);
+      .delete(`${BASEUURL}/api/admin/advertisements/` + postId);
   }
   removeReport(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/admin/removereports/' + postId);
+      .delete(`${BASEUURL}/api/admin/removereports/` + postId);
   }
 
   deleteGroup(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/admin/groups/' + postId);
+      .delete(`${BASEUURL}/api/admin/groups/` + postId);
   }
 
   deleteEvent(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/admin/events/' + postId);
+      .delete(`${BASEUURL}/api/admin/events/` + postId);
   }
 }

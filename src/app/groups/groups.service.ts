@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {Post} from '../posts/post.model';
-
+const BASEUURL = 'http://localhost:3000';
 @Injectable({providedIn: 'root'})
 export class GroupsService {
   username = '';
@@ -23,7 +23,7 @@ export class GroupsService {
     console.log('inservicee' + id);
     this.http.get<{groupcreatorid: any,
       groupmembers: any, groupname: any, description: any, groupcreator: any, grouprequests: any, posts: any}>
-    ('http://localhost:3000/api/groups/' + id)
+    (`${BASEUURL}/api/groups/` + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
           return {
@@ -71,7 +71,7 @@ export class GroupsService {
     const queryParams = `?pagesize=${groupsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
    this.http
      .get<{message: string, groups: any,  username: string, maxGroups: number}>(
-       'http://localhost:3000/api/groups' + queryParams
+       `${BASEUURL}/api/groups` + queryParams
      )
      .pipe(map((groupData) => {
        return { groups: groupData.groups.map(group => {
@@ -104,7 +104,7 @@ export class GroupsService {
   getJoinedGroups() { // httpclientmodule
   this.http
       .get<{message: string, groups: any,  maxGroups: number}>(
-        'http://localhost:3000/api/groups/joinedgroups')
+        `${BASEUURL}/api/groups/joinedgroups`)
       .pipe(map((groupData) => {
         return { groups: groupData.groups.map(group => {
             return {
@@ -131,7 +131,7 @@ export class GroupsService {
   deletePost(groupId: string, postId: string) {
     const queryParams = `?groupid=${groupId}&postid=${postId}`;
     return this.http
-      .delete('http://localhost:3000/api/groups/delete' + queryParams);
+      .delete(`${BASEUURL}/api/groups/delete` + queryParams);
   }
 
   getGroupUpdateListener() {
@@ -141,7 +141,7 @@ export class GroupsService {
   addGroup(groupname: string,  category: string, description: string, username: string) {
     return this.http
       .post(
-        'http://localhost:3000/api/groups',
+        `${BASEUURL}/api/groups`,
         {groupname, description, category, username})
       .subscribe( responseData  => {
         this.router.navigate(['/grouplist']);
@@ -150,7 +150,7 @@ export class GroupsService {
 
   updateGroup(id: string , groupname: string, description: string) {
 
-   return this.http.put('http://localhost:3000/api/groups/' + id, {groupname, description});
+   return this.http.put(`${BASEUURL}/api/groups/` + id, {groupname, description});
   }
 
   addPost(id: string, title: string, content: string , image: File) {
@@ -163,7 +163,7 @@ export class GroupsService {
     console.log(postData);
     return this.http
       .put<{ message: string }>(
-        'http://localhost:3000/api/groups/addgroupPost/' + id,
+        `${BASEUURL}/api/groups/addgroupPost/` + id,
         postData);
       // .subscribe( responseData  => {
       //   this.router.navigate(['/grouplist']);
@@ -178,7 +178,7 @@ export class GroupsService {
     // @ts-ignore
    return this.http
       .put<{ message: string }>(
-        'http://localhost:3000/api/groups/adduser/' + groupid, groupData);
+        `${BASEUURL}/api/groups/adduser/` + groupid, groupData);
   }
 
   requestGroup( id: string) {
@@ -186,7 +186,7 @@ export class GroupsService {
     // @ts-ignore
    return this.http
       .put(
-        'http://localhost:3000/api/groups/requestuser/' + id);
+        `${BASEUURL}/api/groups/requestuser/` + id);
   }
 
   likePost(postid: string, groupid: string) {
@@ -195,7 +195,7 @@ export class GroupsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/groups/likegrouppost/' + groupid, groupData);
+    return this.http.put( `${BASEUURL}/api/groups/likegrouppost/` + groupid, groupData);
   }
   //
   dislikePost(postid: string, groupid: string) {
@@ -204,7 +204,7 @@ export class GroupsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/groups/dislikegrouppost/' + groupid, groupData);
+    return this.http.put( `${BASEUURL}/api/groups/dislikegrouppost/` + groupid, groupData);
   }
 
   addComment(postid: string, groupid: string, comment: string) {
@@ -214,7 +214,7 @@ export class GroupsService {
       comment: comment
     };
     // @ts-ignore
-     return this.http.put( 'http://localhost:3000/api/groups/commentgrouppost/' + groupid, groupData);
+     return this.http.put( `${BASEUURL}/api/groups/commentgrouppost/` + groupid, groupData);
   }
 
   leaveGroup( userid: string, groupid: string) {
@@ -225,7 +225,7 @@ export class GroupsService {
     // @ts-ignore
     return this.http
       .put<{ message: string }>(
-        'http://localhost:3000/api/groups/leavegroup/' + groupid, groupData)
+        `${BASEUURL}/api/groups/leavegroup/` + groupid, groupData)
       .subscribe( responseData  => {
         this.router.navigate(['/grouplist']);
       });

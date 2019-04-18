@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import * as moment from 'moment';
+const BASEUURL = 'http://localhost:3000';
 export interface Notification {
   created: Date;
   sendername: string;
@@ -41,7 +42,7 @@ export class PostsService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, posts: any,  username: string, maxPosts: number}>(
-        'http://localhost:3000/api/advertise/' + advertiserid
+        `${BASEUURL}/api/advertise/` + advertiserid
       )
       .pipe(map((postData) => {
         return { advertisements: postData.posts.map(post => {
@@ -75,7 +76,7 @@ export class PostsService {
     // const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, posts: any,  usern: string, friends: any, requests: any, maxPosts: number}>(
-        'http://localhost:3000/api/posts/user/' + userid
+        `${BASEUURL}/api/posts/user/` + userid
       )
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
@@ -120,7 +121,7 @@ export class PostsService {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
    this.http
      .get<{message: string, posts: any,  username: string, maxPosts: number}>(
-       'http://localhost:3000/api/posts' + queryParams
+       `${BASEUURL}/api/posts` + queryParams
      )
      .pipe(map((postData) => {
        return { posts: postData.posts.map(post => {
@@ -159,7 +160,7 @@ export class PostsService {
   getNotifications() {
     this.http
       .get<{message: string, notifications: any,  username: string, maxNotifictaions: number}>(
-        'http://localhost:3000/api/user/notifications'
+        `${BASEUURL}/api/user/notifications`
       )
       .pipe(map((notificationData) => {
         return { notifications: notificationData.notifications.map(notification => {
@@ -197,7 +198,7 @@ export class PostsService {
     console.log(postData);
     this.http
       .post<{ message: string, post: Post }>(
-        'http://localhost:3000/api/posts',
+        `${BASEUURL}/api/posts`,
         postData)
       .subscribe( responseData  => {
         this.router.navigate(['/messages']);
@@ -215,7 +216,7 @@ export class PostsService {
     console.log(postData);
     return this.http
       .post<{ message: string }>(
-        'http://localhost:3000/api/advertise/advertise/' + advertiserid,
+        `${BASEUURL}/api/advertise/advertise/` + advertiserid,
         postData);
     // .subscribe( responseData  => {
     //   this.router.navigate(['/grouplist']);
@@ -256,7 +257,7 @@ export class PostsService {
     console.log(postData);
    return this.http
       .post<{ message: string, post: Post }>(
-        'http://localhost:3000/api/posts/report',
+        `${BASEUURL}/api/posts/report`,
         {title, content, username, creator, postid, reason});
       // .subscribe( responseData  => {
       //   this.router.navigate(['/messages']);
@@ -272,7 +273,7 @@ export class PostsService {
       category: string,
       creator: string,
       imagePath: string
-    }>('http://localhost:3000/api/posts/' + id) ;
+    }>(`${BASEUURL}/api/posts/` + id) ;
   }
 
   updatePost(id: string , title: string, content: string, image: File | string) {
@@ -304,7 +305,7 @@ export class PostsService {
       };
 
     }
-    this.http.put('http://localhost:3000/api/posts/' + id, postData)
+    this.http.put(`${BASEUURL}/api/posts/` + id, postData)
       .subscribe(response => {
         this.router.navigate(['/messages']);
       });
@@ -312,7 +313,7 @@ export class PostsService {
 
   deletePost(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/posts/' + postId);
+      .delete(`${BASEUURL}/api/posts/` + postId);
   }
 
   // postComment(id, comment) {
@@ -325,12 +326,12 @@ export class PostsService {
 
   likePost(id) {
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/posts/likePost/' + id);
+    return this.http.put( `${BASEUURL}/api/posts/likePost/` + id);
   }
 
   dislikePost(id) {
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/posts/dislikePost/' + id);
+    return this.http.put( `${BASEUURL}/api/posts/dislikePost/` + id);
   }
 
   addComment(id, comment) {
@@ -339,24 +340,24 @@ export class PostsService {
       comment: comment
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/posts/comment/' + id, postdata);
+    return this.http.put( `${BASEUURL}/api/posts/comment/` + id, postdata);
   }
 
   archivepost(id: string) {
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/posts/archivePost/' + id);
+    return this.http.put(`${BASEUURL}/api/posts/archivePost/` + id);
   }
 
   removearchivePost(postId: string) {
     return this.http
-      .delete('http://localhost:3000/api/posts/archives/' + postId);
+      .delete(`${BASEUURL}/api/posts/archives/` + postId);
   }
 
   getarchivePosts(postsPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, posts: any,  username: string, maxPosts: number}>(
-        'http://localhost:3000/api/posts/archives' + queryParams
+        `${BASEUURL}/api/posts/archives` + queryParams
       )
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {

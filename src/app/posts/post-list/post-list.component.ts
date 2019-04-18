@@ -161,7 +161,7 @@ this.notificationSub = this.postsService.getNotificationUpdateListener()
         const a = this.posts.indexOf(post);
         this.posts[a].commentsNo++;
         this.posts[a].comments.push({comment: form.value.comment, commentator: this.username});
-      //   this.socket.emit('refresh', {});
+        // this.socket.emit('refresh', {});
       // this.postsService.getPosts(this.postsPerPage, this.currentPage);
     });
   }

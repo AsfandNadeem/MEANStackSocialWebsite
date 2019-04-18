@@ -7,6 +7,7 @@ import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {Group} from '../groups/group.model';
 
+const BASEUURL = 'http://localhost:3000';
 export interface Request {
   username: string;
   usersrid: string;
@@ -76,7 +77,7 @@ export class AuthService {
     userData.append( 'department', department);
     userData.append('registration', registration);
     console.log(userData);
-    this.http.post('http://localhost:3000/api/user/signup', userData)
+    this.http.post(`${BASEUURL}/api/user/signup`, userData)
       .subscribe(response => {
         console.log(response);
         this.router.navigate(['/login']);
@@ -90,7 +91,7 @@ export class AuthService {
     userData.append('password', password);
     userData.append('username', username);
     console.log(userData);
-    this.http.post('http://localhost:3000/api/advertise/signup', {email, password, username})
+    this.http.post(`${BASEUURL}/api/advertise/signup`, {email, password, username})
       .subscribe(response => {
         console.log(response);
         this.router.navigate(['/advertise']);
@@ -101,7 +102,7 @@ export class AuthService {
   login(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
     this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string, profileimg: any}>(
-      'http://localhost:3000/api/user/login',
+      `${BASEUURL}/api/user/login`,
       {email, password})
       .subscribe( response => {
         const token = response.token;
@@ -134,7 +135,7 @@ export class AuthService {
  advertiserlogin(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
     this.http.post<{userId: string, username: string}>(
-      'http://localhost:3000/api/advertise/login',
+      `${BASEUURL}/api/advertise/login`,
       {email, password})
       .subscribe( response => {
          console.log(response);
@@ -165,7 +166,7 @@ export class AuthService {
   getProfile() {
     this.http.get<{email: any,
       username: any, department: any, registrationo: any}>
-    ('http://localhost:3000/api/user/profile')
+    (`${BASEUURL}/api/user/profile`)
       .pipe(map((postData) => {
         return { email: postData.email, usernamefetched: postData.username,
           departmentfetched: postData.department, registrationofetched: postData.registrationo};
@@ -266,7 +267,7 @@ export class AuthService {
   };
       console.log(userData);
       this.http.put<{userId: string, username: string}>
-    ('http://localhost:3000/api/user/edit/', userData)
+    (`${BASEUURL}/api/user/edit/`, userData)
       .subscribe(response => {
         console.log(response);
         localStorage.removeItem('username');
@@ -280,13 +281,13 @@ export class AuthService {
     // @ts-ignore
     return this.http
       .put(
-        'http://localhost:3000/api/user/requestfriend/' + id);
+        `${BASEUURL}/api/user/requestfriend/` + id);
   }
 
   getRequestedFriends() { // httpclientmodule
     this.http
       .get<{message: string, requesteds: any,  maxGroups: number}>(
-        'http://localhost:3000/api/user/requestedfriends')
+        `${BASEUURL}/api/user/requestedfriends`)
       .pipe(map((groupData) => {
         return { groups: groupData.requesteds.map(group => {
             return {
@@ -317,7 +318,7 @@ export class AuthService {
   getFriends() { // httpclientmodule
     this.http
       .get<{message: string, friends: any,  maxGroups: number}>(
-        'http://localhost:3000/api/user/joinedfriends')
+        `${BASEUURL}/api/user/joinedfriends`)
       .pipe(map((groupData) => {
         return { groups: groupData.friends.map(group => {
             return {
@@ -348,6 +349,6 @@ export class AuthService {
   acceptrequestFriend( id: string) {
     // @ts-ignore
     return this.http
-      .put('http://localhost:3000/api/user/joinfriend/' + id);
+      .put(`${BASEUURL}/api/user/joinfriend/` + id);
   }
 }

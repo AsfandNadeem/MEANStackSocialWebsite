@@ -6,7 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {Post} from '../posts/post.model';
-
+const BASEUURL = 'http://localhost:3000';
 @Injectable({providedIn: 'root'})
 export class EventsService {
   username = '';
@@ -22,7 +22,7 @@ export class EventsService {
     console.log('eventinservicee' + id);
     this.http.get<{eventcreatorid: any,
       eventmembers: any, eventname: any, eventdate: Date, description: any, eventcreator: any, posts: any}>
-    ('http://localhost:3000/api/events/' + id)
+    (`${BASEUURL}/api/events/` + id)
       .pipe(map((postData) => {
         return { posts: postData.posts.map(post => {
           return {
@@ -68,7 +68,7 @@ export class EventsService {
     const queryParams = `?pagesize=${eventsPerPage}&page=${currentPage}`; // `` backtips are for dynamically adding values into strings
     this.http
       .get<{message: string, events: any,  username: string, maxEvents: number}>(
-        'http://localhost:3000/api/events' + queryParams
+        `${BASEUURL}/api/events` + queryParams
       )
       .pipe(map((eventData) => {
         return { events: eventData.events.map(event => {
@@ -98,7 +98,7 @@ export class EventsService {
   getJoinedEvents() { // httpclientmodule
     this.http
       .get<{message: string, events: any,  maxEvents: number}>(
-        'http://localhost:3000/api/events/joinedevents')
+        `${BASEUURL}/api/events/joinedevents`)
       .pipe(map((eventData) => {
         return { events: eventData.events.map(event => {
             return {
@@ -127,13 +127,13 @@ export class EventsService {
   }
 
   updateEvent(id: string , eventname: string, description: string, eventdate: Date) {
-    return this.http.put('http://localhost:3000/api/events/' + id, {eventname, description, eventdate});
+    return this.http.put(`${BASEUURL}/api/events/` + id, {eventname, description, eventdate});
      }
 
   addEvent(eventname: string,  category: string, description: string, eventdate: Date, username: string) {
     return this.http
       .post(
-        'http://localhost:3000/api/events',
+        `${BASEUURL}/api/events`,
         {eventname, description, category, eventdate, username})
       .subscribe( responseData  => {
         this.router.navigate(['/eventlist']);
@@ -150,7 +150,7 @@ export class EventsService {
     console.log(postData);
     return this.http
       .put<{ message: string }>(
-        'http://localhost:3000/api/events/addeventPost/' + id,
+        `${BASEUURL}/api/events/addeventPost/` + id,
         postData);
       // .subscribe( responseData  => {
       //   this.router.navigate(['/eventpage/' + id]);
@@ -161,7 +161,7 @@ export class EventsService {
     // @ts-ignore
     this.http
       .put<{ message: string }>(
-        'http://localhost:3000/api/events/adduser/' + id)
+        `${BASEUURL}/api/events/adduser/` + id)
       .subscribe(responseData  => {
         this.router.navigate(['/eventpage/' + id]);
       });
@@ -173,7 +173,7 @@ export class EventsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/events/likeeventpost/' + eventid, eventData);
+    return this.http.put( `${BASEUURL}/api/events/likeeventpost/` + eventid, eventData);
   }
   //
   dislikePost(postid: string, eventid: string) {
@@ -182,7 +182,7 @@ export class EventsService {
       postid: postid
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/events/dislikeeventpost/' + eventid, eventData);
+    return this.http.put( `${BASEUURL}/api/events/dislikeeventpost/` + eventid, eventData);
   }
 
    addComment(postid: string, eventid: string, comment: string) {
@@ -192,6 +192,6 @@ export class EventsService {
       comment: comment
     };
     // @ts-ignore
-    return this.http.put( 'http://localhost:3000/api/events/commenteventpost/' + eventid, eventData);
+    return this.http.put( `${BASEUURL}/api/events/commenteventpost/` + eventid, eventData);
   }
 }
