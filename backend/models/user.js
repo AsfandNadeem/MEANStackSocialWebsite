@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true},
   password: { type: String, required: true},
   username: {type: String, required: true},
-   imagePath: { type: String, default: "http://localhost:3000/profileimgs/fa15-bcs-008@student.comsats.edu.pk-1550920240501.png"},
+   imagePath: { type: String, default: "http://res.cloudinary.com/da6znvkjz/image/upload/v1555623469/ComsatsSocial/usyp0ahz4svus4iaxnbd.png"},
   // imagePath : { data: Buffer, contentType: String },
   department: {type: String, required: true},
   registrationno: {type: String, required: true, unique: true},

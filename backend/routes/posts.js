@@ -6,9 +6,19 @@ const User = require('../models/user');
 const Advertiser = require("../models/advertiserModel");
 const Advertisement = require("../models/advertisementModel");
 const Report = require("../models/report");
-const checkAuth = require("../middleware/check-auth");
+const cloudinary = require("cloudinary");
+require('dotenv').config();
+const cloudinaryStorage = require("multer-storage-cloudinary");
 
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
@@ -16,24 +26,10 @@ const MIME_TYPE_MAP = {
   "image/jpg": "jpg"
 };
 
-const storage = multer.diskStorage({
- destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid mime type");
-    if (isValid) {
-      error = null;
-    }
-    cb(error, "backend/images");
-  },
-
-  filename: (req, file, cb) => {
-    const name = file.originalname
-      .toLowerCase()
-      .split(" ")
-      .join("-");
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    cb(null, name + "-" + Date.now() + "." + ext);
-  }
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "ComsatsSocial",
+  allowedFormats: ["jpg", "png"]
 });
 
 router.post("/postmobile",
@@ -224,7 +220,8 @@ router.post(
               createdAt: Date.now(),
               category: req.body.category,
               creator: req.userData.userId,
-              imagePath: url + "/images/" + req.file.filename,
+              imagePath: req.file.url,
+              // imagePath: url + "/images/" + req.file.filename,
               profileimg: user.imagePath
             });
 
@@ -300,7 +297,8 @@ router.put(
     if (req.file) {
       const url = req.protocol + "://" + req.get("host");
       console.log(url);
-      imagePath = url + "/images/" + req.file.filename;
+      imagePath = req.file.url
+      // imagePath = url + "/images/" + req.file.filename;
     }
 
     User.findById({ _id: req.userData.userId}, (err, user) => {
@@ -656,14 +654,18 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                                   });
 
                                   User.findOne({_id: post.creator}, (err, user2) => {
-                                    user2.notifications.push(notification);
-                                    user2.save((err) => {
-                                      if (err) {
-                                        res.json({success: false, message: 'something went wrong'});
-                                      } else {
-                                        res.json({success: true, message: 'post liked!'});
-                                      }
-                                    });
+                                    if(user2) {
+                                      user2.notifications.push(notification);
+                                      user2.save((err) => {
+                                        if (err) {
+                                          res.json({success: false, message: 'something went wrong'});
+                                        } else {
+                                          res.json({success: true, message: 'post liked!'});
+                                        }
+                                      });
+                                    } else {
+                                      res.json({success: true, message: 'post liked!'});
+                                    }
                                   });
                                 }
                               }
@@ -699,14 +701,19 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                                   });
 
                                   User.findOne({_id: post.creator}, (err, user2) => {
-                                    user2.notifications.push(notification);
-                                    user2.save((err) => {
-                                      if (err) {
-                                        res.json({success: false, message: 'something went wrong'});
-                                      } else {
-                                        res.json({success: true, message: 'post liked!'});
-                                      }
-                                    });
+                                    if(user2) {
+                                      user2.notifications.push(notification);
+                                      user2.save((err) => {
+                                        if (err) {
+                                          res.json({success: false, message: 'something went wrong'});
+                                        } else {
+                                          res.json({success: true, message: 'post liked!'});
+                                        }
+                                      });
+                                    } else {
+                                      res.json({success: true, message: 'post liked!'});
+                                    }
+
                                   });
 
                                 }
@@ -799,14 +806,20 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                                 });
 
                                 User.findOne({_id: post.creator}, (err, user2) => {
-                                  user2.notifications.push(notification);
-                                  user2.save((err) => {
-                                    if (err) {
-                                      res.json({success: false, message: 'something went wrong'});
-                                    } else {
-                                      res.json({success: true, message: 'post disliked!'});
-                                    }
-                                  });
+                                  if(user2){
+                                    user2.notifications.push(notification);
+                                    user2.save((err) => {
+                                      if (err) {
+                                        res.json({success: false, message: 'something went wrong'});
+                                      } else {
+                                        res.json({success: true, message: 'post disliked!'});
+                                      }
+                                    });
+                                  }
+                                  else{
+                                    res.json({success: true, message: 'post disliked!'});
+                                  }
+
                                 });
                               }
                             }
@@ -839,14 +852,19 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                                 });
 
                                 User.findOne({_id: post.creator}, (err, user2) => {
-                                  user2.notifications.push(notification);
-                                  user2.save((err) => {
-                                    if (err) {
-                                      res.json({success: false, message: 'something went wrong'});
-                                    } else {
-                                      res.json({success: true, message: 'post disliked!'});
-                                    }
-                                  });
+                                  if(user2) {
+                                    user2.notifications.push(notification);
+                                    user2.save((err) => {
+                                      if (err) {
+                                        res.json({success: false, message: 'something went wrong'});
+                                      } else {
+                                        res.json({success: true, message: 'post disliked!'});
+                                      }
+                                    });
+                                  } else {
+                                    res.json({success: true, message: 'post disliked!'});
+                                  }
+
                                 });
                               }
                             }
@@ -928,14 +946,19 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                           });
 
                           User.findOne({_id: post.creator}, (err, user2) => {
-                            user2.notifications.push(notification);
-                            user2.save((err) => {
-                              if (err) {
-                                res.json({success: false, message: 'something went wrong'});
-                              } else {
-                                res.json({success: true, message: 'comment added'});
-                              }
-                            });
+                            if(user2){
+                              user2.notifications.push(notification);
+                              user2.save((err) => {
+                                if (err) {
+                                  res.json({success: false, message: 'something went wrong'});
+                                } else {
+                                  res.json({success: true, message: 'comment added'});
+                                }
+                              });
+                            } else {
+                              res.json({success: true, message: 'comment added'});
+                            }
+
                           });
                         }
                         }

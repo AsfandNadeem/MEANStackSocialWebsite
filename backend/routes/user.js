@@ -10,10 +10,19 @@ const Group = require('../models/group');
 const Event = require('../models/event');
 var nodemailer = require('nodemailer');
 var randomstring = require("randomstring");
-
+const cloudinary = require("cloudinary");
+require('dotenv').config();
+const cloudinaryStorage = require("multer-storage-cloudinary");
 
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
@@ -21,25 +30,13 @@ const MIME_TYPE_MAP = {
   "image/jpg": "jpg"
 };
 
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid mime type");
-    if (isValid) {
-      error = null;
-    }
-    cb(error, "backend/profileimgs");
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname
-      .toLowerCase()
-      .split(" ")
-      .join("-");
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    cb(null, name + "-" + Date.now() + "." + ext);
-  }
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "ComsatsSocial",
+  allowedFormats: ["jpg", "png"]
 });
+
+
 
 
 router.post('/signup',
@@ -47,132 +44,254 @@ router.post('/signup',
   (req,res,next) => {
     const url = req.protocol + "://" + req.get("host");
     console.log(url.toString());
-
-console.log(req.body.email);
+    console.log(req.body.email);
     var regex = new RegExp('^(fa|sp)[0-9]{2}-[a-z]{3}-[0-9]{3}@student.comsats.edu.pk$');
     console.log(regex.test(req.body.email));
-     if(regex.test(req.body.email)) {
-       console.log("valid regex");
-// const passwordgen = randomstring.generate(7);
-//        console.log(passwordgen);
-       const passwordgen = "abcd";
-       bcrypt.hash(passwordgen, 10)
-         .then(hash => {
-           if (req.file) {
-             // F:\Comsats_Social\backend\profileimgs\fa15-bcs-001@student.comsats.edu.pk-1552487106293.jpg
-             // var newImg = fs.readFileSync("backend/profileimgs/"+req.file.filename);
-             // // encode the file as a base64 string.
-             //
-             // var encImg = newImg.toString('base64');
-             // define your new document
-             // var newItem = {
-             //   description: req.body.description,
-             //   contentType: req.file.mimetype,
-             //   size: req.file.size,
-             //   img: Buffer(encImg, 'base64')
-             // };
-             const user = new User({
-               email: req.body.email,
-               password: hash,
-               username: req.body.username,
-               department: req.body.department,
-               registrationno: req.body.registration,
-               imagePath: url + "/profileimgs/" + req.file.filename
-               // imagePath: {data:encImg, contentType: 'image/jpeg'}
-               // url + "/profileimgs/" + req.file.filename
-             });
-             console.log(passwordgen);
-             user.save()
-               .then(result => {
-                 res.status(201).json({
-                   message: 'User Created',
-                   result: result,
-                 });
-                 var transporter = nodemailer.createTransport({
-                   service: 'gmail',
-                   auth: {
-                     user: 'nodeemailsender1@gmail.com',
-                     pass: 'sendemailbynode'
-                   }
-                 });
-                 var mailOptions = {
-                   from: 'nodeemailsender@gmail.com',
-                   to: req.body.email,
-                   subject: 'Confirm your login to Comsats Student Portal',
-                   text: 'Your Password is  ' + passwordgen
-                 };
-                 transporter.sendMail(mailOptions, function (error, info) {
-                   if (error) {
-                     console.log(error);
-                   } else {
-                     console.log('Email sent: ' + info.response);
-                   }
-                 });
+    if(regex.test(req.body.email)) {
+      console.log("valid regex");
+      const passwordgen = "abcd";
+      bcrypt.hash(passwordgen, 10)
+        .then(hash => {
+          if (req.file) {
+            const user = new User({
+              email: req.body.email,
+              password: hash,
+              username: req.body.username,
+              department: req.body.department,
+              registrationno: req.body.registration,
+              imagePath: req.file.url
+            });
+            console.log(passwordgen);
+            user.save()
+              .then(result => {
+                res.status(201).json({
+                  message: 'User Created',
+                  result: result,
+                });
+                var transporter = nodemailer.createTransport({
+                  service: 'gmail',
+                  auth: {
+                    user: 'nodeemailsender1@gmail.com',
+                    pass: 'sendemailbynode'
+                  }
+                });
+                var mailOptions = {
+                  from: 'nodeemailsender@gmail.com',
+                  to: req.body.email,
+                  subject: 'Confirm your login to Comsats Student Portal',
+                  text: 'Your Password is  ' + passwordgen
+                };
+                transporter.sendMail(mailOptions, function (error, info) {
+                  if (error) {
+                    console.log(error);
+                  } else {
+                    console.log('Email sent: ' + info.response);
+                  }
+                });
 
-                 console.log(user);
-               })
-               .catch(err => {
-                 res.status(500).json({
-                   error: err
-                 })
-               });
-           } else {
+                console.log(user);
+              })
+              .catch(err => {
+                res.status(500).json({
+                  error: err
+                })
+              });
+          } else {
 
-             const user = new User({
-               email: req.body.email,
-               password: hash,
-               username: req.body.username,
-               department: req.body.department,
-               registrationno: req.body.registration,
-             });
-             console.log(passwordgen);
-             user.save()
-               .then(result => {
-                 res.status(201).json({
-                   message: 'User Created',
-                   result: result,
-                 });
-                 var transporter = nodemailer.createTransport({
-                   service: 'gmail',
-                   auth: {
-                     user: 'nodeemailsender1@gmail.com',
-                     pass: 'sendemailbynode'
-                   }
-                 });
-                 var mailOptions = {
-                   from: 'nodeemailsender@gmail.com',
-                   to: req.body.email,
-                   subject: 'Confirm your login to Comsats Student Portal',
-                   text: 'Your Password is  ' + passwordgen
-                 };
-                 transporter.sendMail(mailOptions, function (error, info) {
-                   if (error) {
-                     console.log(error);
-                   } else {
-                     console.log('Email sent: ' + info.response);
-                   }
-                 });
-                 console.log(user);
-               })
-               .catch(err => {
-                 res.status(500).json({
-                   error: err
-                 })
-               });
+            const user = new User({
+              email: req.body.email,
+              password: hash,
+              username: req.body.username,
+              department: req.body.department,
+              registrationno: req.body.registration,
+            });
+            console.log(passwordgen);
+            user.save()
+              .then(result => {
+                res.status(201).json({
+                  message: 'User Created',
+                  result: result,
+                });
+                var transporter = nodemailer.createTransport({
+                  service: 'gmail',
+                  auth: {
+                    user: 'nodeemailsender1@gmail.com',
+                    pass: 'sendemailbynode'
+                  }
+                });
+                var mailOptions = {
+                  from: 'nodeemailsender@gmail.com',
+                  to: req.body.email,
+                  subject: 'Confirm your login to Comsats Student Portal',
+                  text: 'Your Password is  ' + passwordgen
+                };
+                transporter.sendMail(mailOptions, function (error, info) {
+                  if (error) {
+                    console.log(error);
+                  } else {
+                    console.log('Email sent: ' + info.response);
+                  }
+                });
+                console.log(user);
+              })
+              .catch(err => {
+                res.status(500).json({
+                  error: err
+                })
+              });
 
-           }
-         });
-     }
-      else {
-        return res.status(401).json({
-         message: "invalid email"
-       });
+          }
+        });
+    }
+    else {
+      return res.status(401).json({
+        message: "invalid email"
+      });
 
-     }
+    }
+
+  });
 
 
 
-});
+
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const isValid = MIME_TYPE_MAP[file.mimetype];
+//     let error = new Error("Invalid mime type");
+//     if (isValid) {
+//       error = null;
+//     }
+//     cb(error, "backend/profileimgs");
+//   },
+//   filename: (req, file, cb) => {
+//     const name = file.originalname
+//       .toLowerCase()
+//       .split(" ")
+//       .join("-");
+//     const ext = MIME_TYPE_MAP[file.mimetype];
+//     cb(null, name + "-" + Date.now() + "." + ext);
+//   }
+// });
+
+
+
+// router.post('/signup',
+//   multer({ storage: storage }).single("image"),
+//   (req,res,next) => {
+//     const url = req.protocol + "://" + req.get("host");
+//     console.log(url.toString());
+//
+// console.log(req.body.email);
+//     var regex = new RegExp('^(fa|sp)[0-9]{2}-[a-z]{3}-[0-9]{3}@student.comsats.edu.pk$');
+//     console.log(regex.test(req.body.email));
+//      if(regex.test(req.body.email)) {
+//        console.log("valid regex");
+//        const passwordgen = "abcd";
+//        bcrypt.hash(passwordgen, 10)
+//          .then(hash => {
+//            if (req.file) {
+//              const user = new User({
+//                email: req.body.email,
+//                password: hash,
+//                username: req.body.username,
+//                department: req.body.department,
+//                registrationno: req.body.registration,
+//                imagePath: url + "/profileimgs/" + req.file.filename
+//                 });
+//              console.log(passwordgen);
+//              user.save()
+//                .then(result => {
+//                  res.status(201).json({
+//                    message: 'User Created',
+//                    result: result,
+//                  });
+//                  var transporter = nodemailer.createTransport({
+//                    service: 'gmail',
+//                    auth: {
+//                      user: 'nodeemailsender1@gmail.com',
+//                      pass: 'sendemailbynode'
+//                    }
+//                  });
+//                  var mailOptions = {
+//                    from: 'nodeemailsender@gmail.com',
+//                    to: req.body.email,
+//                    subject: 'Confirm your login to Comsats Student Portal',
+//                    text: 'Your Password is  ' + passwordgen
+//                  };
+//                  transporter.sendMail(mailOptions, function (error, info) {
+//                    if (error) {
+//                      console.log(error);
+//                    } else {
+//                      console.log('Email sent: ' + info.response);
+//                    }
+//                  });
+//
+//                  console.log(user);
+//                })
+//                .catch(err => {
+//                  res.status(500).json({
+//                    error: err
+//                  })
+//                });
+//            } else {
+//
+//              const user = new User({
+//                email: req.body.email,
+//                password: hash,
+//                username: req.body.username,
+//                department: req.body.department,
+//                registrationno: req.body.registration,
+//              });
+//              console.log(passwordgen);
+//              user.save()
+//                .then(result => {
+//                  res.status(201).json({
+//                    message: 'User Created',
+//                    result: result,
+//                  });
+//                  var transporter = nodemailer.createTransport({
+//                    service: 'gmail',
+//                    auth: {
+//                      user: 'nodeemailsender1@gmail.com',
+//                      pass: 'sendemailbynode'
+//                    }
+//                  });
+//                  var mailOptions = {
+//                    from: 'nodeemailsender@gmail.com',
+//                    to: req.body.email,
+//                    subject: 'Confirm your login to Comsats Student Portal',
+//                    text: 'Your Password is  ' + passwordgen
+//                  };
+//                  transporter.sendMail(mailOptions, function (error, info) {
+//                    if (error) {
+//                      console.log(error);
+//                    } else {
+//                      console.log('Email sent: ' + info.response);
+//                    }
+//                  });
+//                  console.log(user);
+//                })
+//                .catch(err => {
+//                  res.status(500).json({
+//                    error: err
+//                  })
+//                });
+//
+//            }
+//          });
+//      }
+//       else {
+//         return res.status(401).json({
+//          message: "invalid email"
+//        });
+//
+//      }
+//
+//
+//
+// });
 
 
 

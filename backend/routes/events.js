@@ -4,9 +4,19 @@ const multer = require("multer");
 
 const Event = require('../models/event');
 const User = require('../models/user');
-const checkAuth = require("../middleware/check-auth");
+const cloudinary = require("cloudinary");
+require('dotenv').config();
+const cloudinaryStorage = require("multer-storage-cloudinary");
 
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
@@ -14,6 +24,11 @@ const MIME_TYPE_MAP = {
   "image/jpg": "jpg"
 };
 
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "ComsatsSocial",
+  allowedFormats: ["jpg", "png"]
+});
 
 router.post(
   "",
@@ -116,25 +131,25 @@ router.get("", (req, res, next) => {
   }
 });
 
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid mime type");
-    if (isValid) {
-      error = null;
-    }
-    cb(error, "backend/images");
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname
-      .toLowerCase()
-      .split(" ")
-      .join("-");
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    cb(null, name + "-" + Date.now() + "." + ext);
-  }
-});
+//
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const isValid = MIME_TYPE_MAP[file.mimetype];
+//     let error = new Error("Invalid mime type");
+//     if (isValid) {
+//       error = null;
+//     }
+//     cb(error, "backend/images");
+//   },
+//   filename: (req, file, cb) => {
+//     const name = file.originalname
+//       .toLowerCase()
+//       .split(" ")
+//       .join("-");
+//     const ext = MIME_TYPE_MAP[file.mimetype];
+//     cb(null, name + "-" + Date.now() + "." + ext);
+//   }
+// });
 
 router.put(
   "/:id",
@@ -565,7 +580,7 @@ router.put("/addeventPost/:id",
                       username: user.username,
                       createdAt : Date.now(),
                       creator: req.userData.userId,
-                      imagePath: url + "/images/" + req.file.filename
+                      imagePath: req.file.url
                     });
                     event.eventPosts.push( post );
                     event.save((err) => {
@@ -582,16 +597,21 @@ router.put("/addeventPost/:id",
                           });
 
                           User.findOne({_id: element.Euserid}, (err, user2) => {
-                            user2.notifications.push(notification);
-                            user2.save((err) => {
-                              if(err) {
-                                console.log("error");
-                                // res.json({ success: false, message:'something went wrong'});
-                              } else {
-                                console.log("success");
+                            if(user2){
+                              user2.notifications.push(notification);
+                              user2.save((err) => {
+                                if(err) {
+                                  console.log("error");
+                                  // res.json({ success: false, message:'something went wrong'});
+                                } else {
+                                  console.log("success");
 
-                              }
-                            });
+                                }
+                              });
+                            } else {
+                              return;
+                            }
+
                           });
                         });
                         res.json({ success: true, message: 'posted!'});
@@ -621,15 +641,20 @@ router.put("/addeventPost/:id",
                           });
 
                           User.findOne({_id: element.Euserid}, (err, user2) => {
-                            user2.notifications.push(notification);
-                            user2.save((err) => {
-                              if(err) {
-                                console.log("error");
-                                // res.json({ success: false, message:'something went wrong'});
-                              } else {
-                                console.log("success");
-                              }
-                            });
+                            if(user2){
+                              user2.notifications.push(notification);
+                              user2.save((err) => {
+                                if(err) {
+                                  console.log("error");
+                                  // res.json({ success: false, message:'something went wrong'});
+                                } else {
+                                  console.log("success");
+
+                                }
+                              });
+                            } else {
+                              return;
+                            }
                           });
                         });
                         res.json({ success: true, message: 'posted!'});

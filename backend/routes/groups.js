@@ -2,17 +2,33 @@ const express = require("express");
 const multer = require("multer");
 
 const Group = require('../models/group');
-const checkAuth = require("../middleware/check-auth");
-
 const User = require('../models/user');
 
+const cloudinary = require("cloudinary");
+require('dotenv').config();
+const cloudinaryStorage = require("multer-storage-cloudinary");
+
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
   "image/jpeg": "jpg",
   "image/jpg": "jpg"
 };
+
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "ComsatsSocial",
+  allowedFormats: ["jpg", "png"]
+});
 
 router.post(
   "",
@@ -148,24 +164,24 @@ let count = 0;
     });
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid mime type");
-    if (isValid) {
-      error = null;
-    }
-    cb(error, "backend/images");
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname
-      .toLowerCase()
-      .split(" ")
-      .join("-");
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    cb(null, name + "-" + Date.now() + "." + ext);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const isValid = MIME_TYPE_MAP[file.mimetype];
+//     let error = new Error("Invalid mime type");
+//     if (isValid) {
+//       error = null;
+//     }
+//     cb(error, "backend/images");
+//   },
+//   filename: (req, file, cb) => {
+//     const name = file.originalname
+//       .toLowerCase()
+//       .split(" ")
+//       .join("-");
+//     const ext = MIME_TYPE_MAP[file.mimetype];
+//     cb(null, name + "-" + Date.now() + "." + ext);
+//   }
+// });
 
 router.put("/requestuser/:id",checkAuth,(req,res,next) => {
   console.log("getiing group");
@@ -205,14 +221,19 @@ router.put("/requestuser/:id",checkAuth,(req,res,next) => {
                   });
 
                   User.findOne({_id: group.groupcreator}, (err, user2) => {
-                    user2.notifications.push(notification);
-                    user2.save((err) => {
-                      if(err) {
-                        res.json({ success: false, message:'something went wrong'});
-                      } else {
-                        res.json({ success: true, message: 'requests sent!'});
-                      }
-                    });
+                    if(user2) {
+                      user2.notifications.push(notification);
+                      user2.save((err) => {
+                        if(err) {
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          res.json({ success: true, message: 'requests sent!'});
+                        }
+                      });
+                    } else {
+                      res.json({ success: true, message: 'requests sent!'});
+                    }
+
                   });
                 }
               });
@@ -322,14 +343,19 @@ router.put("/adduser/:id",checkAuth,(req,res,next) => {
                   });
 
                   User.findOne({_id: user._id}, (err, user2) => {
-                    user2.notifications.push(notification);
-                    user2.save((err) => {
-                      if(err) {
-                        res.json({ success: false, message:'something went wrong'});
-                      } else {
-                        res.json({ success: true, message: 'group joined!'});
-                      }
-                    });
+                    if(user2) {
+                      user2.notifications.push(notification);
+                      user2.save((err) => {
+                        if(err) {
+                          res.json({ success: false, message:'something went wrong'});
+                        } else {
+                          res.json({ success: true, message: 'group joined!'});
+                        }
+                      });
+                    } else {
+                      res.json({ success: true, message: 'group joined!'});
+                    }
+
                   });
                 }
               });
@@ -702,7 +728,7 @@ router.put("/addgroupPost/:id",
                       createdAt : Date.now(),
                       creator: req.userData.userId,
                       profileimg: user.imagePath,
-                      imagePath: url + "/images/" + req.file.filename
+                      imagePath: req.file.url
                     });
                     group.groupPosts.push( post );
                     group.save((err) => {
@@ -719,16 +745,22 @@ router.put("/addgroupPost/:id",
                           });
 
                           User.findOne({_id: element.Guserid}, (err, user2) => {
-                            user2.notifications.push(notification);
-                            user2.save((err) => {
-                              if(err) {
-                                console.log("error");
-                                // res.json({ success: false, message:'something went wrong'});
-                              } else {
-                                console.log("success");
+                           if(user2){
+                             user2.notifications.push(notification);
+                             user2.save((err) => {
+                               if(err) {
+                                 console.log("error");
+                                 // res.json({ success: false, message:'something went wrong'});
+                               } else {
+                                 console.log("success");
 
-                              }
-                            });
+                               }
+                             });
+                           }
+                           else{
+                             return;
+                           }
+
                           });
                         });
                         res.json({ success: true, message: 'posted!'});
@@ -759,16 +791,21 @@ router.put("/addgroupPost/:id",
                           });
 
                           User.findOne({_id: element.Guserid}, (err, user2) => {
-                            user2.notifications.push(notification);
-                            user2.save((err) => {
-                              if(err) {
-                                console.log("error");
-                                // res.json({ success: false, message:'something went wrong'});
-                              } else {
-                                console.log("success");
+                            if(user2){
+                              user2.notifications.push(notification);
+                              user2.save((err) => {
+                                if(err) {
+                                  console.log("error");
+                                  // res.json({ success: false, message:'something went wrong'});
+                                } else {
+                                  console.log("success");
 
-                              }
-                            });
+                                }
+                              });
+                            }
+                            else{
+                              return;
+                            }
                           });
                         });
                         res.json({ success: true, message: 'posted!'});

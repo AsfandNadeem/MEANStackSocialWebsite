@@ -5,10 +5,19 @@ const multer = require("multer");
 const User = require('../models/user');
 const Advertiser = require("../models/advertiserModel");
 const Advertisement = require("../models/advertisementModel");
-
-const checkAuth = require("../middleware/check-auth");
+const cloudinary = require("cloudinary");
+require('dotenv').config();
+const cloudinaryStorage = require("multer-storage-cloudinary");
 
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
@@ -16,24 +25,10 @@ const MIME_TYPE_MAP = {
   "image/jpg": "jpg"
 };
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid mime type");
-    if (isValid) {
-      error = null;
-    }
-    cb(error, "backend/images");
-  },
-
-  filename: (req, file, cb) => {
-    const name = file.originalname
-      .toLowerCase()
-      .split(" ")
-      .join("-");
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    cb(null, name + "-" + Date.now() + "." + ext);
-  }
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "ComsatsSocial",
+  allowedFormats: ["jpg", "png"]
 });
 
 router.post("/login", (req,res,next) => {
@@ -102,7 +97,7 @@ router.post(
         username: req.body.username,
         createdAt: Date.now(),
         adcreator: req.params.id,
-        imagePath: url + "/images/" + req.file.filename
+        imagePath: req.file.url
       });
 
 
