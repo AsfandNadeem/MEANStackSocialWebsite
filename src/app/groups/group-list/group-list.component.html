@@ -28,10 +28,8 @@
             <mat-card-title><strong>{{group.groupname}}</strong></mat-card-title>
 
 
-            <mat-card-subtitle>
-              {{ group.username }}
 
-            </mat-card-subtitle>
+            <mat-card-subtitle ><a style="text-decoration: none; color: black;" [routerLink]="['/user', group.creator]"><strong>{{group.username}}</strong></a></mat-card-subtitle>
           </li>
         </ul>
       </mat-card-header>

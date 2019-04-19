@@ -55,22 +55,24 @@
              [src]="post.profileimg" style="margin-right: 30px;" >
       </li>
       <li>
-        <mat-card-title><strong>{{post.username}}</strong></mat-card-title>
+        <mat-card-title *ngIf="!post.creator"><strong>Advertisement<br/><p style="color: grey;">{{post.username}}</p></strong></mat-card-title>
+        <mat-card-title *ngIf="post.creator"><a style="text-decoration: none; color: black;" [routerLink]="['/user', post.creator]"><strong>{{post.username}}</strong></a></mat-card-title>
 
 
         <mat-card-subtitle>
-          {{ post.title }}
-
+          <strong>
+            {{ post.title }}
+          </strong>
         </mat-card-subtitle>
       </li>
     </ul>
   </mat-card-header>
-  <!--<div class="post-image">-->
+  <br/>
   <img mat-card-image [hidden]="!post.imagePath" [src]="post.imagePath" [alt]="post.title">
   <!--</div>-->
 
   <mat-card-content>
-    <p>{{ post.content }}</p>
+    <p style="font-size: 26px !important;">{{ post.content }}</p>
     <strong>Date: </strong>{{ post.createdAt | date:'MMM dd, yyyy' }}
   </mat-card-content>
 

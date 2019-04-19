@@ -57,10 +57,12 @@ export class GroupsService {
           description: transformedGroupPost.groupdescription,
           groupcreator: transformedGroupPost.groupcreator
         });
-      } , error => {
-        console.log('error');
-        this.router.navigate(['/grouplist']).then();
-      });
+      }
+      // , error => {
+      //   console.log('error');
+      //   this.router.navigate(['/grouplist']).then();
+      // }
+      );
   }
 
   getPostUpdateListener() {

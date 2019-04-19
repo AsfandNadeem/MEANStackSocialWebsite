@@ -11,55 +11,32 @@
 
 
     </li>
-    <li *ngIf="userIsAuthenticated">
+    <li *ngIf="userIsAuthenticated" style="margin-right: 50px;">
 
     <a  mat-button routerLink="/eventlist" routerLinkActive="mat-accent">Events</a>
 
 
     </li>
-    <li *ngIf="userIsAuthenticated" >
-      <section style="color: black;" style="position: absolute !important;
+
+    <li *ngIf="userIsAuthenticated" style="width:400px;" >
+      <section style="color: black; position: absolute !important;
 
         /*top: -100px !important;*/
          z-index: 10;" >
         <div >
-          <input style=" color: black !important; background: white;" matInput [formControl]="queryField" type="text" placeholder="search..." />
+          <input style=" color: black !important; background: white; width: 300px;" matInput [formControl]="queryField" type="text" placeholder="search..." />
         </div>
         <ul style=" display: block;
 background: white;">
-        <li *ngFor="let result of results"  (click)="queryField.setValue('')">
-          <a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]" >{{ result.username}}</a>
+        <li *ngFor="let result of results; index as i"  (click)="queryField.setValue('')" >
+          <a style="text-decoration: none; color: black ; padding: 8px; margin-bottom: 5px; margin-top:3px;" [routerLink]="['/user', result._id]" >{{ result.username}}</a>
+          <mat-divider *ngIf="i < results.length - 1"></mat-divider>
         </li>
         <!--<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>-->
         </ul>
-        <!--<div >-->
-          <!--<input matInput [formControl]="queryField" type="text" placeholder="search..."  [matMenuTriggerFor]="createsearch" autofocus/>-->
-        <!--</div>-->
-        <!--<mat-menu #createsearch="matMenu">-->
-          <!--<button mat-menu-item *ngFor="let result of results" >-->
-            <!--<a style="text-decoration: none; color: grey ;" [routerLink]="['/user', result._id]">{{ result.username}}</a>-->
-            <!--{{result.username}} {{result._id}}-->
-          <!--</button>-->
-        <!--</mat-menu>-->
-        <!--<ul style="display: block !important;" >-->
-          <!--<li *ngFor="let result of results" >-->
-                         <!--{{result.username}}-->
-            <!--</li>-->
-            <!--&lt;!&ndash;<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>&ndash;&gt;-->
-        <!--</ul>-->
+
       </section>
-      <!--<section class="filter-wrapper">-->
-        <!--<div class="keyword-wrapper">-->
-          <!--<input [formControl]="queryField" type="text" id="keyword" placeholder="search for artists..." autofocus/>-->
-        <!--</div>-->
-        <!--<ul class="filter-select" style="display: block !important;">-->
-          <!--<li *ngFor="let result of results" class="filter-select-list">-->
-            <!--&lt;!&ndash;<img src="{{result.images['2']?.url}}" alt="" width="50" height="50">&ndash;&gt;-->
-            <!--<p class="artist-name">-->
-            <!--{{result.username}}</p>-->
-            <!--&lt;!&ndash;<span class="tags" *ngFor='let genre of result?.genres | slice:0:6'>{{genre}}</span>&ndash;&gt;-->
-        <!--</ul>-->
-      <!--</section>-->
+
     </li>
   </ul>
   <span class="spacer"></span>

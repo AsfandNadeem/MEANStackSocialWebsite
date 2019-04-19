@@ -26,8 +26,7 @@
         <ul style="list-style: none; display: flex;">
 
           <li>
-            <mat-card-title><strong>{{event.username}}</strong></mat-card-title>
-
+            <mat-card-title ><a style="text-decoration: none; color: black;" [routerLink]="['/user', event.creator]"><strong>{{event.username}}</strong></a></mat-card-title>
 
             <mat-card-subtitle>
               {{ event.eventname }}

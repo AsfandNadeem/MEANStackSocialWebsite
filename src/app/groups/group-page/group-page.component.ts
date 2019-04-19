@@ -26,8 +26,6 @@ export interface GroupRequests {
   styleUrls: ['./group-page.component.css']
 })
 export class GroupPageComponent implements OnInit {
-
-  panelOpenState: boolean;
   screenWidth: number;
   private screenWidth$ = new BehaviorSubject<number>(window.innerWidth);
   isLoading = false;
@@ -37,8 +35,6 @@ export class GroupPageComponent implements OnInit {
  groupMembers: GroupMembers[] = [];
   groupRequests: GroupRequests[] = [];
   posts: Post[] = [];
-  groups: Group[] = [];
-  events: Events[] = [];
   @Input() groupid: string;
   groupname: string;
   // eventdate: Date;
@@ -48,8 +44,6 @@ export class GroupPageComponent implements OnInit {
   userIsAuthenticated = false;
   private postsSub: Subscription;
   private authStatusSub: Subscription;
-  private groupsSub: Subscription;
-  private eventsSub: Subscription;
   private username: string;
    userId: string;
   @ViewChild('mat-drawer') sidenav: MatDrawer;
@@ -64,7 +58,6 @@ export class GroupPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.panelOpenState = false;
     this.screenWidth$.subscribe(width => {
       this.screenWidth = width;
     });
@@ -114,22 +107,6 @@ export class GroupPageComponent implements OnInit {
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
         this.userId = this.authService.getUserId();
-      });
-
-    console.log(this.groupsService.getJoinedGroups());
-    this.groupsSub = this.groupsService.getGroupUpdateListener()
-      .subscribe((groupData: { groups: Group[]}) => {
-        this.isLoading = false;
-        this.groups = groupData.groups;
-        console.log(this.groups);
-      });
-
-    console.log(this.eventsService.getJoinedEvents());
-    this.eventsSub = this.eventsService.getEventUpdateListener()
-      .subscribe((eventData: { events: Events[]}) => {
-        this.isLoading = false;
-        this.events = eventData.events;
-        console.log(this.events);
       });
     this.socket.on('refreshpage', (data) => {
       this.groupsService.getPosts(this.groupid);
@@ -237,7 +214,6 @@ export class GroupPageComponent implements OnInit {
      if (form.invalid) {
        return;
      }
-     this.panelOpenState = false;
     this.groupsService.updateGroup(this.groupid, form.value.groupname, form.value.description).
       subscribe(() => {
       this.groupsService.getPosts(this.groupid);

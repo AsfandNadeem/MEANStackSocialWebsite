@@ -39,7 +39,7 @@
       <p style="padding-top: 8px;"> admin: {{groupcreator}}</p>
       <mat-card-actions *ngIf="userId == groupcreatorid">
         <mat-accordion class="example-headers-align" >
-          <mat-expansion-panel  [class.mat-expansion-panel]="false" [expanded]="panelOpenState === true" hideToggle>
+          <mat-expansion-panel  [class.mat-expansion-panel]="false"  hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Edit
@@ -140,12 +140,13 @@
              [src]="post.profileimg" style="margin-right: 30px;" >
       </li>
       <li>
-        <mat-card-title><strong>{{post.username}}</strong></mat-card-title>
 
+        <mat-card-title *ngIf="post.creator"><a style="text-decoration: none; color: black;" [routerLink]="['/user', post.creator]"><strong>{{post.username}}</strong></a></mat-card-title>
 
         <mat-card-subtitle>
-          {{ post.title }}
-
+          <strong>
+            {{ post.title }}
+          </strong>
         </mat-card-subtitle>
       </li>
     </ul>
@@ -156,7 +157,7 @@
   <!--</div>-->
 
   <mat-card-content>
-    <p>{{ post.content }}</p>
+    <p style="font-size: 26px !important;">{{ post.content }}</p>
     <strong>Date: </strong>{{ post.createdAt | date:'MMM dd, yyyy' }}
   </mat-card-content>
 
