@@ -116,21 +116,21 @@ export class GroupPageComponent implements OnInit {
         this.userId = this.authService.getUserId();
       });
 
-    // console.log(this.groupsService.getJoinedGroups());
-    // this.groupsSub = this.groupsService.getGroupUpdateListener()
-    //   .subscribe((groupData: { groups: Group[]}) => {
-    //     this.isLoading = false;
-    //     this.groups = groupData.groups;
-    //     console.log(this.groups);
-    //   });
-    //
-    // console.log(this.eventsService.getJoinedEvents());
-    // this.eventsSub = this.eventsService.getEventUpdateListener()
-    //   .subscribe((eventData: { events: Events[]}) => {
-    //     this.isLoading = false;
-    //     this.events = eventData.events;
-    //     console.log(this.events);
-    //   });
+    console.log(this.groupsService.getJoinedGroups());
+    this.groupsSub = this.groupsService.getGroupUpdateListener()
+      .subscribe((groupData: { groups: Group[]}) => {
+        this.isLoading = false;
+        this.groups = groupData.groups;
+        console.log(this.groups);
+      });
+
+    console.log(this.eventsService.getJoinedEvents());
+    this.eventsSub = this.eventsService.getEventUpdateListener()
+      .subscribe((eventData: { events: Events[]}) => {
+        this.isLoading = false;
+        this.events = eventData.events;
+        console.log(this.events);
+      });
     this.socket.on('refreshpage', (data) => {
       this.groupsService.getPosts(this.groupid);
     });

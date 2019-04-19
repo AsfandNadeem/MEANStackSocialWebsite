@@ -1,9 +1,17 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {MessageService} from '../message.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import io from 'socket.io-client';
+import {Group} from '../groups/group.model';
+import {Events} from '../events/event.model';
+import {Notification} from '../posts/post-list/post-list.component';
+import {PostsService} from '../posts/posts.service';
+import {GroupsService} from '../groups/groups.service';
+import {EventsService} from '../events/events.service';
+import * as moment from 'moment';
+import {MatDrawer} from '@angular/material';
 
 @Component({
   selector: 'app-message',
@@ -11,6 +19,7 @@ import io from 'socket.io-client';
   styleUrls: ['./message.component.css']
 })
 export class MessageComponent implements OnInit, AfterViewInit {
+
   messagesArray = [];
   receiverId: string;
   user: any;
@@ -23,9 +32,11 @@ export class MessageComponent implements OnInit, AfterViewInit {
   typingMessage;
   // abc = '#init';
   typing = false;
+
   constructor(private authService: AuthService,
               private messageService: MessageService,
-              public route: ActivatedRoute) {
+              public route: ActivatedRoute, public postsService: PostsService,
+              private groupsService: GroupsService, private eventsService: EventsService) {
     this.socket = io('http://localhost:3000');
     }
 
@@ -47,8 +58,6 @@ export class MessageComponent implements OnInit, AfterViewInit {
 
       }
     });
-
-
     this.socket.on('refreshpage', () => {
       console.log('socket done');
       this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -76,6 +85,8 @@ export class MessageComponent implements OnInit, AfterViewInit {
 
     });
   }
+
+
 
   ngAfterViewInit() {
     const params = {

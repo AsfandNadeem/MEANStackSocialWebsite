@@ -1,7 +1,78 @@
-<div class="container" style="margin-top: 30px">
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" [opened]="screenWidth> 1000"  >
+    <mat-list style="
+      margin-top: 11px !important;"
+    >
+      <ul style="padding: 4px; font-family: Bahnschrift;">
+        <li>
+          <strong> Joined Groups </strong>
+        </li>
+        <li *ngFor="let group of groups" style="padding: 5px;">
+          <a style="text-decoration: none;" [routerLink]="['/grouppage', group.id]">{{ group.groupname}}</a>
+        </li>
+        <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
+          Following No Groups
+        </li>
+        <br/>
+        <li>
+          <strong> Joined Events </strong>
+        </li>
+        <li *ngFor="let event of events" style="padding: 5px;">
+          <a style="text-decoration: none; " [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
+        </li>
+        <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
+          No events joined
+        </li>
+
+      </ul>
+
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content  >
+    <div class="container" style="margin-top: 30px">
   <div class="row chatRow">
     <div class="col s12">
 <app-message></app-message>
     </div>
   </div>
 </div>
+  </mat-drawer-content>
+
+  <mat-drawer mode="side" [opened]="screenWidth> 1000" position="end">
+    <mat-list style="
+      margin-top: 11px !important;"
+    >
+      <ul style="padding: 4px; font-family: Bahnschrift;">
+        <mat-card class="example-card">
+          <strong> <mat-icon>alarm</mat-icon> Notifcations</strong>
+        </mat-card>
+        <mat-card class="example-card"*ngFor="let notification of notifications">
+          <mat-card-header >
+            <ul style="list-style: none; display: flex;">
+              <li>
+                <img *ngIf="notification.senderimage"
+                     class="example-header-image-post"
+                     [src]="notification.senderimage" style="margin-right: 10px;" >
+              </li>
+              <li>
+                <ul  style="list-style: none;">
+                  <li>
+                    {{notification.message}}
+                  </li>
+                  <li>
+                    <mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>
+                  </li>
+                </ul>
+
+              </li>
+            </ul>
+
+          </mat-card-header>
+        </mat-card>
+
+
+      </ul>
+
+    </mat-list>
+  </mat-drawer>
+</mat-drawer-container>

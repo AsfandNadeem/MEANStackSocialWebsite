@@ -378,6 +378,7 @@ console.log("getiing group");
     if (group) {
       if(group.groupmembersid.includes(req.userData.userId)) {
         console.log("group found");
+        postes = group.groupPosts.sort({ '_id': -1 });
         res.status(200).json({
           groupname: group.groupname,
           description: group.description,
@@ -385,7 +386,7 @@ console.log("getiing group");
           groupmembers: group.groupmembers,
           grouprequests: group.grouprequests,
           groupcreatorid: group.groupcreator,
-          posts: group.groupPosts.reverse()
+          posts: postes.reverse()
         });
         console.log(group.groupPosts);
       }
