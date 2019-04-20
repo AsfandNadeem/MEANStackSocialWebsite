@@ -1,5 +1,19 @@
+
+<p style="font-size: 22px; font-weight: bold; color: midnightblue; margin-left: 20px; margin-top: 50px;">Comsats Social helps you connect and share with the students around you.</p>
+
 <mat-card>
   <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-card-header>
+    <img
+      class="example-header-image-post"
+      [src]="'https://res.cloudinary.com/da6znvkjz/image/upload/v1555697890/ComsatsSocial/logo_ayv0eq.jpg'"
+      style="
+         margin-right: 30px;
+    width: 100px;
+    height: 64px;" >
+    <p style="font-size: 16px; font-weight: bold;">Login</p>
+  </mat-card-header>
+
   <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
     <mat-form-field>
       <input
@@ -11,8 +25,9 @@
         #emailInput="ngModel"
         required
         email
+        pattern="(fa|sp)[0-9]{2}-[a-z]{3}-[0-9]{3}@student.comsats.edu.pk"
       >
-      <mat-error *ngIf="emailInput.invalid">Please enter a valid email.</mat-error>
+      <mat-error *ngIf="emailInput.invalid">Please enter a valid comsats email.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -34,6 +49,8 @@
       type="submit" *ngIf="!isLoading">Login</button>
 
   </form>
+  <br/>
+  <p style="color: darkred;">{{message}}</p>
   <br/>
   <a mat-button routerLink="/advertise">Advertise With Us!</a>
 </mat-card>

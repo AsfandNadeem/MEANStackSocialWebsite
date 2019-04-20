@@ -59,6 +59,7 @@ import { AdvertisersignupComponent } from './auth/Advertiser/advertisersignup/ad
 import { AdvertiserpageComponent } from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
 import { AdminadvertisementsComponent } from './admin/adminadvertisements/adminadvertisements.component';
 import { VideochatComponent } from './videochat/videochat.component';
+import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
 
 @NgModule({
@@ -126,7 +127,8 @@ import { VideochatComponent } from './videochat/videochat.component';
     HttpClientModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
 , AuthService    ],
   bootstrap: [AppComponent]
 })

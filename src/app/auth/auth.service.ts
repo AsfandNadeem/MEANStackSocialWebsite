@@ -6,13 +6,14 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {Group} from '../groups/group.model';
+import {LoginComponent} from './login/login.component';
 
 const BASEUURL = 'http://localhost:3000';
 export interface Request {
   username: string;
   usersrid: string;
 }
-export interface Friend{
+export interface Friend {
   username: string;
   usersrid: string;
 }
@@ -20,7 +21,7 @@ export interface Friend{
   providedIn: 'root'
 })
 export class AuthService {
-
+  private logInErrorSubject = new Subject<string>();
   private isAuthenticated = false;
   private isadvertiserAuthenticated = false;
   private token: string;
@@ -29,6 +30,7 @@ export class AuthService {
   private tokenTimer: any;
   private userId: string;
   userN: string;
+  message: string;
   private requests: Request[] = [];
   private requetsUpdated = new Subject<{requests: Request[], groupCount: number}>();
   private friends: Friend[] = [];
@@ -39,6 +41,9 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  public getLoginErrors(): Subject <string> {
+    return this.logInErrorSubject;
+  }
   getToken() {
     return this .token;
   }
@@ -65,6 +70,10 @@ export class AuthService {
 
   getUserId() {
     return this.userId;
+  }
+  getMessage() {
+    console.log(this.message);
+    return this.message;
   }
 
   createUser(email: string, image: File, username: string, department: string, registration: string ) {
@@ -101,7 +110,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     // const authData: AuthData = {email: email, password: password};
-    this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string, profileimg: any}>(
+    return this.http.post<{token: string, expiresIn: number, userId: string, username: string, department: string, profileimg: any}>(
       `${BASEUURL}/api/user/login`,
       {email, password})
       .subscribe( response => {
@@ -125,8 +134,11 @@ export class AuthService {
           this.router.navigate(['/messages']).then();
         }
       } , error => {
+        this.message = 'invalid Email or Password';
+        this.logInErrorSubject.next(this.message);
         console.log('error');
-        this.router.navigate(['/login']).then();
+       // this.LopginCo.message = this.message;
+        // this.router.navigate(['/login']).then();
     });
 
   }

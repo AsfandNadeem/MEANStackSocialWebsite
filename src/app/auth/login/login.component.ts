@@ -11,8 +11,12 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit , OnDestroy {
 
   isLoading = false;
-
-  constructor(public authService: AuthService, private router: Router) {}
+message = '';
+  constructor(public authService: AuthService, private router: Router) {
+    this.authService.getLoginErrors().subscribe(error => {
+      this.message = error;
+    });
+  }
 
   ngOnInit() {
     this.isLoading = false;
@@ -26,7 +30,7 @@ export class LoginComponent implements OnInit , OnDestroy {
   }
 
   onLogin(form: NgForm) {
-    console.log(form.value.email + '' + form.value.password)
+    console.log(form.value.email + '' + form.value.password);
     if (form.invalid) {
       return;
     }

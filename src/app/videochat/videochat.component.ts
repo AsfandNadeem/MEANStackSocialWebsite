@@ -1,4 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {AuthService} from '../auth/auth.service';
 
 @Component({
   selector: 'app-videochat',
@@ -17,15 +19,17 @@ export class VideochatComponent implements OnInit {
   peer: any;
   n = <any>navigator;
 
-
+  constructor(private authService: AuthService, public route: ActivatedRoute) {
+  }
 
   ngOnInit() {
+    console.log(location.hash);
     const video = this.myVideo.nativeElement;
     let peerx: any;
     this.n.getUserMedia = (this.n.getUserMedia || this.n.webkitGetUserMedia || this.n.mozGetUserMedia || this.n.msGetUserMedia);
-    this.n.getUserMedia({video: true, audio: true}, function(stream) {
+   this.n.getUserMedia({video: true, audio: true}, function(stream) {
       peerx = new SimplePeer ({
-        initiator: location.hash === '#init',
+        initiator: location.hash === '#/videochatstart',
         trickle: false,
         stream: stream
       })

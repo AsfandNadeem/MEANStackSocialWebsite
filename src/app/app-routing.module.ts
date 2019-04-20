@@ -53,7 +53,7 @@ const routes: Routes = [
   { path: 'archives', component: ArchivedpostsComponent, canActivate: [AuthGuard]},
   {path: 'grouppage/:groupId', component: GroupPageComponent, canActivate: [AuthGuard]},
   {path: 'eventpage/:eventId', component: EventPageComponent, canActivate: [AuthGuard]},
-  // {path: 'videochat/#init', component: VideochatComponent},
+  {path: 'videochatstart', component: VideochatComponent},
   {path: 'videochat', component: VideochatComponent}
 ];
 
