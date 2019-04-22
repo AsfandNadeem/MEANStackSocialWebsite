@@ -1,0 +1,53 @@
+
+[
+  {
+    "text": "javascript",
+    "category": "computerscience"
+  },
+  {
+    "text": "c##",
+    "category": "computerscience"
+  },
+  {
+    "text": "node",
+    "category": "computerscience"
+  },
+  {
+    "text": "node.js",
+    "category": "computerscience"
+  },
+  {
+    "text": "angular",
+    "category": "computerscience"
+  },
+  {
+    "text": "program",
+    "category": "computerscience"
+  },
+  {
+    "text": "web",
+    "category": "computerscience"
+  },
+  {
+    "text": "python",
+    "category": "computerscience"
+  },
+  
+  {
+    "text": "job",
+    "category": "job"
+    
+  },
+  {
+    "text":"hiring",
+    "category":"job"
+  },
+  {
+    "text":"hire",
+    "category":"job"
+  },
+  {
+    "text":"openings",
+    "category":"job"
+  }
+]

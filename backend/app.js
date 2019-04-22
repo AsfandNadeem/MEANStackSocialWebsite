@@ -12,7 +12,8 @@ const messageRoutes = require("./routes/messages");
 const advertisementRoutes = require("./routes/advertisements");
 
 const app = express();
-mongoose.connect("mongodb://127.0.0.1/FYP_Social")
+
+mongoose.connect(process.env.MLAB_CON)
   .then(()=>{
     console.log('Connected to database');
   })
@@ -20,6 +21,16 @@ mongoose.connect("mongodb://127.0.0.1/FYP_Social")
     console.log(error);
     console.log("Connection failed");
   });
+// mongoose.connect("mongodb://127.0.0.1/FYP_Social")
+//   .then(()=>{
+//     console.log('Connected to database');
+//   })
+//   .catch(error =>{
+//     console.log(error);
+//     console.log("Connection failed");
+//   });
+
+
 // mongoose.connect("mongodb://asfand:Nj3atbLzmaV5WZHJ@comsatssocial-shard-00-00-y7oqn.mongodb.net:27017,comsatssocial-shard-00-01-y7oqn.mongodb.net:27017,comsatssocial-shard-00-02-y7oqn.mongodb.net:27017/socialdb?ssl=true&replicaSet=ComsatsSocial-shard-0&authSource=admin&retryWrites=true")
 //   .then(()=>{
 //     console.log('Connected to database');

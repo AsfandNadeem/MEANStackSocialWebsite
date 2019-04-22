@@ -19,6 +19,7 @@ const userSchema = mongoose.Schema({
   archives: [{type: mongoose.Schema.Types.ObjectId, ref: "Post"}],
   eventsjoined: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}],
   groupsjoined: [{type: mongoose.Schema.Types.ObjectId, ref: "Group"}],
+  categories: [{types: String}],
   notifications: [
     {
       senderId: {type: mongoose.Schema.Types.ObjectId, ref: "User"},

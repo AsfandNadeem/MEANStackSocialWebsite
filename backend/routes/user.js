@@ -690,7 +690,7 @@ router.get("/notifications",checkAuth, (req,res,next) => {
   let fetchedUser;
  userQuery.then(documents => {
    fetchedUser = documents;
-   return User.count();
+   return documents.notifications.length;
  })
    .then(count => {
      console.log("_________________________________________________________\n"+fetchedUser.notifications);

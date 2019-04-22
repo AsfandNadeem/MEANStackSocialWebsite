@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 
 const Post = require("../models/post");
+const Category = require("../models/categories");
 const User = require('../models/user');
 const Advertiser = require("../models/advertiserModel");
 const Advertisement = require("../models/advertisementModel");
@@ -9,7 +10,7 @@ const Report = require("../models/report");
 const cloudinary = require("cloudinary");
 require('dotenv').config();
 const cloudinaryStorage = require("multer-storage-cloudinary");
-
+var keyword_extractor = require("keyword-extractor");
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
 
@@ -154,46 +155,7 @@ router.post(
       }
     });
 
-    // if(req.file) {
-    //   const post = new Post({
-    //     title: req.body.title,
-    //     content: req.body.content,
-    //     username: "Advertisement",
-    //     createdAt: Date.now(),
-    //     category: req.body.category,
-    //     imagePath: url + "/images/" + req.file.filename
-    //   });
-    //
-    //
-    //   post.save().then(createdPost => {
-    //     res.status(201).json({
-    //       message: "Post added successfully",
-    //       post: {
-    //         ...createdPost,
-    //         id: createdPost._id
-    //       }
-    //     });
-    //   });
-    // }
-    // else {
-    //   const post = new Post({
-    //     title: req.body.title,
-    //     content: req.body.content,
-    //     username: "Advertisement",
-    //     createdAt: Date.now(),
-    //     category: req.body.category
-    //   });
-    //
-    //   post.save().then(createdPost => {
-    //     res.status(201).json({
-    //       message: "Post added successfully",
-    //       post: {
-    //         ...createdPost,
-    //         id: createdPost._id
-    //       }
-    //     });
-    //   });
-    // }
+
   });
 
 router.post(
@@ -227,6 +189,31 @@ router.post(
 
 
             post.save().then(createdPost => {
+
+              // var keyword_extractor = require("keyword-extractor");
+              //
+              var sentence = req.body.content.toString();
+              var extraction_result = keyword_extractor.extract(sentence,{
+                language:"english",
+                remove_digits: true,
+                return_changed_case:true,
+                remove_duplicates: false
+              });
+              //
+              const data = require('../data.json');
+              //
+              extraction_result.forEach(function(index){
+                for (let i=0, len=data.length; i<len; i++){
+
+                  if(data[i].text==index){
+                    console.log(data[i].text +' is of category '+ data[i].category);
+
+                  }
+                }
+
+
+              });
+
               res.status(201).json({
                 message: "Post added successfully",
                 post: {
@@ -248,6 +235,35 @@ router.post(
             });
 
             post.save().then(createdPost => {
+
+              // var keyword_extractor = require("keyword-extractor");
+              //
+              var sentence = req.body.content.toString();
+              var extraction_result = keyword_extractor.extract(sentence,{
+                language:"english",
+                remove_digits: true,
+                return_changed_case:true,
+                remove_duplicates: false
+              });
+              //
+              const data = require('../data.json');
+              //
+              extraction_result.forEach(function(index){
+                for (let i=0, len=data.length; i<len; i++){
+
+                  if(data[i].text==index){
+                    console.log(data[i].text +' is of category '+ data[i].category);
+
+                    // const category = new Category({
+                    //   cattitle: data[i].category,
+                    //   postsids:  [createdPost._id]
+                    // });
+
+                  }
+                }
+
+
+              });
               res.status(201).json({
                 message: "Post added successfully",
                 post: {
@@ -375,7 +391,6 @@ router.get("/user/:id", (req, res, next) => {
     postQuery
       .then(documents => {
         fetchedPosts = documents;
-        user = documents[0].username;
         console.log(user);
         return fetchedPosts.length;
       })
@@ -652,21 +667,25 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                                     senderimage: user.imagePath,
                                     message: user.username.toString() + " likes your post",
                                   });
+                                  if(post.creator == req.userData.userId) {
+                                    res.json({success: true, message: 'post liked!'});
+                                  } else {
+                                    User.findOne({_id: post.creator}, (err, user2) => {
+                                      if(user2) {
+                                        user2.notifications.push(notification);
+                                        user2.save((err) => {
+                                          if (err) {
+                                            res.json({success: false, message: 'something went wrong'});
+                                          } else {
+                                            res.json({success: true, message: 'post liked!'});
+                                          }
+                                        });
+                                      } else {
+                                        res.json({success: true, message: 'post liked!'});
+                                      }
+                                    });
+                                  }
 
-                                  User.findOne({_id: post.creator}, (err, user2) => {
-                                    if(user2) {
-                                      user2.notifications.push(notification);
-                                      user2.save((err) => {
-                                        if (err) {
-                                          res.json({success: false, message: 'something went wrong'});
-                                        } else {
-                                          res.json({success: true, message: 'post liked!'});
-                                        }
-                                      });
-                                    } else {
-                                      res.json({success: true, message: 'post liked!'});
-                                    }
-                                  });
                                 }
                               }
                             });
@@ -699,22 +718,26 @@ router.put("/likePost/:id",checkAuth,(req,res) =>{
                                     senderimage: user.imagePath,
                                     message: user.username.toString() + " likes your post",
                                   });
+if(post.creator == req.userData.userId) {
+  res.json({success: true, message: 'post liked!'});
+} else {
+  User.findOne({_id: post.creator}, (err, user2) => {
+    if(user2) {
+      user2.notifications.push(notification);
+      user2.save((err) => {
+        if (err) {
+          res.json({success: false, message: 'something went wrong'});
+        } else {
+          res.json({success: true, message: 'post liked!'});
+        }
+      });
+    } else {
+      res.json({success: true, message: 'post liked!'});
+    }
 
-                                  User.findOne({_id: post.creator}, (err, user2) => {
-                                    if(user2) {
-                                      user2.notifications.push(notification);
-                                      user2.save((err) => {
-                                        if (err) {
-                                          res.json({success: false, message: 'something went wrong'});
-                                        } else {
-                                          res.json({success: true, message: 'post liked!'});
-                                        }
-                                      });
-                                    } else {
-                                      res.json({success: true, message: 'post liked!'});
-                                    }
+  });
+}
 
-                                  });
 
                                 }
 
@@ -805,22 +828,26 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                                   message: user.username.toString() + " dislikes your post",
                                 });
 
-                                User.findOne({_id: post.creator}, (err, user2) => {
-                                  if(user2){
-                                    user2.notifications.push(notification);
-                                    user2.save((err) => {
-                                      if (err) {
-                                        res.json({success: false, message: 'something went wrong'});
-                                      } else {
-                                        res.json({success: true, message: 'post disliked!'});
-                                      }
-                                    });
-                                  }
-                                  else{
-                                    res.json({success: true, message: 'post disliked!'});
-                                  }
+                                if(post.creator == req.userData.userId){
+                                  res.json({success: true, message: 'post disliked!'});
+                                }
+                                else {
+                                  User.findOne({_id: post.creator}, (err, user2) => {
+                                    if(user2) {
+                                      user2.notifications.push(notification);
+                                      user2.save((err) => {
+                                        if (err) {
+                                          res.json({success: false, message: 'something went wrong'});
+                                        } else {
+                                          res.json({success: true, message: 'post disliked!'});
+                                        }
+                                      });
+                                    } else {
+                                      res.json({success: true, message: 'post disliked!'});
+                                    }
 
-                                });
+                                  });
+                                }
                               }
                             }
                           });
@@ -850,22 +877,27 @@ router.put("/dislikePost/:id",checkAuth,(req,res) =>{
                                   senderimage: user.imagePath,
                                   message: user.username.toString() + " dislikes your post",
                                 });
+                                if(post.creator == req.userData.userId){
+                                  res.json({success: true, message: 'post disliked!'});
+                                }
+                                else {
+                                  User.findOne({_id: post.creator}, (err, user2) => {
+                                    if(user2) {
+                                      user2.notifications.push(notification);
+                                      user2.save((err) => {
+                                        if (err) {
+                                          res.json({success: false, message: 'something went wrong'});
+                                        } else {
+                                          res.json({success: true, message: 'post disliked!'});
+                                        }
+                                      });
+                                    } else {
+                                      res.json({success: true, message: 'post disliked!'});
+                                    }
 
-                                User.findOne({_id: post.creator}, (err, user2) => {
-                                  if(user2) {
-                                    user2.notifications.push(notification);
-                                    user2.save((err) => {
-                                      if (err) {
-                                        res.json({success: false, message: 'something went wrong'});
-                                      } else {
-                                        res.json({success: true, message: 'post disliked!'});
-                                      }
-                                    });
-                                  } else {
-                                    res.json({success: true, message: 'post disliked!'});
-                                  }
+                                  });
+                                }
 
-                                });
                               }
                             }
                           });
@@ -944,22 +976,27 @@ router.put("/comment/:id",checkAuth, (req,res) => {
                             senderName: user.username,
                             message: user.username.toString() + " commented on your post",
                           });
+if(post.creator == req.userData.userId){
+  res.json({success: true, message: 'comment added'});
+}
+else{
+  User.findOne({_id: post.creator}, (err, user2) => {
+    if(user2){
+      user2.notifications.push(notification);
+      user2.save((err) => {
+        if (err) {
+          res.json({success: false, message: 'something went wrong'});
+        } else {
+          res.json({success: true, message: 'comment added'});
+        }
+      });
+    } else {
+      res.json({success: true, message: 'comment added'});
+    }
 
-                          User.findOne({_id: post.creator}, (err, user2) => {
-                            if(user2){
-                              user2.notifications.push(notification);
-                              user2.save((err) => {
-                                if (err) {
-                                  res.json({success: false, message: 'something went wrong'});
-                                } else {
-                                  res.json({success: true, message: 'comment added'});
-                                }
-                              });
-                            } else {
-                              res.json({success: true, message: 'comment added'});
-                            }
+  });
+}
 
-                          });
                         }
                         }
                       });
