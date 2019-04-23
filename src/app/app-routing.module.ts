@@ -26,6 +26,7 @@ import {AdvertisersignupComponent} from './auth/Advertiser/advertisersignup/adve
 import {AdvertiserpageComponent} from './auth/Advertiser/advertiserpage/advertiserpage/advertiserpage.component';
 import {AdminadvertisementsComponent} from './admin/adminadvertisements/adminadvertisements.component';
 import {VideochatComponent} from './videochat/videochat.component';
+import {SuugestionspostsComponent} from './posts/suugestionsposts/suugestionsposts.component';
 
 const routes: Routes = [
   {path: 'admin', component: AdminLoginComponent},
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: '' , component: LoginComponent},
   {path: 'advertiserpage', component: AdvertiserpageComponent},
   { path: 'messages' , component: PostListComponent, canActivate: [AuthGuard] },
+  { path: 'recommendations' , component: SuugestionspostsComponent, canActivate: [AuthGuard] },
   {path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'edit/:postId', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent},

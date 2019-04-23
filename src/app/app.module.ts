@@ -60,6 +60,7 @@ import { AdvertiserpageComponent } from './auth/Advertiser/advertiserpage/advert
 import { AdminadvertisementsComponent } from './admin/adminadvertisements/adminadvertisements.component';
 import { VideochatComponent } from './videochat/videochat.component';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import { SuugestionspostsComponent } from './posts/suugestionsposts/suugestionsposts.component';
 
 
 @NgModule({
@@ -94,7 +95,8 @@ import {HashLocationStrategy, LocationStrategy} from '@angular/common';
     AdvertisersignupComponent,
     AdvertiserpageComponent,
     AdminadvertisementsComponent,
-    VideochatComponent
+    VideochatComponent,
+    SuugestionspostsComponent
   ],
   imports: [
     BrowserModule,

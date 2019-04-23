@@ -49,5 +49,9 @@
   {
     "text":"openings",
     "category":"job"
+  },
+  {
+    "text":"bba",
+    "category":"businessadministration"
   }
 ]

@@ -1,0 +1,267 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" [opened]="screenWidth> 1000">
+    <mat-list style="
+      margin-top: 11px !important;"
+    >
+      <ul style="padding: 4px; font-family: Bahnschrift;">
+        <li>
+          <strong> Joined Groups </strong>
+        </li>
+        <li *ngFor="let group of groups" style="padding: 5px;">
+          <a style="text-decoration: none;" [routerLink]="['/grouppage', group.id]">{{ group.groupname}}</a>
+        </li>
+        <li *ngIf="groups.length < 1" style="padding: 5px; color: gray;">
+          Following No Groups
+        </li>
+        <br/>
+        <li>
+          <strong> Joined Events </strong>
+        </li>
+        <li *ngFor="let event of events" style="padding: 5px;">
+          <a style="text-decoration: none; " [routerLink]="['/eventpage', event.id]">{{ event.eventname}}</a>
+        </li>
+        <li *ngIf="events.length<1" style="padding: 5px; color: gray;">
+          No events joined
+        </li>
+
+      </ul>
+
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content  >
+
+
+    <mat-card class="example-card" id="container">
+      <mat-card-header >
+        <ul style="list-style: none; display: flex;">
+          <li>
+            <img
+
+              class="example-header-image"
+              [src]="profileimg" >
+            <!--<img-->
+
+            <!--class="example-header-image"-->
+            <!--src="data:image/jpeg;base64,{{profileimg}}" >-->
+          </li>
+          <li>
+            <mat-card-title>Hello {{username}}</mat-card-title>
+            <mat-card-subtitle>Having a Good Day?</mat-card-subtitle>
+          </li>
+        </ul>
+      </mat-card-header>
+    </mat-card>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <mat-card class="example-card" *ngFor="let post of posts  "
+              [hidden]="post.creator == userId">
+      <mat-card-header>
+        <ul style="list-style: none; display: flex;">
+          <li>
+            <img
+              [hidden]="!post.profileimg"
+              class="example-header-image-post"
+              [src]="post.profileimg" style="margin-right: 30px;" >
+          </li>
+          <li>
+            <mat-card-title *ngIf="!post.creator"><strong>Advertisement<br/><p style="color: grey;">{{post.username}}</p></strong></mat-card-title>
+            <mat-card-title *ngIf="post.creator"><a style="text-decoration: none; color: black;" [routerLink]="['/user', post.creator]"><strong>{{post.username}}</strong></a></mat-card-title>
+
+
+            <mat-card-subtitle>
+              <strong>
+                {{ post.title }}
+              </strong>
+            </mat-card-subtitle>
+          </li>
+        </ul>
+      </mat-card-header>
+      <br/>
+      <!--<div class="post-image">-->
+      <img [hidden]="!post.imagePath" [src]="post.imagePath" [alt]="post.title" mat-card-image>
+      <!--</div>-->
+      <!--[src]="post.imagePath" [alt]="post.title"-->
+      <mat-card-content>
+        <p style="font-size: 26px !important;">{{ post.content }}</p>
+        <strong>Date: </strong>{{ post.createdAt | date:'MMM dd, yyyy' }}
+      </mat-card-content>
+
+      <button mat-icon-button  (click)="likePost(post.id,post)" >
+        <mat-icon *ngIf="post.likedBy.includes(userId)" color="primary" >thumb_up</mat-icon>
+        <mat-icon *ngIf="!post.likedBy.includes(userId)"  >thumb_up</mat-icon>
+        {{ post.likes }}
+      </button>
+
+
+
+
+      <button mat-icon-button (click)="dislikePost(post.id)" >
+        <mat-icon *ngIf="post.dislikedBy.includes(userId)" color="primary" >thumb_down</mat-icon>
+        <mat-icon *ngIf="!post.dislikedBy.includes(userId)"  >thumb_down</mat-icon>
+        {{ post.dislikes }}
+      </button>
+
+      <br/>
+
+      <mat-accordion class="example-headers-align" >
+        <mat-expansion-panel  [class.mat-expansion-panel]="false" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+
+              <mat-icon >comment</mat-icon>
+              {{ post.commentsNo }}
+
+            </mat-panel-title>
+
+          </mat-expansion-panel-header>
+
+          <ul class="commentspanel">
+            <form (submit)="addComment(post, commentForm)" #commentForm="ngForm" >
+              <li >
+                <mat-form-field style="width:700px; !important; " >
+                  <input  matInput
+                          type="text"
+                          placeholder="Add a Comment"
+                          ngModel
+                          #commentInput="ngModel"
+                          required
+                          name="comment"
+                          comment>
+                  <!--matInput-->
+                  <!--type="text"-->
+                  <!--placeholder="new name"-->
+                  <!--ngModel-->
+                  <!--#groupnameInput="ngModel"-->
+                  <!--required-->
+                  <!--name="groupname"-->
+                  <!--groupname-->
+                  <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
+
+                </mat-form-field>
+              </li>
+              <li>
+                <button mat-raised-button color="primary"
+                        mat-raised-button
+                        type="submit">
+                  <mat-icon >send</mat-icon>
+                </button>
+              </li>
+            </form>
+          </ul>
+
+          <mat-list style="list-style: none;">
+            <mat-list-item *ngFor="let comment of post.comments" style="margin:0;">
+              <strong>{{comment.commentator}}: &nbsp; </strong>
+
+              <p style="margin-bottom: 0px !important;">
+                {{comment.comment}}
+              </p>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+
+          </mat-list>
+
+          <!--<mat-card class="example-card" style="width:80% !important;" *ngFor="let comment of post.comments">-->
+
+
+          <!--<mat-card-content>-->
+          <!--<strong>{{comment.commentator}}</strong>-->
+          <!--<br/>-->
+          <!--<p>-->
+          <!--{{comment.comment}}-->
+          <!--</p>-->
+          <!--</mat-card-content>-->
+
+          <!--</mat-card>-->
+
+
+
+
+
+
+
+        </mat-expansion-panel>
+
+
+
+
+
+
+      </mat-accordion>
+
+      <mat-card-actions *ngIf="userId != post.creator">
+        <!--<button mat-button  color="warn" (click)="onArchive(post.id)">SAVE</button>-->
+        <mat-accordion class="example-headers-align" >
+          <mat-expansion-panel  [class.mat-expansion-panel]="false" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Report
+
+              </mat-panel-title>
+
+            </mat-expansion-panel-header>
+
+            <ul class="commentspanel">
+
+
+            </ul>
+
+
+          </mat-expansion-panel>
+
+
+
+
+
+
+        </mat-accordion>
+      </mat-card-actions>
+      <!--<mat-card-actions *ngIf="userIsAuthenticated && userId == post.creator">-->
+        <!--&lt;!&ndash;<button mat-button  color="warn" (click)="onDelete(post.id)">DELETE</button>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>&ndash;&gt;-->
+
+      <!--</mat-card-actions>-->
+    </mat-card>
+
+    <!--<mat-paginator style="background-color: #FAFAFA;" [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions"  (page)="onChangedPage($event)"-->
+                   <!--*ngIf="posts.length > 0"></mat-paginator>-->
+
+    <p  class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No recommendations yet!</p>
+  </mat-drawer-content>
+  <mat-drawer mode="side" [opened]="screenWidth> 1000" position="end">
+    <mat-list style="
+      margin-top: 11px !important;"
+    >
+      <ul style="padding: 4px; font-family: Bahnschrift;">
+        <mat-card class="example-card">
+          <strong> <mat-icon>alarm</mat-icon> Notifcations</strong>
+        </mat-card>
+        <mat-card class="example-card"*ngFor="let notification of notifications">
+          <mat-card-header >
+            <ul style="list-style: none; display: flex;">
+              <li>
+                <img *ngIf="notification.senderimage"
+                     class="example-header-image-post"
+                     [src]="notification.senderimage" style="margin-right: 10px;" >
+              </li>
+              <li>
+                <ul  style="list-style: none;">
+                  <li>
+                    {{notification.message}}
+                  </li>
+                  <li>
+                    <mat-card-subtitle>{{TimeFromNow(notification.created)}}</mat-card-subtitle>
+                  </li>
+                </ul>
+
+              </li>
+            </ul>
+
+          </mat-card-header>
+        </mat-card>
+
+
+      </ul>
+
+    </mat-list>
+  </mat-drawer>
+</mat-drawer-container>

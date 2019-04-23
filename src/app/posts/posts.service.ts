@@ -29,6 +29,8 @@ export class PostsService {
   private notificationUpdated = new Subject<{notifications: Notification[], notificationCount: number}>();
   private posts: Post[] = [];
   private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
+  private suggestionposts: Post[] = [];
+  private suggestionpostsUpdated = new Subject<{posts: Post[], postCount: number}>();
   private archivedposts: Post[] = [];
   private archivedpostsUpdated = new Subject<{posts: Post[], postCount: number}>();
   private advertisements: Advertisement[] = [];
@@ -157,6 +159,48 @@ export class PostsService {
   getPostUpdateListener() {
     return this.postsUpdated.asObservable();
   }
+
+  getSuggestionPosts() { // httpclientmodule
+
+    this.http
+      .get<{message: string, posts: any,  username: string, maxPosts: number}>(
+        `${BASEUURL}/api/posts/recommendations`
+      )
+      .pipe(map((postData) => {
+        return {  posts: postData.posts.map(post => {
+            return {
+              profileimg: post.profileimg,
+              title: post.title,
+              content: post.content,
+              id: post._id,
+              username : post.username,
+              creator: post.creator,
+              likes: post.likes,
+              likedBy: post.likedBy,
+              dislikedBy: post.dislikedBy,
+              category: post.category,
+              commentsNo: post.commentsNo,
+              comments: post.comments,
+              dislikes: post.dislikes,
+              createdAt: post.createdAt,
+              imagePath: post.imagePath
+            };
+          }), maxPosts: postData.maxPosts  };
+      }))// change rterieving data
+      .subscribe(transformedPostData => {
+        this.suggestionposts = transformedPostData.posts;
+        this.suggestionpostsUpdated.next({
+            posts: [...this.suggestionposts],
+            postCount: transformedPostData.maxPosts
+          }
+        );
+      }); // subscribe is to liosten
+  }
+
+  getSuggestionPostUpdateListener() {
+    return this.suggestionpostsUpdated.asObservable();
+  }
+
   getNotifications() {
     this.http
       .get<{message: string, notifications: any,  username: string, maxNotifictaions: number}>(

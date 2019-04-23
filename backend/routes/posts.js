@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-
+var natural = require('natural');
 const Post = require("../models/post");
 const Category = require("../models/categories");
 const User = require('../models/user');
@@ -13,7 +13,7 @@ const cloudinaryStorage = require("multer-storage-cloudinary");
 var keyword_extractor = require("keyword-extractor");
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
-
+stemmer = natural.PorterStemmer;
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
@@ -31,6 +31,45 @@ const storage = cloudinaryStorage({
   cloudinary: cloudinary,
   folder: "ComsatsSocial",
   allowedFormats: ["jpg", "png"]
+});
+
+router.get("/recommendations", checkAuth, (req,res,next) => {
+
+ const catQuery = Category.find({usersids: req.userData.userId}).sort({ '_id': -1 });
+  catQuery
+    .then(categories => {
+      var posts=[];
+      categories.forEach(function (onecategory) {
+        console.log(onecategory.cattitle);
+        posts.push(new Promise(function(resolsve,reject){
+
+          Post.findOne({
+            '_id': { $in: onecategory.postsids}
+          })
+            .then(p =>{
+
+              resolsve(p);
+
+            });
+        }));
+
+
+      });
+      Promise.all(posts).then(function (results) {
+        // uniqueArray = results.filter(function (iten,pos) {
+        //   return
+        // });
+
+        res.status(200).json({
+          message: "Posts fetched successfully!",
+          posts: results,
+          maxPosts: results.length
+        });
+      });
+      // console.log(results)
+      // console.log("_______________________________________"+ fetchedPosts);
+    });
+  // console.log("_______________________________________"+ fetchedPosts);
 });
 
 router.post("/postmobile",
@@ -205,9 +244,11 @@ router.post(
               extraction_result.forEach(function(index){
                 for (let i=0, len=data.length; i<len; i++){
 
+                 var stem = stemmer.stem(data[i].text);
+                 console.log(stem);
                   if(data[i].text==index){
-                    console.log(data[i].text +' is of category '+ data[i].category);
-
+                    // console.log(data[i].text +' is of category '+ data[i].category);
+                    console.log(stem +' is of category '+ data[i].category);
                   }
                 }
 
@@ -250,14 +291,34 @@ router.post(
               //
               extraction_result.forEach(function(index){
                 for (let i=0, len=data.length; i<len; i++){
-
+                  var stem = stemmer.stem(data[i].text);
+                  // console.log(stem);
                   if(data[i].text==index){
-                    console.log(data[i].text +' is of category '+ data[i].category);
-
+                    // console.log(data[i].text +' is of category '+ data[i].category);
+                    console.log(stem +' is of category '+ data[i].category);
                     // const category = new Category({
                     //   cattitle: data[i].category,
                     //   postsids:  [createdPost._id]
                     // });
+                   Category.findOne({cattitle: data[i].category}, (err, categ) => {
+                     console.log(categ);
+                     if(categ) {
+                       categ.postsids.push(createdPost._id);
+                       categ.usersids.push(req.userData.userId);
+                       categ.save();
+
+                     }
+                    else if(categ == null) {
+                       console.log(categ);
+                       console.log("no category");
+                       const categorynew = new Category({
+                         cattitle: data[i].category,
+                         postsids:  [createdPost._id],
+                         usersids: [req.userData.userId]
+                       });
+                       categorynew.save();
+                     }
+                   });
 
                   }
                 }

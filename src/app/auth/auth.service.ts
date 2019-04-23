@@ -126,7 +126,7 @@ export class AuthService {
           this.authStatusListener.next(true);
           console.log('here');
           const now = new Date();
-          const expirationDate = new Date(now.getTime() + (expiresInDuration * 1000));
+          const expirationDate = new Date(now.getTime() + (expiresInDuration * 100000));
           console.log(expirationDate);
           console.log(response.profileimg);
           this.saveAuthData( token, expirationDate,
@@ -219,7 +219,7 @@ export class AuthService {
       this.token = authInformation.token;
       this.isAuthenticated = true;
       this.userId = authInformation.userId;
-      this.setAuthTimer(expiresIn / 1000);
+      this.setAuthTimer(expiresIn / 100000);
       this.authStatusListener.next(true);
     }
   }
@@ -229,7 +229,7 @@ export class AuthService {
     this.tokenTimer = setTimeout(() => {
         this.logout();
       },
-      duration * 1000);
+      duration * 100000);
   }
 
   private saveAuthData(token: string, expirationDate: Date, userId: string, userNam: string, department: string, profileimg: string) {
