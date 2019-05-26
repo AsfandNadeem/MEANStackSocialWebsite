@@ -58,6 +58,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   constructor(public postsService: PostsService, private authService: AuthService,
               private groupsService: GroupsService, private eventsService: EventsService) {
+    // this.socket = io('https://comsatsconnectbackend.herokuapp.com');
     this.socket = io('http://localhost:3000');
   }
 

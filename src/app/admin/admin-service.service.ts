@@ -10,6 +10,7 @@ import {Post} from '../posts/post.model';
 import {PostsService} from '../posts/posts.service';
 
 
+// const BASEUURL = 'https://comsatsconnectbackend.herokuapp.com';
 const BASEUURL = 'http://localhost:3000';
 export interface Report {
   id: string;

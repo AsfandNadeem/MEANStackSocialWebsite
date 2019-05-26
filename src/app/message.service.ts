@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {Post} from './posts/post.model';
 import {Observable} from 'rxjs';
 
+// const BASEUURL = 'https://comsatsconnectbackend.herokuapp.com/api/chat';
+
 const BASEUURL = 'http://localhost:3000/api/chat';
 
 @Injectable({

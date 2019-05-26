@@ -43,6 +43,7 @@ export class PostCreateComponent implements OnInit {
 
   constructor(public postsService: PostsService, public route: ActivatedRoute,
               private groupsService: GroupsService, private eventsService: EventsService) {
+    // this.socketHost = 'https://comsatsconnectbackend.herokuapp.com';
     this.socketHost = 'http://localhost:3000';
     this.socket = io(this.socketHost);
   }

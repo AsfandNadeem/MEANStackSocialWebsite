@@ -37,6 +37,7 @@ export class MessageComponent implements OnInit, AfterViewInit {
               private messageService: MessageService,
               public route: ActivatedRoute, public postsService: PostsService,
               private groupsService: GroupsService, private eventsService: EventsService) {
+    // this.socket = io('https://comsatsconnectbackend.herokuapp.com');
     this.socket = io('http://localhost:3000');
     }
 

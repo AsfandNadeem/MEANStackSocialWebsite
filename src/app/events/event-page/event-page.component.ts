@@ -52,6 +52,7 @@ export class EventPageComponent implements OnInit {
   }
   constructor(public eventService: EventsService, public groupsService: GroupsService,
               private authService: AuthService, public route: ActivatedRoute) {
+    // this.socket = io('https://comsatsconnectbackend.herokuapp.com');
     this.socket = io('http://localhost:3000');
   }
 

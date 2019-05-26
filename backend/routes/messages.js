@@ -55,7 +55,7 @@ router.get("/chat-messages/:sender_Id/:receiver_Id",
            if(err) {
              console.log("nochat user")
            } else {
-             console.log(userchat.username)
+             // console.log(userchat.username)
              res.status(200).json({
                message: 'message returned',
                messages: fetchedMessages,

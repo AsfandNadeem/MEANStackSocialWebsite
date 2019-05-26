@@ -41,7 +41,7 @@ export class GroupListComponent implements OnInit, OnDestroy {
   }
    constructor(public groupsService: GroupsService, private authService: AuthService,
                private eventsService: EventsService) {
-     this.socket = io('http://localhost:3000');
+     this.socket = io('https://comsatsconnectbackend.herokuapp.com');
    }
 
    ngOnInit() {

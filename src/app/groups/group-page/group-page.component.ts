@@ -54,9 +54,9 @@ export class GroupPageComponent implements OnInit {
 
   constructor(public groupsService: GroupsService, private eventsService: EventsService,
               private authService: AuthService, public route: ActivatedRoute) {
+    // this.socket = io('https://comsatsconnectbackend.herokuapp.com');
     this.socket = io('http://localhost:3000');
   }
-
   ngOnInit() {
     this.screenWidth$.subscribe(width => {
       this.screenWidth = width;
