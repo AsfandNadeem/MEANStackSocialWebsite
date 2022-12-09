@@ -30,7 +30,7 @@
     "cloudinary": "^1.14.0",
     "core-js": "^2.5.4",
     "dotenv": "^7.0.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "font-awesome": "^4.7.0",
     "getusermedia": "^2.0.1",
     "jsonwebtoken": "^8.4.0",
